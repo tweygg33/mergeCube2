@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR.js Multiple Markers Example with Conditional Display</title>
+    <title>AR.js Würfel mit QR-Codes</title>
     <!-- Include A-Frame and AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
@@ -27,64 +27,58 @@
 </head>
 <body>
     <div id="info">
-        <h2>AR.js Multiple Markers Example</h2>
-        <p>Point your camera at different markers to see the Porsche model from different angles.</p>
+        <h2>AR.js Würfel QR-Code Steuerung</h2>
+        <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
     </div>
  
     <a-scene embedded arjs='sourceType: webcam;'>
 
-        <!-- Define multiple QR markers. The model will only be loaded when a marker is detected. -->
-        <a-marker type="pattern" url="pattern-DRV1.patt">
+        <!-- Marker für die 6 Seiten eines Würfels -->
+        <a-marker type="pattern" url="pattern-DRV1.patt" id="marker1">
             <a-entity id="model-container-1"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="0 0 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
         
-        <a-marker type="pattern" url="pattern-DRV2.patt">
+        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
             <a-entity id="model-container-2"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="0 -90 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
-        
-        <a-marker type="pattern" url="pattern-DRV3.patt">
+
+        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
             <a-entity id="model-container-3"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="0 90 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
-        
-        <a-marker type="pattern" url="pattern-DRV4.patt">
+
+        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
             <a-entity id="model-container-4"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="0 180 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
 
-        <a-marker type="pattern" url="pattern-DRV5.patt">
+        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
             <a-entity id="model-container-5"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="90 0 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
 
-        <a-marker type="pattern" url="pattern-DRV6.patt">
+        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
             <a-entity id="model-container-6"
-                gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                scale="0.4 0.4 0.4"
-                position="0 0 0"
-                rotation="180 0 0">
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
             </a-entity>
         </a-marker>
 
@@ -93,45 +87,36 @@
     </a-scene>
 
     <script>
-      let rotationSpeed = 0.01; // Define rotation speed
+      // Hide all models initially
+      const hideAllModels = () => {
+        const models = [
+          document.querySelector('#model-container-1'),
+          document.querySelector('#model-container-2'),
+          document.querySelector('#model-container-3'),
+          document.querySelector('#model-container-4'),
+          document.querySelector('#model-container-5'),
+          document.querySelector('#model-container-6'),
+        ];
+        models.forEach(model => model.setAttribute('visible', 'false'));
+      };
 
-      AFRAME.registerComponent('rotate-model', {
-        tick: function () {
-          const model1 = document.querySelector('#model-container-1');
-          const model2 = document.querySelector('#model-container-2');
-          const model3 = document.querySelector('#model-container-3');
-          const model4 = document.querySelector('#model-container-4');
-          const model5 = document.querySelector('#model-container-5');
-          const model6 = document.querySelector('#model-container-6');
-          
-          // Rotate the model if any of the markers are detected
-          if (model1.object3D.visible) {
-            model1.object3D.rotation.y += rotationSpeed;
-          }
-          if (model2.object3D.visible) {
-            model2.object3D.rotation.y += rotationSpeed;
-          }
-          if (model3.object3D.visible) {
-            model3.object3D.rotation.y += rotationSpeed;
-          }
-          if (model4.object3D.visible) {
-            model4.object3D.rotation.y += rotationSpeed;
-          }
-          if (model5.object3D.visible) {
-            model5.object3D.rotation.y += rotationSpeed;
-          }
-          if (model6.object3D.visible) {
-            model6.object3D.rotation.y += rotationSpeed;
-          }
-        }
-      });
+      // Show model based on detected marker
+      const showModelForMarker = (markerId) => {
+        hideAllModels(); // Hide all models before showing the correct one
+        const model = document.querySelector(`#model-container-${markerId}`);
+        model.setAttribute('visible', 'true');
+      };
 
-      document.querySelector('#model-container-1').setAttribute('rotate-model', '');
-      document.querySelector('#model-container-2').setAttribute('rotate-model', '');
-      document.querySelector('#model-container-3').setAttribute('rotate-model', '');
-      document.querySelector('#model-container-4').setAttribute('rotate-model', '');
-      document.querySelector('#model-container-5').setAttribute('rotate-model', '');
-      document.querySelector('#model-container-6').setAttribute('rotate-model', '');
+      // Register event listeners for markers
+      document.querySelector('#marker1').addEventListener('markerFound', () => showModelForMarker(1));
+      document.querySelector('#marker2').addEventListener('markerFound', () => showModelForMarker(2));
+      document.querySelector('#marker3').addEventListener('markerFound', () => showModelForMarker(3));
+      document.querySelector('#marker4').addEventListener('markerFound', () => showModelForMarker(4));
+      document.querySelector('#marker5').addEventListener('markerFound', () => showModelForMarker(5));
+      document.querySelector('#marker6').addEventListener('markerFound', () => showModelForMarker(6));
+
+      // Initially hide all models
+      hideAllModels();
     </script>
 </body>
 </html>
