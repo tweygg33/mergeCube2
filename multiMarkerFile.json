@@ -1,0 +1,65 @@
+{
+    "markers": [
+      {
+        "id": 0,
+        "patternUrl": "pattern-DRV1.patt",
+        "poseMatrix": [
+          [1, 0, 0, 0],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1]
+        ]
+      },
+      {
+        "id": 1,
+        "patternUrl": "pattern-DRV2.patt",
+        "poseMatrix": [
+          [1, 0, 0, 1],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1]
+        ]
+      },
+      {
+        "id": 2,
+        "patternUrl": "pattern-DRV3.patt",
+        "poseMatrix": [
+          [1, 0, 0, -1],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1]
+        ]
+      },
+      {
+        "id": 3,
+        "patternUrl": "pattern-DRV4.patt",
+        "poseMatrix": [
+          [0, 1, 0, 0],
+          [-1, 0, 0, 1],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1]
+        ]
+      },
+      {
+        "id": 4,
+        "patternUrl": "pattern-DRV5.patt",
+        "poseMatrix": [
+          [0, -1, 0, 0],
+          [1, 0, 0, -1],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1]
+        ]
+      },
+      {
+        "id": 5,
+        "patternUrl": "pattern-DRV6.patt",
+        "poseMatrix": [
+          [0, 0, 1, 0],
+          [0, 1, 0, 0],
+          [-1, 0, 0, 1],
+          [0, 0, 0, 1]
+        ]
+      }
+    ]
+}
+
