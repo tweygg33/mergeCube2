@@ -61,7 +61,7 @@
     <div id="camera-selection">
         <label for="camera-select">Kamera auswählen (Nummer eingeben): </label>
         <input type="number" id="camera-select" min="1" />
-        <button onclick="selectCamera()">Kamera starten</button>
+        <button id="start-camera-button">Kamera starten</button>
         <p id="selected-camera"></p>
     </div>
 
@@ -151,6 +151,11 @@
             selectedCameraText.textContent = 'Ungültige Kameraauswahl.';
         }
     }
+
+    // Hier sicherstellen, dass das Event für den Button funktioniert
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('start-camera-button').addEventListener('click', selectCamera);
+    });
 
     window.onload = () => {
         initCamera();
