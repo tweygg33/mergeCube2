@@ -7,7 +7,7 @@
     <!-- Include A-Frame and AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
-
+ 
     <style>
         body, html {
             margin: 0;
@@ -23,16 +23,6 @@
             color: white;
             font-family: Arial, sans-serif;
         }
-        #camera-list, #active-camera {
-            position: absolute;
-            top: 50px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 3px;
-        }
     </style>
 </head>
 <body>
@@ -40,8 +30,7 @@
         <h2>AR.js Würfel QR-Code Steuerung</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
     </div>
-
-
+ 
     <a-scene embedded arjs='sourceType: webcam;'>
 
         <!-- Marker für die 6 Seiten eines Würfels -->
@@ -52,7 +41,7 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
-
+        
         <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
             <a-entity id="model-container-2"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
@@ -96,50 +85,37 @@
         <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-        async function initCamera() {
-            try {
-                // Enumerate all media devices (cameras and microphones)
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-                // Try to find the first back-facing camera
-                let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
-         
-                const constraints = {
-                    video: {
-                        deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Use the back camera if available
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                };
-         
-                // Request the video stream
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.createElement('video');
-                video.srcObject = stream;
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('playsinline', '');
-                document.body.appendChild(video);
-         
-                video.onloadedmetadata = () => {
-                    const arSystem = document.querySelector('a-scene').systems['arjs'];
-                    arSystem.sourceElement = video;
-                    arSystem._initSource = function () {
-                        this.context.arController.setVideo(video);
-                        this.context.arController.setup(video);
-                    };
-                    arSystem.start();
-                };
-            } catch (error) {
-                console.error('Error accessing camera:', error);
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Frontkamera verwenden</title>
+      </head>
+      <body>
+        <video id="video" autoplay playsinline></video>
+    
+        <script>
+          // Optionen für die Kamera, um die Frontkamera anzufordern
+          const constraints = {
+            video: {
+              facingMode: "user" // "user" steht für die Frontkamera, "environment" für die Rückkamera
             }
-        }
-         
-        window.onload = () => {
-            initCamera();
-        };
-    </script>
+          };
+    
+          // Zugriff auf die Kamera über getUserMedia
+          navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+              const video = document.getElementById('video');
+              video.srcObject = mediaStream;
+              video.onloadedmetadata = function (e) {
+                video.play();
+              };
+            })
+            .catch(function (err) {
+              console.error("Fehler beim Zugriff auf die Kamera: ", err);
+            });
+        </script>
+      </body>
+    </html>
+    
 </body>
 </html>
