@@ -66,14 +66,14 @@
     </div>
 
     <!-- Auswahlfeld für die Kamera -->
-    <div id="camera-selection">
+    <div id="camera-selection" style="margin-top: 3rem;">
         <label for="camera-select">Kamera auswählen (Nummer eingeben): </label>
         <input type="number" id="camera-select" min="1" />
         <button id="start-camera-button">Kamera starten</button>
         <p id="selected-camera"></p>
     </div>
 
-    <a-scene embedded arjs='sourceType: webcam;'>
+    <a-scene embedded arjs='sourceType: webcam;' id="scene">
         <!-- Marker für die 6 Seiten eines Würfels -->
         <a-marker type="pattern" url="pattern-4drv.patt" id="marker1">
             <a-entity id="model-container-1"
@@ -100,6 +100,7 @@
             
             // Liste der Kameras im HTML anzeigen
             const cameraList = document.getElementById('camera-list');
+            cameraList.innerHTML = ''; // Liste zurücksetzen, falls neu initialisiert
             videoInputDevices.forEach((device, index) => {
                 const li = document.createElement('li');
                 li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
@@ -116,6 +117,15 @@
             currentStream.getTracks().forEach(track => track.stop());
             currentStream = null; // Zurücksetzen
         }
+    }
+
+    function resetARjs() {
+        // AR.js-System stoppen und zurücksetzen
+        const scene = document.querySelector('#scene');
+        scene.pause();
+        scene.components['arjs'].stop();
+        scene.components['arjs'].init(); // AR.js neu initialisieren
+        scene.play();
     }
 
     async function selectCamera() {
@@ -151,6 +161,8 @@
                 document.body.appendChild(video);
 
                 video.onloadedmetadata = () => {
+                    // AR.js neu initialisieren, um die Kamera zu verwenden
+                    resetARjs();
                     const arSystem = document.querySelector('a-scene').systems['arjs'];
                     arSystem.sourceElement = video;
                     arSystem._initSource = function () {
