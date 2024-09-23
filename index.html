@@ -82,17 +82,17 @@
                 cameraList.appendChild(li);
             });
 
-            // Rückkamera 6 zuerst auswählen (falls vorhanden)
+            // Rückkamera nach Label auswählen, zum Beispiel die "Rückkamera"
             let selectedCamera = videoInputDevices.find(device => 
-                device.label.toLowerCase().includes('rückkamera') && device.deviceId.includes('1A5EA09088503F79EA7D740836ABB1FD'));
+                device.label.toLowerCase().includes('rückkamera'));  // Nach "Rückkamera" suchen
 
             const selectedCameraText = document.getElementById('selected-camera');
             
             if (selectedCamera) {
                 selectedCameraText.textContent = `Rückkamera ausgewählt: ${selectedCamera.label}`;
             } else {
-                selectedCameraText.textContent = "Keine Rückkamera 6 gefunden, Standardkamera wird verwendet.";
-                // Falls Rückkamera 6 nicht gefunden wird, andere Rückkameras auswählen
+                selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
+                // Falls Rückkamera nicht gefunden wird, andere Rückkameras auswählen
                 selectedCamera = videoInputDevices.find(device => 
                     device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
             }
