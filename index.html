@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR.js Würfel mit QR-Codes</title>
-    <!-- Include A-Frame and AR.js -->
+    <!-- Include A-Frame und AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
- 
+
     <style>
         body, html {
             margin: 0;
@@ -23,6 +23,16 @@
             color: white;
             font-family: Arial, sans-serif;
         }
+        #camera-info {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +40,14 @@
         <h2>AR.js Würfel QR-Code Steuerung</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
     </div>
- 
+
+    <!-- Textbereich zur Anzeige der Kamerainformationen -->
+    <div id="camera-info">
+        <h3>Verfügbare Kameras:</h3>
+        <ul id="camera-list"></ul>
+        <p id="selected-camera"></p>
+    </div>
+
     <a-scene embedded arjs='sourceType: webcam;'>
 
         <!-- Marker für die 6 Seiten eines Würfels -->
@@ -41,7 +58,7 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
-        
+
         <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
             <a-entity id="model-container-2"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
@@ -82,53 +99,69 @@
             </a-entity>
         </a-marker>
 
-        <!-- Camera -->
+        <!-- Kamera -->
         <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- <script>
-     async function initCamera() {
-    try {
-        // Enumerate all media devices (cameras and microphones)
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-        // Try to find the first back-facing camera
-        let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
- 
-        const constraints = {
-            video: {
-                deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Use the back camera if available
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
+    <script>
+    async function initCamera() {
+        try {
+            // Alle Media-Geräte (Kameras und Mikrofone) auflisten
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+            
+            // Liste der Kameras im HTML anzeigen
+            const cameraList = document.getElementById('camera-list');
+            videoInputDevices.forEach((device, index) => {
+                const li = document.createElement('li');
+                li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
+                cameraList.appendChild(li);
+            });
+            
+            // Die Rückkamera finden
+            let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
+
+            const selectedCameraText = document.getElementById('selected-camera');
+            if (backCamera) {
+                selectedCameraText.textContent = `Rückkamera gefunden: ${backCamera.label}`;
+            } else {
+                selectedCameraText.textContent = "Rückkamera nicht gefunden, Standardkamera wird verwendet.";
             }
-        };
- 
-        // Request the video stream
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.setAttribute('autoplay', '');
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        document.body.appendChild(video);
- 
-        video.onloadedmetadata = () => {
-            const arSystem = document.querySelector('a-scene').systems['arjs'];
-            arSystem.sourceElement = video;
-            arSystem._initSource = function () {
-                this.context.arController.setVideo(video);
-                this.context.arController.setup(video);
+
+            const constraints = {
+                video: {
+                    deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Rückkamera verwenden, wenn verfügbar
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
             };
-            arSystem.start();
-        };
-    } catch (error) {
-        console.error('Error accessing camera:', error);
+
+            // Videostream anfordern
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.setAttribute('autoplay', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            document.body.appendChild(video);
+
+            video.onloadedmetadata = () => {
+                const arSystem = document.querySelector('a-scene').systems['arjs'];
+                arSystem.sourceElement = video;
+                arSystem._initSource = function () {
+                    this.context.arController.setVideo(video);
+                    this.context.arController.setup(video);
+                };
+                arSystem.start();
+            };
+        } catch (error) {
+            console.error('Fehler beim Zugriff auf die Kamera:', error);
+        }
     }
-}
- 
-window.onload = () => {
-    initCamera();
-};
-    </script> -->
+
+    window.onload = () => {
+        initCamera();
+    };
+    </script>
 </body>
 </html>
