@@ -7,7 +7,7 @@
     <!-- Include A-Frame and AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
- 
+
     <style>
         body, html {
             margin: 0;
@@ -23,6 +23,16 @@
             color: white;
             font-family: Arial, sans-serif;
         }
+        #camera-list, #active-camera {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +40,18 @@
         <h2>AR.js Würfel QR-Code Steuerung</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
     </div>
- 
+
+    <!-- Liste der Kameras -->
+    <div id="camera-list">
+        <h3>Verfügbare Kameras:</h3>
+        <ul id="camera-items"></ul>
+    </div>
+
+    <!-- Anzeige der aktiven Kamera -->
+    <div id="active-camera">
+        <p>Aktive Kamera: Nicht verfügbar</p>
+    </div>
+
     <a-scene embedded arjs='sourceType: webcam;'>
 
         <!-- Marker für die 6 Seiten eines Würfels -->
@@ -41,7 +62,7 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
-        
+
         <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
             <a-entity id="model-container-2"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
@@ -86,49 +107,68 @@
         <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- <script>
+    <script>
      async function initCamera() {
-    try {
-        // Enumerate all media devices (cameras and microphones)
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-        // Try to find the first back-facing camera
-        let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
- 
-        const constraints = {
-            video: {
-                deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Use the back camera if available
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
+        try {
+            // Kamerageräte auflisten
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+
+            // Kamera-Liste im HTML anzeigen
+            const cameraListElement = document.getElementById('camera-items');
+            videoInputDevices.forEach((device, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Kamera ${index + 1}: ${device.label} (ID: ${device.deviceId})`;
+                cameraListElement.appendChild(listItem);
+            });
+
+            // Wähle entweder die erste Rückkamera oder die erste Kamera in der Liste
+            let selectedCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back')) || videoInputDevices[0];
+
+            if (!selectedCamera) {
+                console.error('Keine verfügbare Kamera gefunden.');
+                document.getElementById('active-camera').textContent = 'Keine Kamera verfügbar';
+                return;
             }
-        };
- 
-        // Request the video stream
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.setAttribute('autoplay', '');
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        document.body.appendChild(video);
- 
-        video.onloadedmetadata = () => {
-            const arSystem = document.querySelector('a-scene').systems['arjs'];
-            arSystem.sourceElement = video;
-            arSystem._initSource = function () {
-                this.context.arController.setVideo(video);
-                this.context.arController.setup(video);
+
+            const constraints = {
+                video: {
+                    deviceId: { exact: selectedCamera.deviceId },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
             };
-            arSystem.start();
-        };
-    } catch (error) {
-        console.error('Error accessing camera:', error);
+
+            // Kamerastream anfordern
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.setAttribute('autoplay', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            document.body.appendChild(video);
+
+            // Anzeige der aktiven Kamera
+            document.getElementById('active-camera').textContent = `Aktive Kamera: ${selectedCamera.label}`;
+
+            video.onloadedmetadata = () => {
+                const arSystem = document.querySelector('a-scene').systems['arjs'];
+                arSystem.sourceElement = video;
+                arSystem._initSource = function () {
+                    this.context.arController.setVideo(video);
+                    this.context.arController.setup(video);
+                };
+                arSystem.start();
+            };
+        } catch (error) {
+            console.error('Fehler beim Zugriff auf die Kamera:', error);
+            document.getElementById('active-camera').textContent = 'Kamera konnte nicht gestartet werden';
+        }
     }
-}
- 
-window.onload = () => {
-    initCamera();
-};
-    </script> -->
+
+    window.onload = () => {
+        initCamera();
+    };
+    </script>
 </body>
 </html>
