@@ -20,6 +20,7 @@
             position: absolute;
             top: 10px;
             left: 10px;
+            z-index: 1000; /* Sicherstellen, dass es anklickbar ist */
             color: white;
             font-family: Arial, sans-serif;
         }
@@ -27,6 +28,7 @@
             position: absolute;
             top: 100px;
             left: 10px;
+            z-index: 1000; /* Sicherstellen, dass es anklickbar ist */
             color: white;
             font-family: Arial, sans-serif;
             background-color: rgba(0, 0, 0, 0.5);
@@ -37,11 +39,18 @@
             position: absolute;
             top: 200px;
             left: 10px;
+            z-index: 1000; /* Sicherstellen, dass es anklickbar ist */
             color: white;
             font-family: Arial, sans-serif;
             background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 5px;
+        }
+
+        /* Vermeiden, dass das Input-Feld hinter anderen Elementen versteckt wird */
+        input, button {
+            z-index: 1000; /* Sicherstellen, dass die Elemente anklickbar sind */
+            position: relative; /* Vermeiden, dass die Eingabefelder überdeckt werden */
         }
     </style>
 </head>
@@ -66,7 +75,6 @@
     </div>
 
     <a-scene embedded arjs='sourceType: webcam;'>
-
         <!-- Marker für die 6 Seiten eines Würfels -->
         <a-marker type="pattern" url="pattern-4drv.patt" id="marker1">
             <a-entity id="model-container-1"
@@ -75,11 +83,6 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
-
-        <!-- Weitere Marker hier... -->
-
-        <!-- Kamera -->
-        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
@@ -152,7 +155,7 @@
         }
     }
 
-    // Hier sicherstellen, dass das Event für den Button funktioniert
+    // Sicherstellen, dass der Button funktioniert, sobald das DOM geladen ist
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('start-camera-button').addEventListener('click', selectCamera);
     });
