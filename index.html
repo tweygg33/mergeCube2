@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR.js Würfel mit QR-Codes</title>
+    <!-- Include A-Frame and AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
+ 
     <style>
         body, html {
             margin: 0;
@@ -21,16 +23,6 @@
             color: white;
             font-family: Arial, sans-serif;
         }
-        #camera-info {
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
@@ -38,14 +30,7 @@
         <h2>AR.js Würfel QR-Code Steuerung</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
     </div>
-
-    <!-- Textbereich zur Anzeige der Kamerainformationen -->
-    <div id="camera-info">
-        <h3>Verfügbare Kameras:</h3>
-        <ul id="camera-list"></ul>
-        <p id="selected-camera"></p>
-    </div>
-
+ 
     <a-scene embedded arjs='sourceType: webcam;'>
 
         <!-- Marker für die 6 Seiten eines Würfels -->
@@ -56,88 +41,94 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
+        
+        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
+            <a-entity id="model-container-2"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
 
-        <!-- Weitere Marker hier... -->
+        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
+            <a-entity id="model-container-3"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
 
-        <!-- Kamera -->
+        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
+            <a-entity id="model-container-4"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
+            <a-entity id="model-container-5"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
+            <a-entity id="model-container-6"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-    async function initCamera() {
-        try {
-            // Zuerst die Erlaubnis zum Kamerazugriff einholen
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
-
-            // Sobald der Zugriff erlaubt ist, Geräte auflisten
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-            
-            // Liste der Kameras im HTML anzeigen
-            const cameraList = document.getElementById('camera-list');
-            videoInputDevices.forEach((device, index) => {
-                const li = document.createElement('li');
-                li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
-                cameraList.appendChild(li);
-            });
-
-            // Rückkamera nach Label auswählen, zum Beispiel die "Rückkamera"
-            let selectedCamera = videoInputDevices.find(device => 
-                device.label.toLowerCase().includes('rückkamera'));  // Nach "Rückkamera" suchen
-
-            const selectedCameraText = document.getElementById('selected-camera');
-            
-            if (selectedCamera) {
-                selectedCameraText.textContent = `Rückkamera ausgewählt: ${selectedCamera.label}`;
-            } else {
-                selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
-                // Falls Rückkamera nicht gefunden wird, andere Rückkameras auswählen
-                selectedCamera = videoInputDevices.find(device => 
-                    device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
+    <!-- <script>
+     async function initCamera() {
+    try {
+        // Enumerate all media devices (cameras and microphones)
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+        // Try to find the first back-facing camera
+        let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
+ 
+        const constraints = {
+            video: {
+                deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Use the back camera if available
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
             }
-
-            if (selectedCamera) {
-                selectedCameraText.textContent += ` | Aktuell getestet: ${selectedCamera.label}`;
-                
-                // Setze die Constraints für die ausgewählte Rückkamera
-                const constraints = {
-                    video: {
-                        deviceId: { exact: selectedCamera.deviceId },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                };
-
-                // Videostream anfordern
-                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.createElement('video');
-                video.srcObject = newStream;
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('playsinline', '');
-                document.body.appendChild(video);
-
-                video.onloadedmetadata = () => {
-                    const arSystem = document.querySelector('a-scene').systems['arjs'];
-                    arSystem.sourceElement = video;
-                    arSystem._initSource = function () {
-                        this.context.arController.setVideo(video);
-                        this.context.arController.setup(video);
-                    };
-                    arSystem.start();
-                };
-            } else {
-                selectedCameraText.textContent = "Keine Rückkamera gefunden.";
-            }
-        } catch (error) {
-            console.error('Fehler beim Zugriff auf die Kamera:', error);
-        }
+        };
+ 
+        // Request the video stream
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        document.body.appendChild(video);
+ 
+        video.onloadedmetadata = () => {
+            const arSystem = document.querySelector('a-scene').systems['arjs'];
+            arSystem.sourceElement = video;
+            arSystem._initSource = function () {
+                this.context.arController.setVideo(video);
+                this.context.arController.setup(video);
+            };
+            arSystem.start();
+        };
+    } catch (error) {
+        console.error('Error accessing camera:', error);
     }
-
-    window.onload = () => {
-        initCamera();
-    };
-    </script>
+}
+ 
+window.onload = () => {
+    initCamera();
+};
+    </script> -->
 </body>
 </html>
