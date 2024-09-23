@@ -40,12 +40,13 @@
                       position="0 0 0">
             </a-entity>
         </a-marker>
-        
+
         <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
             <a-entity id="model-container-2"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
                       scale="0.4 0.4 0.4"
-                      position="0 0 0">
+                      position="0 0 0"
+                      rotation="0 -45 0"> <!-- Rotation um die Y-Achse um -45 Grad -->
             </a-entity>
         </a-marker>
 
@@ -53,7 +54,8 @@
             <a-entity id="model-container-3"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
                       scale="0.4 0.4 0.4"
-                      position="0 0 0">
+                      position="0 0 0"
+                      rotation="0 90 0"> <!-- Rotation um die Y-Achse um 90 Grad -->
             </a-entity>
         </a-marker>
 
@@ -61,7 +63,8 @@
             <a-entity id="model-container-4"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
                       scale="0.4 0.4 0.4"
-                      position="0 0 0">
+                      position="0 0 0"
+                      rotation="0 0 45"> <!-- Rotation um die Z-Achse um 45 Grad -->
             </a-entity>
         </a-marker>
 
@@ -69,7 +72,8 @@
             <a-entity id="model-container-5"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
                       scale="0.4 0.4 0.4"
-                      position="0 0 0">
+                      position="0 0 0"
+                      rotation="45 0 0"> <!-- Rotation um die X-Achse um 45 Grad -->
             </a-entity>
         </a-marker>
 
@@ -77,33 +81,14 @@
             <a-entity id="model-container-6"
                       gltf-model="url(free_porsche_911_carrera_4s.glb)"
                       scale="0.4 0.4 0.4"
-                      position="0 0 0">
+                      position="0 0 0"
+                      rotation="0 0 90"> <!-- Rotation um die Z-Achse um 90 Grad -->
             </a-entity>
         </a-marker>
 
         <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-      // Hier kannst du zusätzliche Kameraparameter setzen
-      const constraints = {
-        video: {
-          facingMode: "environment", // Rückkamera auf Mobilgeräten
-          brightness: 0.7, // Erhöht die Helligkeit (je nach Unterstützung des Browsers)
-          exposureMode: "continuous" // Automatische Belichtungsanpassung
-        }
-      };
-
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then(function (mediaStream) {
-          const video = document.querySelector('video');
-          video.srcObject = mediaStream;
-        })
-        .catch(function (err) {
-          console.error("Fehler beim Zugriff auf die Kamera: ", err);
-        });
-    </script>
 
 </body>
 </html>
