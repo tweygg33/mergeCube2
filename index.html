@@ -108,67 +108,47 @@
     </a-scene>
 
     <script>
-     async function initCamera() {
-        try {
-            // Kamerageräte auflisten
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-
-            // Kamera-Liste im HTML anzeigen
-            const cameraListElement = document.getElementById('camera-items');
-            videoInputDevices.forEach((device, index) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `Kamera ${index + 1}: ${device.label} (ID: ${device.deviceId})`;
-                cameraListElement.appendChild(listItem);
-            });
-
-            // Wähle entweder die erste Rückkamera oder die erste Kamera in der Liste
-            let selectedCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back')) || videoInputDevices[0];
-
-            if (!selectedCamera) {
-                console.error('Keine verfügbare Kamera gefunden.');
-                document.getElementById('active-camera').textContent = 'Keine Kamera verfügbar';
-                return;
+    //----------------------------------------------------------------------
+        //  Here we list all media devices, in order to choose between
+        //  the front and the back camera.
+        //      videoDevices[0] : Front Camera
+        //      videoDevices[1] : Back Camera
+        //  I used an array to save the devices ID 
+        //  which i get using devices.forEach()
+        //  Then set the video resolution.
+        //----------------------------------------------------------------------
+        navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+          var videoDevices = [0,0];
+          var videoDeviceIndex = 0;
+          devices.forEach(function(device) {
+            console.log(device.kind + ": " + device.label +
+              " id = " + device.deviceId);
+            if (device.kind == "videoinput") {  
+              videoDevices[videoDeviceIndex++] =  device.deviceId;    
             }
+          });
 
-            const constraints = {
-                video: {
-                    deviceId: { exact: selectedCamera.deviceId },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                }
-            };
 
-            // Kamerastream anfordern
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            const video = document.createElement('video');
+          var constraints =  {width: { min: 1024, ideal: 1280, max: 1920 },
+          height: { min: 776, ideal: 720, max: 1080 },
+          deviceId: { exact: videoDevices[1]  } 
+        };
+        return navigator.mediaDevices.getUserMedia({ video: constraints });
+
+      })
+        .then(stream => {
+          if (window.webkitURL) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            localMediaStream = stream;
+          } else if (video.mozSrcObject !== undefined) {
+            video.mozSrcObject = stream;
+          } else if (video.srcObject !== undefined) {
             video.srcObject = stream;
-            video.setAttribute('autoplay', '');
-            video.setAttribute('muted', '');
-            video.setAttribute('playsinline', '');
-            document.body.appendChild(video);
-
-            // Anzeige der aktiven Kamera
-            document.getElementById('active-camera').textContent = `Aktive Kamera: ${selectedCamera.label}`;
-
-            video.onloadedmetadata = () => {
-                const arSystem = document.querySelector('a-scene').systems['arjs'];
-                arSystem.sourceElement = video;
-                arSystem._initSource = function () {
-                    this.context.arController.setVideo(video);
-                    this.context.arController.setup(video);
-                };
-                arSystem.start();
-            };
-        } catch (error) {
-            console.error('Fehler beim Zugriff auf die Kamera:', error);
-            document.getElementById('active-camera').textContent = 'Kamera konnte nicht gestartet werden';
-        }
-    }
-
-    window.onload = () => {
-        initCamera();
-    };
+          } else {
+            video.src = stream;
+          }})
+        .catch(e => console.error(e));
     </script>
 </body>
 </html>
