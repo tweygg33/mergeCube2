@@ -87,36 +87,48 @@
     </a-scene>
 
     <script>
-      // Hide all models initially
-      const hideAllModels = () => {
-        const models = [
-          document.querySelector('#model-container-1'),
-          document.querySelector('#model-container-2'),
-          document.querySelector('#model-container-3'),
-          document.querySelector('#model-container-4'),
-          document.querySelector('#model-container-5'),
-          document.querySelector('#model-container-6'),
-        ];
-        models.forEach(model => model.setAttribute('visible', 'false'));
-      };
-
-      // Show model based on detected marker
-      const showModelForMarker = (markerId) => {
-        hideAllModels(); // Hide all models before showing the correct one
-        const model = document.querySelector(`#model-container-${markerId}`);
-        model.setAttribute('visible', 'true');
-      };
-
-      // Register event listeners for markers
-      document.querySelector('#marker1').addEventListener('markerFound', () => showModelForMarker(1));
-      document.querySelector('#marker2').addEventListener('markerFound', () => showModelForMarker(2));
-      document.querySelector('#marker3').addEventListener('markerFound', () => showModelForMarker(3));
-      document.querySelector('#marker4').addEventListener('markerFound', () => showModelForMarker(4));
-      document.querySelector('#marker5').addEventListener('markerFound', () => showModelForMarker(5));
-      document.querySelector('#marker6').addEventListener('markerFound', () => showModelForMarker(6));
-
-      // Initially hide all models
-      hideAllModels();
+        async function initCamera() {
+            try {
+                // Enumerate all media devices (cameras and microphones)
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+                // Try to find the first back-facing camera
+                let backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
+         
+                const constraints = {
+                    video: {
+                        deviceId: backCamera ? { exact: backCamera.deviceId } : undefined, // Use the back camera if available
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+         
+                // Request the video stream
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.setAttribute('autoplay', '');
+                video.setAttribute('muted', '');
+                video.setAttribute('playsinline', '');
+                document.body.appendChild(video);
+         
+                video.onloadedmetadata = () => {
+                    const arSystem = document.querySelector('a-scene').systems['arjs'];
+                    arSystem.sourceElement = video;
+                    arSystem._initSource = function () {
+                        this.context.arController.setVideo(video);
+                        this.context.arController.setup(video);
+                    };
+                    arSystem.start();
+                };
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+         
+        window.onload = () => {
+            initCamera();
+        };
     </script>
 </body>
 </html>
