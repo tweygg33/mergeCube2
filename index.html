@@ -125,20 +125,10 @@ async function initCamera() {
             cameraList.appendChild(li);
         });
 
-        // Rückkameras bevorzugen
-        let backCameras = videoInputDevices.filter(device => 
-            device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
-
+        // Die erste verfügbare Kamera auswählen
+        let selectedCamera = videoInputDevices[0]; 
         const selectedCameraText = document.getElementById('selected-camera');
-        let selectedCamera;
-
-        if (backCameras.length > 0) {
-            selectedCamera = backCameras[0];
-            selectedCameraText.textContent = `Rückkamera gefunden: ${selectedCamera.label}`;
-        } else {
-            selectedCamera = videoInputDevices[0]; // Falls keine Rückkamera, erste verfügbare Kamera wählen
-            selectedCameraText.textContent = `Rückkamera nicht gefunden. Verwende: ${selectedCamera.label}`;
-        }
+        selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
 
         // Setze die Constraints für die ausgewählte Kamera
         const constraints = {
