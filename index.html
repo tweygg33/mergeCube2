@@ -1,3 +1,4 @@
+<!-- Hier kann man unte per nummer die Kamera auswählen manuell -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,12 +24,27 @@
             color: white;
             font-family: Arial, sans-serif;
         }
+        #camera-info {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
+    </div>
+    <div id="camera-info">
+        <h3>Verfügbare Kameras:</h3>
+        <ul id="camera-list"></ul>
+        <p id="selected-camera"></p>
     </div>
  
     <a-scene embedded arjs='sourceType: webcam;'>
@@ -91,6 +107,66 @@
         <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
+    <script>
+async function initCamera() {
+    try {
+        // Zuerst die Erlaubnis zum Kamerazugriff einholen
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
 
+        // Sobald der Zugriff erlaubt ist, Geräte auflisten
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+
+        // Liste der Kameras im HTML anzeigen
+        const cameraList = document.getElementById('camera-list');
+        videoInputDevices.forEach((device, index) => {
+            const li = document.createElement('li');
+            li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
+            cameraList.appendChild(li);
+        });
+
+        // Die erste verfügbare Kamera auswählen
+        let selectedCamera = videoInputDevices[1]; 
+        const selectedCameraText = document.getElementById('selected-camera');
+        selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
+
+        // Setze die Constraints für die ausgewählte Kamera
+        const constraints = {
+            video: {
+                deviceId: { exact: selectedCamera.deviceId },
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        };
+
+        // Videostream anfordern
+        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+        const video = document.createElement('video');
+        video.srcObject = newStream;
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        document.body.appendChild(video);
+
+        video.onloadedmetadata = () => {
+            const arSystem = document.querySelector('a-scene').systems['arjs'];
+            arSystem.sourceElement = video;
+            arSystem._initSource = function () {
+                this.context.arController.setVideo(video);
+                this.context.arController.setup(video);
+            };
+            arSystem.start();
+        };
+    } catch (error) {
+        console.error('Fehler beim Zugriff auf die Kamera:', error);
+    }
+}
+
+window.onload = () => {
+    initCamera();
+};
+
+    </script>
 </body>
 </html>
