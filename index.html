@@ -108,48 +108,75 @@
         <a-entity camera></a-entity>
     </a-scene>
     <script>
-async function initCamera() {
+        async function initCamera() {
     try {
         // Zuerst die Erlaubnis zum Kamerazugriff einholen
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
+        stream.getTracks().forEach(track => track.stop());
 
-        // Sobald der Zugriff erlaubt ist, Geräte auflisten
+        // Geräte auflisten
         const devices = await navigator.mediaDevices.enumerateDevices();
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-        // Liste der Kameras im HTML anzeigen
-        const cameraList = document.getElementById('camera-list');
+        // Auswahlfeld für die Kameraauswahl erstellen
+        const cameraSelect = document.createElement('select');
         videoInputDevices.forEach((device, index) => {
-            const li = document.createElement('li');
-            li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
-            cameraList.appendChild(li);
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}`;
+            cameraSelect.appendChild(option);
+        });
+        document.getElementById('camera-info').appendChild(cameraSelect);
+
+        // Event-Listener für Kameraänderung hinzufügen
+        cameraSelect.addEventListener('change', async (event) => {
+            const deviceId = event.target.value;
+            await startCamera(deviceId);
         });
 
-        // Die erste verfügbare Kamera auswählen
-        let selectedCamera = videoInputDevices[1]; 
-        const selectedCameraText = document.getElementById('selected-camera');
-        selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
+        // Standardkamera starten
+        await startCamera(videoInputDevices[1].deviceId); // Passen Sie den Index an
 
-        // Setze die Constraints für die ausgewählte Kamera
+    } catch (error) {
+        console.error('Fehler beim Zugriff auf die Kamera:', error);
+    }
+}
+
+async function startCamera(deviceId) {
+    try {
+        // Setzen der Constraints für die ausgewählte Kamera
         const constraints = {
             video: {
-                deviceId: { exact: selectedCamera.deviceId },
+                deviceId: { exact: deviceId },
                 width: { ideal: 1280 },
-                height: { ideal: 720 }
+                height: { ideal: 720 },
+                facingMode: 'environment'
             }
         };
 
-        // Videostream anfordern
+        // Vorherigen Videostream stoppen, falls vorhanden
+        if (window.currentStream) {
+            window.currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Neuen Videostream anfordern
         const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-        const video = document.createElement('video');
+        window.currentStream = newStream; // Speichern, um später stoppen zu können
+
+        // Videoelement erstellen oder aktualisieren
+        let video = document.getElementById('videoElement');
+        if (!video) {
+            video = document.createElement('video');
+            video.id = 'videoElement';
+            video.setAttribute('autoplay', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            document.body.appendChild(video);
+        }
         video.srcObject = newStream;
-        video.setAttribute('autoplay', '');
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        document.body.appendChild(video);
 
         video.onloadedmetadata = () => {
+            // AR.js mit dem ausgewählten Videoelement initialisieren
             const arSystem = document.querySelector('a-scene').systems['arjs'];
             arSystem.sourceElement = video;
             arSystem._initSource = function () {
@@ -159,7 +186,7 @@ async function initCamera() {
             arSystem.start();
         };
     } catch (error) {
-        console.error('Fehler beim Zugriff auf die Kamera:', error);
+        console.error('Fehler beim Starten der Kamera:', error);
     }
 }
 
