@@ -59,19 +59,53 @@
             </a-entity>
         </a-marker>
 
-        <!-- Weitere Marker hier -->
+        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
+            <a-entity id="model-container-2"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
+            <a-entity id="model-container-3"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
+            <a-entity id="model-container-4"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
+            <a-entity id="model-container-5"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
+
+        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
+            <a-entity id="model-container-6"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0">
+            </a-entity>
+        </a-marker>
 
         <!-- Kamera -->
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-    let isCameraInitialized = false; // Variable zur Verhinderung mehrfacher Initialisierungen
-
     async function initCamera() {
         try {
-            if (isCameraInitialized) return; // Verhindere erneute Initialisierung
-            
             // Zuerst die Erlaubnis zum Kamerazugriff einholen
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
@@ -82,23 +116,24 @@
             
             // Liste der Kameras im HTML anzeigen
             const cameraList = document.getElementById('camera-list');
-            cameraList.innerHTML = ''; // Vorherige Liste leeren
             videoInputDevices.forEach((device, index) => {
                 const li = document.createElement('li');
                 li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
                 cameraList.appendChild(li);
             });
 
-            // Rückkamera auswählen, falls vorhanden
+            // Versuchen, Rückkameras zu finden (mehrere Rückkameras unterstützen)
             let backCameras = videoInputDevices.filter(device => 
                 device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
 
             const selectedCameraText = document.getElementById('selected-camera');
             
             if (backCameras.length > 0) {
+                // Falls mehrere Rückkameras vorhanden sind, wähle die erste
                 const selectedCamera = backCameras[0];
                 selectedCameraText.textContent = `Rückkamera gefunden: ${selectedCamera.label}`;
                 
+                // Setze die Constraints für die ausgewählte Rückkamera
                 const constraints = {
                     video: {
                         deviceId: { exact: selectedCamera.deviceId },
@@ -107,6 +142,7 @@
                     }
                 };
 
+                // Videostream anfordern
                 const newStream = await navigator.mediaDevices.getUserMedia(constraints);
                 const video = document.createElement('video');
                 video.srcObject = newStream;
@@ -127,20 +163,14 @@
             } else {
                 selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
             }
-            
-            isCameraInitialized = true; // Kamera wurde initialisiert
         } catch (error) {
             console.error('Fehler beim Zugriff auf die Kamera:', error);
         }
     }
 
-    // Nur starten, wenn der Benutzer den Zugriff erlaubt hat
-    document.addEventListener('click', () => {
-        if (!isCameraInitialized) {
-            initCamera();
-        }
-    });
-
+    window.onload = () => {
+        initCamera();
+    };
     </script>
 </body>
 </html>
