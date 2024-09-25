@@ -64,14 +64,16 @@
         <a-entity camera></a-entity>
     </a-scene>
   <script>
-    async function updateCameraText() {
+   async function updateCameraText() {
     try {
+        // Warte, bis der Benutzer den Kamerazugriff erlaubt
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
         // Geräte auflisten, ohne den aktiven Stream zu beeinflussen
         const devices = await navigator.mediaDevices.enumerateDevices();
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
         // Zeige die tatsächlich verwendete Kamera an
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const videoTracks = stream.getVideoTracks();
         const selectedTrack = videoTracks[0];
         const selectedCameraText = document.getElementById('selected-camera');
@@ -85,6 +87,7 @@
 
         // Stream sofort beenden, um den AR-Stream nicht zu stören
         stream.getTracks().forEach(track => track.stop());
+
     } catch (error) {
         console.error('Fehler beim Aktualisieren der Kamera-Info:', error);
     }
@@ -92,9 +95,10 @@
 
 window.onload = () => {
     updateCameraText();
-    // Nur die Kamera-Informationen alle 10 Sekunden aktualisieren
+    // Kamera-Informationen alle 10 Sekunden aktualisieren
     setInterval(updateCameraText, 10000);
 };
+
 
   </script>
     
