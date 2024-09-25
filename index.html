@@ -23,12 +23,27 @@
             color: white;
             font-family: Arial, sans-serif;
         }
+        #camera-info {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
+    </div>
+    <div id="camera-info">
+        <h3>Verfügbare Kameras:</h3>
+        <ul id="camera-list"></ul>
+        <p id="selected-camera"></p>
     </div>
  
     <a-scene embedded arjs='sourceType: webcam;'>
