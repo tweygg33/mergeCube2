@@ -127,23 +127,21 @@ async function initCamera() {
         });
 
         // Die erste verfügbare Kamera auswählen
-        let selectedCamera = videoInputDevices[2]; 
+        let selectedCamera = videoInputDevices[1]; 
         const selectedCameraText = document.getElementById('selected-camera');
         selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
 
         // Setze die Constraints für die ausgewählte Kamera
-        // const constraints = {
-        //     video: {
-        //         deviceId: { exact: selectedCamera.deviceId },
-        //         width: { ideal: 1280 },
-        //         height: { ideal: 720 }
-        //     }
-        // };
+        const constraints = {
+            video: {
+                deviceId: { exact: selectedCamera.deviceId },
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        };
 
         // Videostream anfordern
-        // const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-        const newStream = await navigator.mediaDevices.getUserMedia({ video: true });
-
+        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
         const video = document.createElement('video');
         video.srcObject = newStream;
         video.setAttribute('autoplay', '');
