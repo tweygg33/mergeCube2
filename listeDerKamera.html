@@ -66,8 +66,12 @@
     </a-scene>
 
     <script>
+    let isCameraInitialized = false; // Variable zur Verhinderung mehrfacher Initialisierungen
+
     async function initCamera() {
         try {
+            if (isCameraInitialized) return; // Verhindere erneute Initialisierung
+            
             // Zuerst die Erlaubnis zum Kamerazugriff einholen
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
@@ -78,24 +82,23 @@
             
             // Liste der Kameras im HTML anzeigen
             const cameraList = document.getElementById('camera-list');
+            cameraList.innerHTML = ''; // Vorherige Liste leeren
             videoInputDevices.forEach((device, index) => {
                 const li = document.createElement('li');
                 li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
                 cameraList.appendChild(li);
             });
 
-            // Versuchen, Rückkameras zu finden (mehrere Rückkameras unterstützen)
+            // Rückkamera auswählen, falls vorhanden
             let backCameras = videoInputDevices.filter(device => 
                 device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
 
             const selectedCameraText = document.getElementById('selected-camera');
             
             if (backCameras.length > 0) {
-                // Falls mehrere Rückkameras vorhanden sind, wähle die erste
                 const selectedCamera = backCameras[0];
                 selectedCameraText.textContent = `Rückkamera gefunden: ${selectedCamera.label}`;
                 
-                // Setze die Constraints für die ausgewählte Rückkamera
                 const constraints = {
                     video: {
                         deviceId: { exact: selectedCamera.deviceId },
@@ -104,7 +107,6 @@
                     }
                 };
 
-                // Videostream anfordern
                 const newStream = await navigator.mediaDevices.getUserMedia(constraints);
                 const video = document.createElement('video');
                 video.srcObject = newStream;
@@ -125,6 +127,8 @@
             } else {
                 selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
             }
+            
+            isCameraInitialized = true; // Kamera wurde initialisiert
         } catch (error) {
             console.error('Fehler beim Zugriff auf die Kamera:', error);
         }
@@ -132,7 +136,9 @@
 
     // Nur starten, wenn der Benutzer den Zugriff erlaubt hat
     document.addEventListener('click', () => {
-        initCamera();
+        if (!isCameraInitialized) {
+            initCamera();
+        }
     });
 
     </script>
