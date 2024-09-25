@@ -63,45 +63,40 @@
         <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
-    <script>
-        async function updateCameraInfo() {
-            try {
-                // Geräte auflisten, aber den Stream nicht stoppen
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-                
-                // Liste der Kameras anzeigen
-                const cameraList = document.getElementById('camera-list');
-                cameraList.innerHTML = ''; // Vorherige Liste leeren
-                videoInputDevices.forEach((device, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
-                    cameraList.appendChild(li);
-                });
+  <script>
+    async function updateCameraText() {
+    try {
+        // Geräte auflisten, ohne den aktiven Stream zu beeinflussen
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-                // Zeige die tatsächlich verwendete Kamera an
-                const selectedCameraText = document.getElementById('selected-camera');
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const videoTracks = stream.getVideoTracks();
-                const selectedTrack = videoTracks[0];
-                const usedCamera = videoInputDevices.find(device => device.label === selectedTrack.label);
+        // Zeige die tatsächlich verwendete Kamera an
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const videoTracks = stream.getVideoTracks();
+        const selectedTrack = videoTracks[0];
+        const selectedCameraText = document.getElementById('selected-camera');
+        const usedCamera = videoInputDevices.find(device => device.label === selectedTrack.label);
 
-                if (usedCamera) {
-                    selectedCameraText.textContent = `Verwendete Kamera: ${usedCamera.label}`;
-                } else {
-                    selectedCameraText.textContent = `Verwendete Kamera: Unbekannt`;
-                }
-
-            } catch (error) {
-                console.error('Fehler beim Zugriff auf die Kamera:', error);
-            }
+        if (usedCamera) {
+            selectedCameraText.textContent = `Verwendete Kamera: ${usedCamera.label}`;
+        } else {
+            selectedCameraText.textContent = `Verwendete Kamera: Unbekannt`;
         }
 
-        window.onload = () => {
-            updateCameraInfo();
-            // Kamera-Informationen alle 10 Sekunden aktualisieren
-            setInterval(updateCameraInfo, 10000);
-        };
-    </script>
+        // Stream sofort beenden, um den AR-Stream nicht zu stören
+        stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren der Kamera-Info:', error);
+    }
+}
+
+window.onload = () => {
+    updateCameraText();
+    // Nur die Kamera-Informationen alle 10 Sekunden aktualisieren
+    setInterval(updateCameraText, 10000);
+};
+
+  </script>
+    
 </body>
 </html>
