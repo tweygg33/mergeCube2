@@ -64,41 +64,51 @@
         <a-entity camera></a-entity>
     </a-scene>
   <script>
-   async function updateCameraText() {
+   async function forceFirstCamera() {
     try {
-        // Warte, bis der Benutzer den Kamerazugriff erlaubt
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-        // Geräte auflisten, ohne den aktiven Stream zu beeinflussen
+        // Geräte auflisten und die erste Kamera auswählen
         const devices = await navigator.mediaDevices.enumerateDevices();
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-
-        // Zeige die tatsächlich verwendete Kamera an
-        const videoTracks = stream.getVideoTracks();
-        const selectedTrack = videoTracks[0];
-        const selectedCameraText = document.getElementById('selected-camera');
-        const usedCamera = videoInputDevices.find(device => device.label === selectedTrack.label);
-
-        if (usedCamera) {
-            selectedCameraText.textContent = `Verwendete Kamera: ${usedCamera.label}`;
-        } else {
-            selectedCameraText.textContent = `Verwendete Kamera: Unbekannt`;
+        
+        if (videoInputDevices.length === 0) {
+            console.error('Keine Kameras gefunden.');
+            return;
         }
 
-        // Stream sofort beenden, um den AR-Stream nicht zu stören
-        stream.getTracks().forEach(track => track.stop());
+        // Wähle die erste Kamera
+        const firstCamera = videoInputDevices[0];
+        const constraints = {
+            video: {
+                deviceId: { exact: firstCamera.deviceId } // Erzwungene Nutzung der ersten Kamera
+            }
+        };
 
+        // Erlaube nur den Zugriff auf die erste Kamera
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const selectedCameraText = document.getElementById('selected-camera');
+        selectedCameraText.textContent = `Verwendete Kamera: ${firstCamera.label}`;
+
+        // Video-Stream für AR.js verwenden (falls nötig)
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = stream;
+        videoElement.play();
+        
+        // Füge den Stream dem AR.js System hinzu, wenn benötigt
+        const arSystem = document.querySelector('a-scene').systems['arjs'];
+        arSystem.sourceElement = videoElement;
+        arSystem._initSource = function () {
+            this.context.arController.setVideo(videoElement);
+            this.context.arController.setup(videoElement);
+        };
+        arSystem.start();
     } catch (error) {
-        console.error('Fehler beim Aktualisieren der Kamera-Info:', error);
+        console.error('Fehler beim Zugriff auf die Kamera:', error);
     }
 }
 
 window.onload = () => {
-    updateCameraText();
-    // Kamera-Informationen alle 10 Sekunden aktualisieren
-    setInterval(updateCameraText, 10000);
+    forceFirstCamera();
 };
-
 
   </script>
     
