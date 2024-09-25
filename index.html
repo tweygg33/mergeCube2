@@ -23,31 +23,12 @@
             color: white;
             font-family: Arial, sans-serif;
         }
-        #camera-info {
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #camera-list li {
-            cursor: pointer;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body>
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
-    </div>
-    <div id="camera-info">
-        <h3>Verfügbare Kameras:</h3>
-        <ul id="camera-list"></ul>
-        <p id="selected-camera">Keine Kamera ausgewählt</p>
     </div>
  
     <a-scene embedded arjs='sourceType: webcam;'>
@@ -110,77 +91,6 @@
         <!-- Camera -->
         <a-entity camera></a-entity>
     </a-scene>
-    
-    <script>
-        let videoInputDevices = [];
 
-        async function initCamera() {
-            try {
-                // Erlaubnis für Kamera-Zugriff einholen
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                stream.getTracks().forEach(track => track.stop());  // Stream stoppen, da wir nur die Erlaubnis benötigen
-
-                // Verfügbare Kameras auflisten
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-                
-                // Liste der Kameras anzeigen
-                const cameraList = document.getElementById('camera-list');
-                videoInputDevices.forEach((device, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}, ID: ${device.deviceId}`;
-                    li.addEventListener('click', () => selectCamera(device.deviceId));
-                    cameraList.appendChild(li);
-                });
-
-            } catch (error) {
-                console.error('Fehler beim Zugriff auf die Kamera:', error);
-            }
-        }
-
-        async function selectCamera(deviceId) {
-            try {
-                // Text anzeigen, welche Kamera ausgewählt wurde
-                const selectedCameraText = document.getElementById('selected-camera');
-                const selectedDevice = videoInputDevices.find(device => device.deviceId === deviceId);
-                selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbenannte Kamera'}`;
-
-                // Constraints für die ausgewählte Kamera setzen
-                const constraints = {
-                    video: {
-                        deviceId: { exact: deviceId },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                };
-
-                // Videostream für die ausgewählte Kamera anfordern
-                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.createElement('video');
-                video.srcObject = newStream;
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('playsinline', '');
-                document.body.appendChild(video);
-
-                video.onloadedmetadata = () => {
-                    const arSystem = document.querySelector('a-scene').systems['arjs'];
-                    arSystem.sourceElement = video;
-                    arSystem._initSource = function () {
-                        this.context.arController.setVideo(video);
-                        this.context.arController.setup(video);
-                    };
-                    arSystem.start();
-                };
-
-            } catch (error) {
-                console.error('Fehler beim Zugriff auf die ausgewählte Kamera:', error);
-            }
-        }
-
-        window.onload = () => {
-            initCamera();
-        };
-    </script>
 </body>
 </html>
