@@ -58,50 +58,7 @@
             </a-entity>
         </a-marker>
 
-        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
-            <a-entity id="model-container-2"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 -90 90">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
-            <a-entity id="model-container-3"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 90 -90">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
-            <a-entity id="model-container-4"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
-            <a-entity id="model-container-5"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="90 0 180">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
-            <a-entity id="model-container-6"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 0 180">
-            </a-entity>
-        </a-marker>
+        <!-- Weitere Marker hier -->
 
         <!-- Camera -->
         <a-entity camera></a-entity>
@@ -109,71 +66,44 @@
     <script>
         async function initCamera() {
             try {
-                // Zuerst die Erlaubnis zum Kamerazugriff einholen
+                // Erlaubnis zum Kamerazugriff einholen
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
-    
-                // Sobald der Zugriff erlaubt ist, Geräte auflisten
+                
+                // Die tatsächlich verwendete Kamera identifizieren
+                const videoTracks = stream.getVideoTracks();
+                const selectedTrack = videoTracks[0]; // Er nimmt die Kamera, die standardmäßig verwendet wird
+                
+                // Kameras auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
                 
-                // Liste der Kameras im HTML anzeigen
+                // Liste der Kameras anzeigen
                 const cameraList = document.getElementById('camera-list');
                 videoInputDevices.forEach((device, index) => {
                     const li = document.createElement('li');
                     li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
                     cameraList.appendChild(li);
                 });
-    
-                // Versuchen, Rückkameras zu finden (mehrere Rückkameras unterstützen)
-                let backCameras = videoInputDevices.filter(device => 
-                    device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
-    
+
+                // Zeige die tatsächlich verwendete Kamera an
                 const selectedCameraText = document.getElementById('selected-camera');
-                
-                if (backCameras.length > 0) {
-                    // Falls mehrere Rückkameras vorhanden sind, wähle die erste
-                    const selectedCamera = backCameras[0];
-                    selectedCameraText.textContent = `Rückkamera gefunden: ${selectedCamera.label}`;
-                    
-                    // Setze die Constraints für die ausgewählte Rückkamera
-                    const constraints = {
-                        video: {
-                            deviceId: { exact: selectedCamera.deviceId },
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        }
-                    };
-    
-                    // Videostream anfordern
-                    const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    const video = document.createElement('video');
-                    video.srcObject = newStream;
-                    video.setAttribute('autoplay', '');
-                    video.setAttribute('muted', '');
-                    video.setAttribute('playsinline', '');
-                    document.body.appendChild(video);
-    
-                    video.onloadedmetadata = () => {
-                        const arSystem = document.querySelector('a-scene').systems['arjs'];
-                        arSystem.sourceElement = video;
-                        arSystem._initSource = function () {
-                            this.context.arController.setVideo(video);
-                            this.context.arController.setup(video);
-                        };
-                        arSystem.start();
-                    };
+                const usedCamera = videoInputDevices.find(device => device.label === selectedTrack.label);
+                if (usedCamera) {
+                    selectedCameraText.textContent = `Verwendete Kamera: ${usedCamera.label}`;
                 } else {
-                    selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
+                    selectedCameraText.textContent = `Verwendete Kamera: Unbekannt`;
                 }
+
+                // Videostream stoppen, da wir ihn nur für die Erlaubnis benötigen
+                stream.getTracks().forEach(track => track.stop());
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
             }
         }
-    
+
         window.onload = () => {
             initCamera();
         };
-        </script>
+    </script>
 </body>
 </html>
