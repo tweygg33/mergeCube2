@@ -74,8 +74,7 @@
             
             // Zuerst die Erlaubnis zum Kamerazugriff einholen
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
-
+            
             // Sobald der Zugriff erlaubt ist, Geräte auflisten
             const devices = await navigator.mediaDevices.enumerateDevices();
             let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
