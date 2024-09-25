@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR.js Würfel mit QR-Codes</title>
-    <!-- Include A-Frame and AR.js -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
-
+    <!-- A-Frame 1.6.0 und AR.js 3.4.5 -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
  
     <style>
         body, html {
@@ -33,6 +32,7 @@
     </div>
  
     <a-scene embedded arjs='sourceType: webcam;'>
+
         <!-- Marker für die 6 Seiten eines Würfels -->
         <a-marker type="pattern" url="mc2.patt" id="marker1">
             <a-entity id="model-container-1"
