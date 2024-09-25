@@ -64,7 +64,7 @@
         <a-entity camera></a-entity>
     </a-scene>
     <script>
-        async function initCamera() {
+        async function updateCameraInfo() {
             try {
                 // Erlaubnis zum Kamerazugriff einholen
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -79,6 +79,7 @@
                 
                 // Liste der Kameras anzeigen
                 const cameraList = document.getElementById('camera-list');
+                cameraList.innerHTML = ''; // Vorherige Liste leeren
                 videoInputDevices.forEach((device, index) => {
                     const li = document.createElement('li');
                     li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
@@ -102,7 +103,9 @@
         }
 
         window.onload = () => {
-            initCamera();
+            updateCameraInfo();
+            // Kamera-Informationen alle 10 Sekunden aktualisieren
+            setInterval(updateCameraInfo, 10000);
         };
     </script>
 </body>
