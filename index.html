@@ -112,68 +112,44 @@
     try {
         // Zuerst die Erlaubnis zum Kamerazugriff einholen
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
 
-        // Geräte auflisten
+        // Sobald der Zugriff erlaubt ist, Geräte auflisten
         const devices = await navigator.mediaDevices.enumerateDevices();
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-        // Auswahlfeld für die Kameraauswahl erstellen
-        const cameraSelect = document.createElement('select');
+        // Liste der Kameras im HTML anzeigen
+        const cameraList = document.getElementById('camera-list');
         videoInputDevices.forEach((device, index) => {
-            const option = document.createElement('option');
-            option.value = device.deviceId;
-            option.text = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}`;
-            cameraSelect.appendChild(option);
-        });
-        document.getElementById('camera-info').appendChild(cameraSelect);
-
-        // Event-Listener für Kameraänderung hinzufügen
-        cameraSelect.addEventListener('change', async (event) => {
-            const deviceId = event.target.value;
-            await startCamera(deviceId);
+            const li = document.createElement('li');
+            li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
+            cameraList.appendChild(li);
         });
 
-        // Standardkamera starten
-        await startCamera(videoInputDevices[1].deviceId); // Passen Sie den Index an
+        // Die "Ultra-Triple-Kamera" auswählen
+        let selectedCamera = videoInputDevices[1]; // Passen Sie den Index entsprechend an
+        const selectedCameraText = document.getElementById('selected-camera');
+        selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
 
-    } catch (error) {
-        console.error('Fehler beim Zugriff auf die Kamera:', error);
-    }
-}
-
-async function startCamera(deviceId) {
-    try {
-        // Setzen der Constraints für die ausgewählte Kamera
+        // Setzen der Constraints für die Standardlinse ohne Zoom
         const constraints = {
             video: {
-                deviceId: { exact: deviceId },
+                deviceId: { exact: selectedCamera.deviceId },
                 width: { ideal: 1280 },
                 height: { ideal: 720 },
                 facingMode: 'environment'
+                // Keine erweiterten Constraints
             }
         };
 
-        // Vorherigen Videostream stoppen, falls vorhanden
-        if (window.currentStream) {
-            window.currentStream.getTracks().forEach(track => track.stop());
-        }
-
-        // Neuen Videostream anfordern
+        // Videostream anfordern
         const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-        window.currentStream = newStream; // Speichern, um später stoppen zu können
-
-        // Videoelement erstellen oder aktualisieren
-        let video = document.getElementById('videoElement');
-        if (!video) {
-            video = document.createElement('video');
-            video.id = 'videoElement';
-            video.setAttribute('autoplay', '');
-            video.setAttribute('muted', '');
-            video.setAttribute('playsinline', '');
-            document.body.appendChild(video);
-        }
+        const video = document.createElement('video');
         video.srcObject = newStream;
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        document.body.appendChild(video);
 
         video.onloadedmetadata = () => {
             // AR.js mit dem ausgewählten Videoelement initialisieren
@@ -186,7 +162,7 @@ async function startCamera(deviceId) {
             arSystem.start();
         };
     } catch (error) {
-        console.error('Fehler beim Starten der Kamera:', error);
+        console.error('Fehler beim Zugriff auf die Kamera:', error);
     }
 }
 
