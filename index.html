@@ -66,14 +66,7 @@
     <script>
         async function updateCameraInfo() {
             try {
-                // Erlaubnis zum Kamerazugriff einholen
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                
-                // Die tatsächlich verwendete Kamera identifizieren
-                const videoTracks = stream.getVideoTracks();
-                const selectedTrack = videoTracks[0]; // Er nimmt die Kamera, die standardmäßig verwendet wird
-                
-                // Kameras auflisten
+                // Geräte auflisten, aber den Stream nicht stoppen
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
                 
@@ -88,15 +81,17 @@
 
                 // Zeige die tatsächlich verwendete Kamera an
                 const selectedCameraText = document.getElementById('selected-camera');
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const videoTracks = stream.getVideoTracks();
+                const selectedTrack = videoTracks[0];
                 const usedCamera = videoInputDevices.find(device => device.label === selectedTrack.label);
+
                 if (usedCamera) {
                     selectedCameraText.textContent = `Verwendete Kamera: ${usedCamera.label}`;
                 } else {
                     selectedCameraText.textContent = `Verwendete Kamera: Unbekannt`;
                 }
 
-                // Videostream stoppen, da wir ihn nur für die Erlaubnis benötigen
-                stream.getTracks().forEach(track => track.stop());
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
             }
