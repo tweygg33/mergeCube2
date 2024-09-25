@@ -127,7 +127,7 @@ async function initCamera() {
         });
 
         // Die erste verfügbare Kamera auswählen
-        let selectedCamera = videoInputDevices[0]; 
+        let selectedCamera = videoInputDevices[1]; 
         const selectedCameraText = document.getElementById('selected-camera');
         selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
 
