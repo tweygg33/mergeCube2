@@ -125,47 +125,39 @@
                     cameraList.appendChild(li);
                 });
     
-                // Versuchen, Rückkameras zu finden (mehrere Rückkameras unterstützen)
-                let backCameras = videoInputDevices.filter(device => 
-                    device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('facing'));
-    
+                // Wähle die erste verfügbare Kamera
                 const selectedCameraText = document.getElementById('selected-camera');
+                const selectedCamera = videoInputDevices[0];  // Immer die erste Kamera auswählen
+                selectedCameraText.textContent = `Zugriff auf: ${selectedCamera.label}`;
                 
-                if (backCameras.length > 0) {
-                    // Falls mehrere Rückkameras vorhanden sind, wähle die erste
-                    const selectedCamera = backCameras[0];
-                    selectedCameraText.textContent = `Rückkamera gefunden: ${selectedCamera.label}`;
-                    
-                    // Setze die Constraints für die ausgewählte Rückkamera
-                    const constraints = {
-                        video: {
-                            deviceId: { exact: selectedCamera.deviceId },
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        }
-                    };
+                // Setze die Constraints für die ausgewählte Kamera
+                const constraints = {
+                    video: {
+                        deviceId: { exact: selectedCamera.deviceId },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
     
-                    // Videostream anfordern
-                    const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    const video = document.createElement('video');
-                    video.srcObject = newStream;
-                    video.setAttribute('autoplay', '');
-                    video.setAttribute('muted', '');
-                    video.setAttribute('playsinline', '');
-                    document.body.appendChild(video);
+                // Videostream anfordern
+                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.createElement('video');
+                video.srcObject = newStream;
+                video.setAttribute('autoplay', '');
+                video.setAttribute('muted', '');
+                video.setAttribute('playsinline', '');
+                document.body.appendChild(video);
     
-                    video.onloadedmetadata = () => {
-                        const arSystem = document.querySelector('a-scene').systems['arjs'];
-                        arSystem.sourceElement = video;
-                        arSystem._initSource = function () {
-                            this.context.arController.setVideo(video);
-                            this.context.arController.setup(video);
-                        };
-                        arSystem.start();
+                video.onloadedmetadata = () => {
+                    const arSystem = document.querySelector('a-scene').systems['arjs'];
+                    arSystem.sourceElement = video;
+                    arSystem._initSource = function () {
+                        this.context.arController.setVideo(video);
+                        this.context.arController.setup(video);
                     };
-                } else {
-                    selectedCameraText.textContent = "Keine Rückkamera gefunden, Standardkamera wird verwendet.";
-                }
+                    arSystem.start();
+                };
+    
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
             }
@@ -174,6 +166,6 @@
         window.onload = () => {
             initCamera();
         };
-        </script>
+    </script>
 </body>
 </html>
