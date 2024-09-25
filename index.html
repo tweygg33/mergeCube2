@@ -113,11 +113,11 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
 
-                // Geräte auflisten
+                // Geräte auflisten (optional)
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-                // Liste der Kameras im HTML anzeigen
+                // Liste der Kameras im HTML anzeigen (optional)
                 const cameraList = document.getElementById('camera-list');
                 videoInputDevices.forEach((device, index) => {
                     const li = document.createElement('li');
@@ -125,31 +125,17 @@
                     cameraList.appendChild(li);
                 });
 
-                // Kamera mit facingMode 'environment' suchen
-                let selectedCamera;
-                for (let device of videoInputDevices) {
-                    // Versuch, die rückseitige Kamera anhand des Namens zu identifizieren
-                    if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('umgebung') || device.label.toLowerCase().includes('environment')) {
-                        selectedCamera = device;
-                        break;
-                    }
-                }
-
-                // Wenn keine passende Kamera gefunden wurde, verwenden Sie die erste verfügbare Kamera
-                if (!selectedCamera) {
-                    selectedCamera = videoInputDevices[0];
-                }
-
-                // Anzeige der aktiven Kamera
+                // Anzeige der aktiven Kamera (optional)
                 const selectedCameraText = document.getElementById('selected-camera');
-                selectedCameraText.textContent = `Aktive Kamera: ${selectedCamera.label || 'Unbenannte Kamera'}`;
+                selectedCameraText.textContent = `Aktive Kamera: Standard-Rückkamera`;
 
-                // Setzen der Constraints mit der spezifischen deviceId
+                // Setzen der Constraints, um die Standard-Rückkamera zu verwenden
                 const constraints = {
                     video: {
-                        deviceId: { exact: selectedCamera.deviceId },
+                        facingMode: { exact: 'environment' },
                         width: { ideal: 1280 },
                         height: { ideal: 720 }
+                        // Keine deviceId-Constraint
                     }
                 };
 
@@ -174,6 +160,38 @@
                 };
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
+
+                // Fallback, falls die exakte facingMode-Constraint nicht erfüllt werden kann
+                if (error.name === 'OverconstrainedError' || error.name === 'NotFoundError') {
+                    try {
+                        const fallbackConstraints = {
+                            video: {
+                                facingMode: { ideal: 'environment' },
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            }
+                        };
+                        const newStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+                        const video = document.createElement('video');
+                        video.srcObject = newStream;
+                        video.setAttribute('autoplay', '');
+                        video.setAttribute('muted', '');
+                        video.setAttribute('playsinline', '');
+                        document.body.appendChild(video);
+
+                        video.onloadedmetadata = () => {
+                            const arSystem = document.querySelector('a-scene').systems['arjs'];
+                            arSystem.sourceElement = video;
+                            arSystem._initSource = function () {
+                                this.context.arController.setVideo(video);
+                                this.context.arController.setup(video);
+                            };
+                            arSystem.start();
+                        };
+                    } catch (fallbackError) {
+                        console.error('Fehler beim Fallback-Kamerazugriff:', fallbackError);
+                    }
+                }
             }
         }
 
