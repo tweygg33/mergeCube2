@@ -64,8 +64,11 @@
         <a-entity camera></a-entity>
     </a-scene>
   <script>
-   async function forceFirstCamera() {
+  async function updateCameraText() {
     try {
+        // Warte auf die Benutzererlaubnis, um auf die Kamera zuzugreifen
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
         // Geräte auflisten und die erste Kamera auswählen
         const devices = await navigator.mediaDevices.enumerateDevices();
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
@@ -76,39 +79,32 @@
         }
 
         // Wähle die erste Kamera
-        const firstCamera = videoInputDevices[1];
-        const constraints = {
-            video: {
-                deviceId: { exact: firstCamera.deviceId } // Erzwungene Nutzung der ersten Kamera
-            }
-        };
-
-        // Erlaube nur den Zugriff auf die erste Kamera
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const firstCamera = videoInputDevices[0];
         const selectedCameraText = document.getElementById('selected-camera');
         selectedCameraText.textContent = `Verwendete Kamera: ${firstCamera.label}`;
 
-        // Video-Stream für AR.js verwenden (falls nötig)
-        const videoElement = document.createElement('video');
-        videoElement.srcObject = stream;
-        videoElement.play();
-        
-        // Füge den Stream dem AR.js System hinzu, wenn benötigt
-        const arSystem = document.querySelector('a-scene').systems['arjs'];
-        arSystem.sourceElement = videoElement;
-        arSystem._initSource = function () {
-            this.context.arController.setVideo(videoElement);
-            this.context.arController.setup(videoElement);
-        };
-        arSystem.start();
+        // Stream sofort beenden, um den AR-Stream nicht zu stören
+        stream.getTracks().forEach(track => track.stop());
+
     } catch (error) {
         console.error('Fehler beim Zugriff auf die Kamera:', error);
     }
 }
 
 window.onload = () => {
-    forceFirstCamera();
+    const button = document.createElement('button');
+    button.textContent = 'Kamerazugriff erlauben';
+    button.style.position = 'absolute';
+    button.style.top = '20px';
+    button.style.left = '20px';
+    document.body.appendChild(button);
+
+    button.addEventListener('click', () => {
+        updateCameraText();
+        button.remove(); // Entfernt den Button nach dem Drücken
+    });
 };
+
 
   </script>
     
