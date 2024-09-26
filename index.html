@@ -22,6 +22,7 @@
             left: 10px;
             color: white;
             font-family: Arial, sans-serif;
+            z-index: 10;
         }
         #camera-info {
             position: absolute;
@@ -32,6 +33,9 @@
             background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 5px;
+            z-index: 10;
+            max-height: 80vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -43,7 +47,7 @@
     <div id="camera-info">
         <h3>Verfügbare Kameras:</h3>
         <ul id="camera-list"></ul>
-        <p id="selected-camera"></p>
+        <p id="selected-camera">Aktive Kamera: Lädt...</p>
     </div>
 
     <a-scene embedded arjs='sourceType: webcam;'>
@@ -110,26 +114,22 @@
         async function initCamera() {
             try {
                 // Zuerst die Erlaubnis zum Kamerazugriff einholen
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                stream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
+                const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
 
-                // Geräte auflisten (optional)
+                // Geräte auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-                // Liste der Kameras im HTML anzeigen (optional)
+                // Liste der Kameras im HTML anzeigen
                 const cameraList = document.getElementById('camera-list');
                 videoInputDevices.forEach((device, index) => {
                     const li = document.createElement('li');
-                    li.textContent = `Kamera ${index + 1}: ${device.label}, ID: ${device.deviceId}`;
+                    li.textContent = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}, ID: ${device.deviceId}`;
                     cameraList.appendChild(li);
                 });
 
-                // Anzeige der aktiven Kamera (optional)
-                const selectedCameraText = document.getElementById('selected-camera');
-                selectedCameraText.textContent = `Aktive Kamera: Standard-Rückkamera`;
-
-                // Setzen der Constraints, um die Standard-Rückkamera zu verwenden
+                // Constraints setzen, um die Umgebungskamera (Rückkamera) zu verwenden
                 const constraints = {
                     video: {
                         facingMode: { exact: 'environment' },
@@ -139,59 +139,59 @@
                     }
                 };
 
-                // Videostream anfordern
-                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                // Versuche, den Stream mit den gesetzten Constraints zu bekommen
+                let selectedStream;
+                let selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rück') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back'));
+
+                try {
+                    selectedStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (error) {
+                    console.warn('Spezifische facingMode nicht verfügbar, versuche allgemeines Environment Camera:', error);
+                    // Fallback: Verwende die erste verfügbare Environment Kamera
+                    selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back')) || videoInputDevices[0];
+                    if (selectedDevice) {
+                        selectedStream = await navigator.mediaDevices.getUserMedia({
+                            video: { deviceId: { exact: selectedDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                        });
+                    } else {
+                        throw new Error('Keine geeignete Kamera gefunden.');
+                    }
+                }
+
+                // Videoelement erstellen und den Stream zuweisen
                 const video = document.createElement('video');
-                video.srcObject = newStream;
+                video.srcObject = selectedStream;
                 video.setAttribute('autoplay', '');
                 video.setAttribute('muted', '');
                 video.setAttribute('playsinline', '');
+                video.style.display = 'none';  // Videoelement verstecken
                 document.body.appendChild(video);
 
+                // Aktualisiere die ausgewählte Kamera-Anzeige
+                const selectedCameraText = document.getElementById('selected-camera');
+                if (selectedDevice) {
+                    selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                } else {
+                    selectedCameraText.textContent = 'Aktive Kamera: Unbekannt';
+                }
+
+                // Sobald das Video geladen ist, initialisiere AR.js mit diesem Video
                 video.onloadedmetadata = () => {
-                    // AR.js mit dem ausgewählten Videoelement initialisieren
+                    video.play();
                     const arSystem = document.querySelector('a-scene').systems['arjs'];
                     arSystem.sourceElement = video;
-                    arSystem._initSource = function () {
-                        this.context.arController.setVideo(video);
-                        this.context.arController.setup(video);
+                    arSystem.context.source = {
+                        sourceType: 'video',
+                        sourceWidth: video.videoWidth,
+                        sourceHeight: video.videoHeight,
+                        source: video
                     };
-                    arSystem.start();
+                    arSystem.initialize();
                 };
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
-
-                // Fallback, falls die exakte facingMode-Constraint nicht erfüllt werden kann
-                if (error.name === 'OverconstrainedError' || error.name === 'NotFoundError') {
-                    try {
-                        const fallbackConstraints = {
-                            video: {
-                                facingMode: { ideal: 'environment' },
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            }
-                        };
-                        const newStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
-                        const video = document.createElement('video');
-                        video.srcObject = newStream;
-                        video.setAttribute('autoplay', '');
-                        video.setAttribute('muted', '');
-                        video.setAttribute('playsinline', '');
-                        document.body.appendChild(video);
-
-                        video.onloadedmetadata = () => {
-                            const arSystem = document.querySelector('a-scene').systems['arjs'];
-                            arSystem.sourceElement = video;
-                            arSystem._initSource = function () {
-                                this.context.arController.setVideo(video);
-                                this.context.arController.setup(video);
-                            };
-                            arSystem.start();
-                        };
-                    } catch (fallbackError) {
-                        console.error('Fehler beim Fallback-Kamerazugriff:', fallbackError);
-                    }
-                }
+                const selectedCameraText = document.getElementById('selected-camera');
+                selectedCameraText.textContent = 'Aktive Kamera: Fehler beim Zugriff';
             }
         }
 
