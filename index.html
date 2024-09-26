@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR.js Würfel mit QR-Codes</title>
-    <!-- A-Frame 1.6.0 und AR.js 3.4.5 -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
-
     <style>
         body, html {
             margin: 0;
@@ -15,6 +11,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            background-color: black; /* Hintergrundfarbe für bessere Sichtbarkeit */
         }
         #info {
             position: absolute;
@@ -30,12 +27,36 @@
             left: 10px;
             color: white;
             font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
             z-index: 10;
             max-height: 80vh;
             overflow-y: auto;
+            width: 300px;
+        }
+        #camera-select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #start-ar-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #start-ar-button:hover {
+            background-color: #218838;
+        }
+        #ar-container {
+            display: none; /* Versteckt die AR-Szene initial */
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -46,157 +67,218 @@
     </div>
     <div id="camera-info">
         <h3>Verfügbare Kameras:</h3>
-        <ul id="camera-list"></ul>
-        <p id="selected-camera">Aktive Kamera: Lädt...</p>
+        <select id="camera-select"></select>
+        <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p>
+        <button id="start-ar-button">AR starten</button>
     </div>
 
-    <a-scene embedded arjs='sourceType: webcam;'>
-        <!-- Marker für die 6 Seiten eines Würfels -->
-        <a-marker type="pattern" url="mc2.patt" id="marker1">
-            <a-entity id="model-container-1"
-                      gltf-model="url(ekana_stadium_low_poly_lucknow_city_game_asset.glb)"
-                      scale="0.03 0.03 0.03"
-                      position="0 0 0"
-                      rotation="-60 0 0">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
-            <a-entity id="model-container-2"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 -90 90">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
-            <a-entity id="model-container-3"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 90 -90">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
-            <a-entity id="model-container-4"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
-            <a-entity id="model-container-5"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="90 0 180">
-            </a-entity>
-        </a-marker>
-
-        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
-            <a-entity id="model-container-6"
-                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                      scale="0.4 0.4 0.4"
-                      position="0 0 0"
-                      rotation="0 0 180">
-            </a-entity>
-        </a-marker>
-
-        <!-- Kamera -->
-        <a-entity camera></a-entity>
-    </a-scene>
+    <div id="ar-container">
+        <!-- AR.js scene wird hier dynamisch geladen -->
+    </div>
 
     <script>
-        async function initCamera() {
+        // Utility-Funktion, um URL-Parameter abzurufen
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Funktion zur Initialisierung der Kameraauswahl
+        async function initCameraSelection() {
             try {
-                // Zuerst die Erlaubnis zum Kamerazugriff einholen
+                // Erlaubnis zum Kamerazugriff einholen
                 const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
+                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
 
                 // Geräte auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
+                if (videoInputDevices.length === 0) {
+                    throw new Error('Keine Videokameras gefunden.');
+                }
+
                 // Liste der Kameras im HTML anzeigen
-                const cameraList = document.getElementById('camera-list');
+                const cameraSelect = document.getElementById('camera-select');
                 videoInputDevices.forEach((device, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}, ID: ${device.deviceId}`;
-                    cameraList.appendChild(li);
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    cameraSelect.appendChild(option);
                 });
 
-                // Constraints setzen, um die Umgebungskamera (Rückkamera) zu verwenden
-                const constraints = {
-                    video: {
-                        facingMode: { exact: 'environment' },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                        // Keine deviceId-Constraint
-                    }
-                };
+                // Automatisch die erste Umgebungskamera auswählen, falls vorhanden
+                let selectedDevice = videoInputDevices.find(device => 
+                    device.label.toLowerCase().includes('rear') || 
+                    device.label.toLowerCase().includes('back') || 
+                    device.label.toLowerCase().includes('rück')
+                ) || videoInputDevices[0];
 
-                // Versuche, den Stream mit den gesetzten Constraints zu bekommen
-                let selectedStream;
-                let selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rück') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back'));
+                cameraSelect.value = selectedDevice.deviceId;
+                document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
 
-                try {
-                    selectedStream = await navigator.mediaDevices.getUserMedia(constraints);
-                } catch (error) {
-                    console.warn('Spezifische facingMode nicht verfügbar, versuche allgemeines Environment Camera:', error);
-                    // Fallback: Verwende die erste verfügbare Environment Kamera
-                    selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back')) || videoInputDevices[0];
+                // Event Listener für Kameraauswahl
+                cameraSelect.addEventListener('change', () => {
+                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+                    document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                });
+
+                // Event Listener für "AR starten" Button
+                document.getElementById('start-ar-button').addEventListener('click', () => {
                     if (selectedDevice) {
-                        selectedStream = await navigator.mediaDevices.getUserMedia({
-                            video: { deviceId: { exact: selectedDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
-                        });
+                        // Seite neu laden mit der ausgewählten cameraId als URL-Parameter
+                        const newUrl = new URL(window.location.href);
+                        newUrl.searchParams.set('cameraId', selectedDevice.deviceId);
+                        window.location.href = newUrl.toString();
                     } else {
-                        throw new Error('Keine geeignete Kamera gefunden.');
+                        alert('Bitte wähle eine Kamera aus.');
                     }
-                }
+                });
 
-                // Videoelement erstellen und den Stream zuweisen
-                const video = document.createElement('video');
-                video.srcObject = selectedStream;
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('playsinline', '');
-                video.style.display = 'none';  // Videoelement verstecken
-                document.body.appendChild(video);
-
-                // Aktualisiere die ausgewählte Kamera-Anzeige
-                const selectedCameraText = document.getElementById('selected-camera');
-                if (selectedDevice) {
-                    selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
-                } else {
-                    selectedCameraText.textContent = 'Aktive Kamera: Unbekannt';
-                }
-
-                // Sobald das Video geladen ist, initialisiere AR.js mit diesem Video
-                video.onloadedmetadata = () => {
-                    video.play();
-                    const arSystem = document.querySelector('a-scene').systems['arjs'];
-                    arSystem.sourceElement = video;
-                    arSystem.context.source = {
-                        sourceType: 'video',
-                        sourceWidth: video.videoWidth,
-                        sourceHeight: video.videoHeight,
-                        source: video
-                    };
-                    arSystem.initialize();
-                };
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
-                const selectedCameraText = document.getElementById('selected-camera');
-                selectedCameraText.textContent = 'Aktive Kamera: Fehler beim Zugriff';
+                document.getElementById('selected-camera').textContent = 'Fehler beim Zugriff auf die Kamera.';
             }
         }
 
+        // Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
+        function overrideGetUserMedia(selectedDeviceId) {
+            const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                if (constraints.video && selectedDeviceId) {
+                    // Setze deviceId in den Video-Constraints
+                    constraints.video = {
+                        ...constraints.video,
+                        deviceId: { exact: selectedDeviceId }
+                    };
+                }
+                return originalGetUserMedia(constraints);
+            };
+        }
+
+        // Funktion zum dynamischen Laden der A-Frame- und AR.js-Skripte
+        function loadScripts() {
+            return new Promise((resolve, reject) => {
+                const aFrameScript = document.createElement('script');
+                aFrameScript.src = "https://aframe.io/releases/1.6.0/aframe.min.js";
+                aFrameScript.onload = () => {
+                    const arjsScript = document.createElement('script');
+                    arjsScript.src = "https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js";
+                    arjsScript.onload = () => {
+                        resolve();
+                    };
+                    arjsScript.onerror = () => reject(new Error('Fehler beim Laden der AR.js-Bibliothek.'));
+                    document.head.appendChild(arjsScript);
+                };
+                aFrameScript.onerror = () => reject(new Error('Fehler beim Laden der A-Frame-Bibliothek.'));
+                document.head.appendChild(aFrameScript);
+            });
+        }
+
+        // Funktion zur Initialisierung der AR-Szene
+        async function initializeARScene() {
+            const cameraId = getUrlParameter('cameraId');
+
+            if (cameraId) {
+                // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
+                overrideGetUserMedia(cameraId);
+
+                // Dynamisch A-Frame und AR.js Skripte laden
+                try {
+                    await loadScripts();
+                } catch (error) {
+                    console.error(error);
+                    alert('Fehler beim Laden der AR-Bibliotheken.');
+                    return;
+                }
+
+                // Zeige den AR-Container
+                document.getElementById('ar-container').style.display = 'block';
+                // Verstecke die Kameraauswahl und Info
+                document.getElementById('camera-info').style.display = 'none';
+                document.getElementById('info').style.display = 'none';
+
+                // Erstelle die A-Frame Szene
+                const arContainer = document.getElementById('ar-container');
+                arContainer.innerHTML = `
+                    <a-scene embedded arjs='sourceType: webcam;'>
+                        <!-- Marker für die 6 Seiten eines Würfels -->
+                        <a-marker type="pattern" url="mc2.patt" id="marker1">
+                            <a-entity id="model-container-1"
+                                      gltf-model="url(ekana_stadium_low_poly_lucknow_city_game_asset.glb)"
+                                      scale="0.03 0.03 0.03"
+                                      position="0 0 0"
+                                      rotation="-60 0 0">
+                            </a-entity>
+                        </a-marker>
+
+                        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
+                            <a-entity id="model-container-2"
+                                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                                      scale="0.4 0.4 0.4"
+                                      position="0 0 0"
+                                      rotation="0 -90 90">
+                            </a-entity>
+                        </a-marker>
+
+                        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
+                            <a-entity id="model-container-3"
+                                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                                      scale="0.4 0.4 0.4"
+                                      position="0 0 0"
+                                      rotation="0 90 -90">
+                            </a-entity>
+                        </a-marker>
+
+                        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
+                            <a-entity id="model-container-4"
+                                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                                      scale="0.4 0.4 0.4"
+                                      position="0 0 0"
+                                      rotation="-90 0 0">
+                            </a-entity>
+                        </a-marker>
+
+                        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
+                            <a-entity id="model-container-5"
+                                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                                      scale="0.4 0.4 0.4"
+                                      position="0 0 0"
+                                      rotation="90 0 180">
+                            </a-entity>
+                        </a-marker>
+
+                        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
+                            <a-entity id="model-container-6"
+                                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                                      scale="0.4 0.4 0.4"
+                                      position="0 0 0"
+                                      rotation="0 0 180">
+                            </a-entity>
+                        </a-marker>
+
+                        <!-- Kamera -->
+                        <a-entity camera></a-entity>
+                    </a-scene>
+                `;
+            } else {
+                // Zeige die Kameraauswahl UI
+                document.getElementById('camera-info').style.display = 'block';
+                document.getElementById('ar-container').style.display = 'none';
+            }
+        }
+
+        // Beim Laden der Seite entscheidet, ob die AR-Szene initialisiert werden soll oder die Kameraauswahl angezeigt wird
         window.onload = () => {
-            initCamera();
+            const cameraId = getUrlParameter('cameraId');
+            if (cameraId) {
+                initializeARScene();
+            } else {
+                initCameraSelection();
+            }
         };
     </script>
 </body>
