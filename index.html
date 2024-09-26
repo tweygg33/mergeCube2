@@ -344,6 +344,7 @@
                         // Falls eine cameraId vorhanden ist, überschreibe getUserMedia und initialisiere die AR-Szene
                         overrideGetUserMedia(cameraId);
                         initializeARScene();
+                        initCameraSelection();
                     } else {
                         // Andernfalls zeige die Kameraauswahl UI
                         initCameraSelection();
