@@ -15,7 +15,6 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: black; /* Hintergrundfarbe für bessere Sichtbarkeit */
         }
         #info {
             position: absolute;
@@ -31,36 +30,12 @@
             left: 10px;
             color: white;
             font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
             z-index: 10;
             max-height: 80vh;
             overflow-y: auto;
-            width: 300px;
-        }
-        #camera-select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        #start-ar-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #start-ar-button:hover {
-            background-color: #218838;
-        }
-        #ar-container {
-            display: none; /* Versteckt die AR-Szene initial */
-            width: 100%;
-            height: 100%;
         }
     </style>
 </head>
@@ -71,213 +46,157 @@
     </div>
     <div id="camera-info">
         <h3>Verfügbare Kameras:</h3>
-        <select id="camera-select"></select>
-        <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p>
-        <button id="start-ar-button">AR starten</button>
+        <ul id="camera-list"></ul>
+        <p id="selected-camera">Aktive Kamera: Lädt...</p>
     </div>
 
-    <div id="ar-container">
-        <a-scene id="ar-scene" embedded arjs='sourceType: webcam;'>
-            <!-- Marker für die 6 Seiten eines Würfels -->
-            <a-marker type="pattern" url="mc2.patt" id="marker1">
-                <a-entity id="model-container-1"
-                          gltf-model="url(ekana_stadium_low_poly_lucknow_city_game_asset.glb)"
-                          scale="0.03 0.03 0.03"
-                          position="0 0 0"
-                          rotation="-60 0 0">
-                </a-entity>
-            </a-marker>
+    <a-scene embedded arjs='sourceType: webcam;'>
+        <!-- Marker für die 6 Seiten eines Würfels -->
+        <a-marker type="pattern" url="mc2.patt" id="marker1">
+            <a-entity id="model-container-1"
+                      gltf-model="url(ekana_stadium_low_poly_lucknow_city_game_asset.glb)"
+                      scale="0.03 0.03 0.03"
+                      position="0 0 0"
+                      rotation="-60 0 0">
+            </a-entity>
+        </a-marker>
 
-            <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
-                <a-entity id="model-container-2"
-                          gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                          scale="0.4 0.4 0.4"
-                          position="0 0 0"
-                          rotation="0 -90 90">
-                </a-entity>
-            </a-marker>
+        <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
+            <a-entity id="model-container-2"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0"
+                      rotation="0 -90 90">
+            </a-entity>
+        </a-marker>
 
-            <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
-                <a-entity id="model-container-3"
-                          gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                          scale="0.4 0.4 0.4"
-                          position="0 0 0"
-                          rotation="0 90 -90">
-                </a-entity>
-            </a-marker>
+        <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
+            <a-entity id="model-container-3"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0"
+                      rotation="0 90 -90">
+            </a-entity>
+        </a-marker>
 
-            <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
-                <a-entity id="model-container-4"
-                          gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                          scale="0.4 0.4 0.4"
-                          position="0 0 0"
-                          rotation="-90 0 0">
-                </a-entity>
-            </a-marker>
+        <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
+            <a-entity id="model-container-4"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0"
+                      rotation="-90 0 0">
+            </a-entity>
+        </a-marker>
 
-            <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
-                <a-entity id="model-container-5"
-                          gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                          scale="0.4 0.4 0.4"
-                          position="0 0 0"
-                          rotation="90 0 180">
-                </a-entity>
-            </a-marker>
+        <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
+            <a-entity id="model-container-5"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0"
+                      rotation="90 0 180">
+            </a-entity>
+        </a-marker>
 
-            <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
-                <a-entity id="model-container-6"
-                          gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                          scale="0.4 0.4 0.4"
-                          position="0 0 0"
-                          rotation="0 0 180">
-                </a-entity>
-            </a-marker>
+        <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
+            <a-entity id="model-container-6"
+                      gltf-model="url(free_porsche_911_carrera_4s.glb)"
+                      scale="0.4 0.4 0.4"
+                      position="0 0 0"
+                      rotation="0 0 180">
+            </a-entity>
+        </a-marker>
 
-            <!-- Kamera -->
-            <a-entity camera></a-entity>
-        </a-scene>
-    </div>
+        <!-- Kamera -->
+        <a-entity camera></a-entity>
+    </a-scene>
 
     <script>
-        async function initCameraSelection() {
+        async function initCamera() {
             try {
-                // Erlaubnis zum Kamerazugriff einholen
+                // Zuerst die Erlaubnis zum Kamerazugriff einholen
                 const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
+                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da wir nur die Erlaubnis benötigen
 
                 // Geräte auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
-                if (videoInputDevices.length === 0) {
-                    throw new Error('Keine Videokameras gefunden.');
+                // Liste der Kameras im HTML anzeigen
+                const cameraList = document.getElementById('camera-list');
+                videoInputDevices.forEach((device, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}, ID: ${device.deviceId}`;
+                    cameraList.appendChild(li);
+                });
+
+                // Constraints setzen, um die Umgebungskamera (Rückkamera) zu verwenden
+                const constraints = {
+                    video: {
+                        facingMode: { exact: 'environment' },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                        // Keine deviceId-Constraint
+                    }
+                };
+
+                // Versuche, den Stream mit den gesetzten Constraints zu bekommen
+                let selectedStream;
+                let selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rück') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back'));
+
+                try {
+                    selectedStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (error) {
+                    console.warn('Spezifische facingMode nicht verfügbar, versuche allgemeines Environment Camera:', error);
+                    // Fallback: Verwende die erste verfügbare Environment Kamera
+                    selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back')) || videoInputDevices[0];
+                    if (selectedDevice) {
+                        selectedStream = await navigator.mediaDevices.getUserMedia({
+                            video: { deviceId: { exact: selectedDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                        });
+                    } else {
+                        throw new Error('Keine geeignete Kamera gefunden.');
+                    }
                 }
 
-                // Liste der Kameras im HTML anzeigen
-                const cameraSelect = document.getElementById('camera-select');
-                videoInputDevices.forEach((device, index) => {
-                    const option = document.createElement('option');
-                    option.value = device.deviceId;
-                    option.text = device.label || `Kamera ${index + 1}`;
-                    cameraSelect.appendChild(option);
-                });
+                // Videoelement erstellen und den Stream zuweisen
+                const video = document.createElement('video');
+                video.srcObject = selectedStream;
+                video.setAttribute('autoplay', '');
+                video.setAttribute('muted', '');
+                video.setAttribute('playsinline', '');
+                video.style.display = 'none';  // Videoelement verstecken
+                document.body.appendChild(video);
 
-                // Automatisch die erste Umgebungskamera auswählen, falls vorhanden
-                let selectedDevice = videoInputDevices.find(device => 
-                    device.label.toLowerCase().includes('rear') || 
-                    device.label.toLowerCase().includes('back') || 
-                    device.label.toLowerCase().includes('rück')
-                ) || videoInputDevices[0];
+                // Aktualisiere die ausgewählte Kamera-Anzeige
+                const selectedCameraText = document.getElementById('selected-camera');
+                if (selectedDevice) {
+                    selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                } else {
+                    selectedCameraText.textContent = 'Aktive Kamera: Unbekannt';
+                }
 
-                cameraSelect.value = selectedDevice.deviceId;
-                document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
-
-                // Event Listener für Kameraauswahl
-                cameraSelect.addEventListener('change', () => {
-                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
-                    document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
-                });
-
-                // Event Listener für "AR starten" Button
-                document.getElementById('start-ar-button').addEventListener('click', () => {
-                    if (selectedDevice) {
-                        startAR(selectedDevice.deviceId);
-                    } else {
-                        alert('Bitte wähle eine Kamera aus.');
-                    }
-                });
-
+                // Sobald das Video geladen ist, initialisiere AR.js mit diesem Video
+                video.onloadedmetadata = () => {
+                    video.play();
+                    const arSystem = document.querySelector('a-scene').systems['arjs'];
+                    arSystem.sourceElement = video;
+                    arSystem.context.source = {
+                        sourceType: 'video',
+                        sourceWidth: video.videoWidth,
+                        sourceHeight: video.videoHeight,
+                        source: video
+                    };
+                    arSystem.initialize();
+                };
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
-                document.getElementById('selected-camera').textContent = 'Fehler beim Zugriff auf die Kamera.';
+                const selectedCameraText = document.getElementById('selected-camera');
+                selectedCameraText.textContent = 'Aktive Kamera: Fehler beim Zugriff';
             }
         }
 
-        async function startAR(deviceId) {
-            // Verstecke die Kameraauswahl und Info
-            document.getElementById('camera-info').style.display = 'none';
-            document.getElementById('info').style.display = 'none';
-
-            // Zeige den AR-Container
-            const arContainer = document.getElementById('ar-container');
-            arContainer.style.display = 'block';
-
-            // Entferne den bestehenden AR-Scene-Inhalt
-            arContainer.innerHTML = '';
-
-            // Erstelle eine neue A-Frame Szene mit den ausgewählten Kamera-Constraints
-            const newScene = document.createElement('a-scene');
-            newScene.setAttribute('embedded', '');
-            newScene.setAttribute('id', 'ar-scene');
-            newScene.setAttribute('arjs', `sourceType: webcam; sourceDeviceId: '${deviceId}'; sourceWidth: 1280; sourceHeight: 720;`);
-
-            // Füge die Marker und Modelle hinzu
-            newScene.innerHTML = `
-                <!-- Marker für die 6 Seiten eines Würfels -->
-                <a-marker type="pattern" url="mc2.patt" id="marker1">
-                    <a-entity id="model-container-1"
-                              gltf-model="url(ekana_stadium_low_poly_lucknow_city_game_asset.glb)"
-                              scale="0.03 0.03 0.03"
-                              position="0 0 0"
-                              rotation="-60 0 0">
-                    </a-entity>
-                </a-marker>
-
-                <a-marker type="pattern" url="pattern-DRV2.patt" id="marker2">
-                    <a-entity id="model-container-2"
-                              gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                              scale="0.4 0.4 0.4"
-                              position="0 0 0"
-                              rotation="0 -90 90">
-                    </a-entity>
-                </a-marker>
-
-                <a-marker type="pattern" url="pattern-DRV3.patt" id="marker3">
-                    <a-entity id="model-container-3"
-                              gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                              scale="0.4 0.4 0.4"
-                              position="0 0 0"
-                              rotation="0 90 -90">
-                    </a-entity>
-                </a-marker>
-
-                <a-marker type="pattern" url="pattern-DRV4.patt" id="marker4">
-                    <a-entity id="model-container-4"
-                              gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                              scale="0.4 0.4 0.4"
-                              position="0 0 0"
-                              rotation="-90 0 0">
-                    </a-entity>
-                </a-marker>
-
-                <a-marker type="pattern" url="pattern-DRV5.patt" id="marker5">
-                    <a-entity id="model-container-5"
-                              gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                              scale="0.4 0.4 0.4"
-                              position="0 0 0"
-                              rotation="90 0 180">
-                    </a-entity>
-                </a-marker>
-
-                <a-marker type="pattern" url="pattern-DRV6.patt" id="marker6">
-                    <a-entity id="model-container-6"
-                              gltf-model="url(free_porsche_911_carrera_4s.glb)"
-                              scale="0.4 0.4 0.4"
-                              position="0 0 0"
-                              rotation="0 0 180">
-                    </a-entity>
-                </a-marker>
-
-                <!-- Kamera -->
-                <a-entity camera></a-entity>
-            `;
-
-            // Füge die neue Szene dem AR-Container hinzu
-            arContainer.appendChild(newScene);
-        }
-
         window.onload = () => {
-            initCameraSelection();
+            initCamera();
         };
     </script>
 </body>
