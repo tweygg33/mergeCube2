@@ -46,7 +46,7 @@
     </div>
     <div id="camera-info">
         <h3>Verfügbare Kameras:</h3>
-        <ul id="camera-list"></ul>
+        <select id="camera-select"></select>
         <p id="selected-camera">Aktive Kamera: Lädt...</p>
     </div>
 
@@ -122,40 +122,38 @@
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
 
                 // Liste der Kameras im HTML anzeigen
-                const cameraList = document.getElementById('camera-list');
+                const cameraSelect = document.getElementById('camera-select');
                 videoInputDevices.forEach((device, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Kamera ${index + 1}: ${device.label || 'Unbenannte Kamera'}, ID: ${device.deviceId}`;
-                    cameraList.appendChild(li);
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    cameraSelect.appendChild(option);
                 });
 
-                // Constraints setzen, um die Umgebungskamera (Rückkamera) zu verwenden
-                const constraints = {
-                    video: {
-                        facingMode: { exact: 'environment' },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                        // Keine deviceId-Constraint
-                    }
+                // Automatisch die erste Umgebungskamera auswählen, falls vorhanden
+                let selectedDevice = videoInputDevices.find(device => 
+                    device.label.toLowerCase().includes('rear') || 
+                    device.label.toLowerCase().includes('back') || 
+                    device.label.toLowerCase().includes('rück')
+                ) || videoInputDevices[0];
+
+                cameraSelect.value = selectedDevice.deviceId;
+
+                // Videostream anfordern
+                const getStream = async (deviceId) => {
+                    return await navigator.mediaDevices.getUserMedia({
+                        video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                    });
                 };
 
-                // Versuche, den Stream mit den gesetzten Constraints zu bekommen
                 let selectedStream;
-                let selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rück') || device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back'));
-
                 try {
-                    selectedStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    selectedStream = await getStream(selectedDevice.deviceId);
                 } catch (error) {
                     console.warn('Spezifische facingMode nicht verfügbar, versuche allgemeines Environment Camera:', error);
-                    // Fallback: Verwende die erste verfügbare Environment Kamera
-                    selectedDevice = videoInputDevices.find(device => device.label.toLowerCase().includes('rear') || device.label.toLowerCase().includes('back')) || videoInputDevices[0];
-                    if (selectedDevice) {
-                        selectedStream = await navigator.mediaDevices.getUserMedia({
-                            video: { deviceId: { exact: selectedDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
-                        });
-                    } else {
-                        throw new Error('Keine geeignete Kamera gefunden.');
-                    }
+                    selectedStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                    });
                 }
 
                 // Videoelement erstellen und den Stream zuweisen
@@ -169,11 +167,7 @@
 
                 // Aktualisiere die ausgewählte Kamera-Anzeige
                 const selectedCameraText = document.getElementById('selected-camera');
-                if (selectedDevice) {
-                    selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
-                } else {
-                    selectedCameraText.textContent = 'Aktive Kamera: Unbekannt';
-                }
+                selectedCameraText.textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
 
                 // Sobald das Video geladen ist, initialisiere AR.js mit diesem Video
                 video.onloadedmetadata = () => {
@@ -188,6 +182,39 @@
                     };
                     arSystem.initialize();
                 };
+
+                // Ereignislistener für manuelle Kamerawahl
+                cameraSelect.addEventListener('change', async () => {
+                    const newDeviceId = cameraSelect.value;
+                    try {
+                        const newStream = await getStream(newDeviceId);
+                        video.srcObject = newStream;
+                        video.play();
+
+                        // Stoppe vorherigen Stream
+                        selectedStream.getTracks().forEach(track => track.stop());
+                        selectedStream = newStream;
+
+                        // Aktualisiere die ausgewählte Kamera-Anzeige
+                        const newDevice = videoInputDevices.find(device => device.deviceId === newDeviceId);
+                        selectedCameraText.textContent = `Aktive Kamera: ${newDevice.label || 'Unbekannte Kamera'}`;
+
+                        // Initialisiere AR.js erneut mit dem neuen Video
+                        const arSystem = document.querySelector('a-scene').systems['arjs'];
+                        arSystem.sourceElement = video;
+                        arSystem.context.source = {
+                            sourceType: 'video',
+                            sourceWidth: video.videoWidth,
+                            sourceHeight: video.videoHeight,
+                            source: video
+                        };
+                        arSystem.initialize();
+                    } catch (error) {
+                        console.error('Fehler beim Wechseln der Kamera:', error);
+                        selectedCameraText.textContent = 'Aktive Kamera: Fehler beim Wechseln';
+                    }
+                });
+
             } catch (error) {
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
                 const selectedCameraText = document.getElementById('selected-camera');
