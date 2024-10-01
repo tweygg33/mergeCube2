@@ -272,7 +272,7 @@
                     // Erstelle die A-Frame Szene
                     const arContainer = document.getElementById('ar-container');
                     arContainer.innerHTML = `
-                        <a-scene embedded arjs='sourceType: webcam;'>
+                            <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                             <!-- Marker für die 6 Seiten eines Würfels -->
                             
                             <!-- Marker 1 -->
