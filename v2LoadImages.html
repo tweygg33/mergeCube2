@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- 
+        Meta-Tags und Dokumentinformationen
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR.js Würfel mit QR-Codes</title>
+    <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <style>
+        /* 
+            Grundlegende Stile für die gesamte Seite
+            - Entfernt Standard-Margen und Padding
+            - Setzt die Breite und Höhe auf 100% der Ansicht
+            - Verhindert Scrollen durch overflow: hidden
+            - Entfernt den schwarzen Hintergrund
+        */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Hintergrundfarbe entfernt für bessere Sichtbarkeit */
+            /* background-color: black; */
+        }
+        
+        /* 
+            Stil für das Informationsfeld oben links
+            - Positioniert absolut an der oberen linken Ecke
+            - Weißer Text mit Arial-Schrift
+            - Höherer z-Index, damit es über anderen Elementen liegt
+        */
+        #info {
+            display: none;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5); /* Optional: Hintergrund für bessere Lesbarkeit */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* 
+            Stil für das Kamera-Informations- und Auswahlfeld
+            - Positioniert absolut etwas weiter unten links
+            - Weißer Text mit transparentem schwarzen Hintergrund
+            - Padding und abgerundete Ecken für bessere Lesbarkeit
+            - Scrollbar bei Überlauf
+            - Festgelegte Breite
+        */
+        #camera-info {
+         
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 300px;
+        }
+
+        /* 
+            Stil für das Dropdown-Menü zur Kamerawahl
+            - Volle Breite des Containers
+            - Padding und größere Schriftgröße
+        */
+        #camera-select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* 
+            Stil für den "AR starten" Button
+            - Padding und größere Schriftgröße
+            - Grüner Hintergrund mit weißem Text
+            - Keine Rahmen, abgerundete Ecken
+            - Cursor wechselt zu Pointer beim Hover
+        */
+        #start-ar-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 
+            Hover-Effekt für den "AR starten" Button
+            - Dunkleres Grün beim Überfahren mit der Maus
+        */
+        #start-ar-button:hover {
+            background-color: #218838;
+        }
+
+        /* 
+            Stil für den AR-Container
+            - Anfangs versteckt
+            - Volle Breite und Höhe der Ansicht
+        */
+        #ar-container {
+            display: none; /* Versteckt die AR-Szene initial */
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        Informationsbereich mit Titel und Beschreibung
+    -->
+    <div id="info">
+        <h2>AR.js Würfel QR-Code mc2</h2>
+        <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
+    </div>
+
+    <!-- 
+        Kameraauswahl- und Steuerungsbereich
+    -->
+    <div id="camera-info">
+        <h3>Verfügbare Kameras:</h3>
+        <select id="camera-select"></select> <!-- Dropdown-Menü für Kameras -->
+        <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p>
+        <button id="start-ar-button">AR starten</button> <!-- Button zum Starten der AR-Szene -->
+    </div>
+
+    <!-- 
+        Container für die AR-Szene, wird dynamisch mit A-Frame-Inhalten gefüllt
+    -->
+    <div id="ar-container">
+        <!-- AR.js scene wird hier dynamisch geladen -->
+    </div>
+
+    <script>
+        /**
+         * Utility-Funktion, um URL-Parameter abzurufen
+         * @param {string} name - Der Name des URL-Parameters
+         * @returns {string} - Der Wert des URL-Parameters oder leerer String
+         */
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        /**
+         * Funktion zur Initialisierung der Kameraauswahl
+         * - Fordert Kamerazugriff an
+         * - Listet verfügbare Videokameras auf
+         * - Ermöglicht dem Benutzer, eine Kamera auszuwählen
+         */
+        async function initCameraSelection() {
+            try {
+                // Erlaubnis zum Kamerazugriff einholen
+                const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
+
+                // Geräte auflisten
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+
+                if (videoInputDevices.length === 0) {
+                    throw new Error('Keine Videokameras gefunden.');
+                }
+
+                // Liste der Kameras im HTML anzeigen
+                const cameraSelect = document.getElementById('camera-select');
+                videoInputDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+
+                // Automatisch die erste Rückkamera auswählen, falls vorhanden
+                let selectedDevice = videoInputDevices.find(device => 
+                    device.label.toLowerCase().includes('rear') || 
+                    device.label.toLowerCase().includes('back') || 
+                    device.label.toLowerCase().includes('rück')
+                ) || videoInputDevices[0];
+
+                cameraSelect.value = selectedDevice.deviceId;
+                document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+
+                // Event Listener für Kameraauswahl
+                cameraSelect.addEventListener('change', () => {
+                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+                    document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                });
+
+                // Event Listener für "AR starten" Button
+                document.getElementById('start-ar-button').addEventListener('click', async () => {
+                    if (selectedDevice) {
+                        try {
+                            // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
+                            overrideGetUserMedia(selectedDevice.deviceId);
+
+                            // Initialisiere die AR-Szene
+                            await initializeARScene();
+
+                            // Zeige den AR-Container und verstecke die Kameraauswahl und Info
+                            document.getElementById('ar-container').style.display = 'block';
+                            document.getElementById('camera-info').style.display = 'none';
+                            document.getElementById('info').style.display = 'none';
+                        } catch (error) {
+                            console.error('Fehler beim Initialisieren der AR-Szene:', error);
+                            alert('Fehler beim Starten der AR-Anwendung.');
+                        }
+                    } else {
+                        alert('Bitte wähle eine Kamera aus.');
+                    }
+                });
+
+            } catch (error) {
+                console.error('Fehler beim Zugriff auf die Kamera:', error);
+                document.getElementById('selected-camera').textContent = 'Fehler beim Zugriff auf die Kamera.';
+            }
+        }
+
+        /**
+         * Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
+         * @param {string} selectedDeviceId - Die deviceId der ausgewählten Kamera
+         */
+        function overrideGetUserMedia(selectedDeviceId) {
+            const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                if (constraints.video && selectedDeviceId) {
+                    // Setze deviceId in den Video-Constraints
+                    constraints.video = {
+                        ...constraints.video,
+                        deviceId: { exact: selectedDeviceId }
+                    };
+                }
+                return originalGetUserMedia(constraints);
+            };
+        }
+
+        /**
+         * Funktion zur Initialisierung der AR-Szene
+         * - Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
+         */
+        async function initializeARScene() {
+            // Zeige den AR-Container und verstecke die Kameraauswahl und Info
+            document.getElementById('ar-container').style.display = 'block';
+            document.getElementById('camera-info').style.display = 'none';
+            document.getElementById('info').style.display = 'none';
+
+            // Erstelle die A-Frame Szene
+            const arContainer = document.getElementById('ar-container');
+            arContainer.innerHTML = `
+                    <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+                    <!-- Marker für die 6 Seiten eines Würfels -->
+                    
+                    <!-- Marker 1 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
+                        <a-entity id="model-container-1"
+                                 gltf-model="url(glb/futuristic_building(1).glb)"
+                                 scale="0.1 0.1 0.1" 
+                                 position="0 0 0"
+                                 rotation="-90 0 0"
+                                 visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Marker 2 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
+                        <a-entity id="model-container-2"
+                                  gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.1 0.1 0.1" 
+                                  position="0 0 0"
+                                  rotation="0 -90 90"
+                                  visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Marker 3 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
+                        <a-entity id="model-container-3"
+                                  gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.1 0.1 0.1" 
+                                  position="0 0 0"
+                                  rotation="0 90 -90"
+                                  visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Marker 4 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
+                        <a-entity id="model-container-4"
+                                 gltf-model="url(glb/futuristic_building(1).glb)"
+                                 scale="0.1 0.1 0.1"  
+                                 position="0 0 0"
+                                 rotation="-90 0 0"
+                                 visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Marker 5 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
+                        <a-entity id="model-container-5"
+                                  gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.1 0.1 0.1"   
+                                  position="0 0 0"
+                                  rotation="90 0 180"
+                                  visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Marker 6 -->
+                    <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
+                        <a-entity id="model-container-6"
+                                gltf-model="url(glb/futuristic_building(1).glb)"
+                                scale="0.1 0.1 0.1"  
+                                position="0 0 0"
+                                rotation="0 0 180"
+                                visible="false">
+                        </a-entity>
+                    </a-marker>
+
+                    <!-- Kamera in der Szene -->
+                    <a-entity camera></a-entity>
+                </a-scene>
+            `;
+
+            // Warte, bis die Szene geladen ist
+            await new Promise(resolve => {
+                const scene = arContainer.querySelector('a-scene');
+                if (scene.hasLoaded) {
+                    resolve();
+                } else {
+                    scene.addEventListener('loaded', () => {
+                        resolve();
+                    });
+                }
+            });
+
+            // Füge die Marker-Event-Listener hinzu
+            initializeMarkerEvents();
+        }
+
+        /**
+         * Funktion zur Initialisierung der Marker-Events
+         */
+        function initializeMarkerEvents() {
+            const markers = document.querySelectorAll('a-marker');
+            let currentVisibleMarker = null;
+
+            markers.forEach(marker => {
+                marker.addEventListener('markerFound', () => {
+                    if (currentVisibleMarker && currentVisibleMarker !== marker) {
+                        // Verstecke das vorherige Modell
+                        const previousModel = currentVisibleMarker.querySelector('a-entity');
+                        if (previousModel) {
+                            previousModel.setAttribute('visible', 'false');
+                        }
+                    }
+
+                    // Zeige das aktuelle Modell
+                    const currentModel = marker.querySelector('a-entity');
+                    if (currentModel) {
+                        currentModel.setAttribute('visible', 'true');
+                    }
+
+                    currentVisibleMarker = marker;
+                });
+
+                marker.addEventListener('markerLost', () => {
+                    // Verstecke das Modell, wenn der Marker verloren geht
+                    const lostModel = marker.querySelector('a-entity');
+                    if (lostModel) {
+                        lostModel.setAttribute('visible', 'false');
+                    }
+
+                    // Suche nach einem anderen sichtbaren Marker
+                    let anotherVisibleMarker = null;
+                    markers.forEach(m => {
+                        if (m.object3D.visible && m !== marker) {
+                            anotherVisibleMarker = m;
+                        }
+                    });
+
+                    if (anotherVisibleMarker) {
+                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                        if (anotherModel) {
+                            anotherModel.setAttribute('visible', 'true');
+                        }
+                        currentVisibleMarker = anotherVisibleMarker;
+                    } else {
+                        currentVisibleMarker = null;
+                    }
+                });
+            });
+        }
+
+        /**
+         * Preload-Funktion für GLTF-Modelle
+         */
+        function preloadGLTFModels(modelUrls) {
+            const loader = new THREE.GLTFLoader();
+            modelUrls.forEach(url => {
+                loader.load(
+                    url,
+                    (gltf) => {
+                        console.log('3D-Modell vorgeladen:', url);
+                        // Du kannst das geladene Modell hier cachen oder verarbeiten
+                        console.log("3d Modell geladen")
+                    },
+                    undefined,
+                    (error) => {
+                        console.error('Fehler beim Laden des 3D-Modells:', error);
+                    }
+                );
+            });
+        }
+
+        // Beispiel: Lade 3D-Modelle im Hintergrund vor
+        preloadGLTFModels([
+            'glb/futuristic_building(1).glb'
+        ]);
+
+        /**
+         * Event Listener für das Laden der Seite
+         * - Initialisiert die Kameraauswahl UI
+         */
+        window.onload = () => {
+            const cameraId = getUrlParameter('cameraId');
+            if (cameraId) {
+                // Falls eine cameraId vorhanden ist, überschreibe getUserMedia und initialisiere die AR-Szene
+                overrideGetUserMedia(cameraId);
+                initializeARScene();
+            } else {
+                // Andernfalls zeige die Kameraauswahl UI
+                initCameraSelection();
+            }
+        };
+    </script>
+    <!--             '/glb/ekana_stadium_low_poly_lucknow_city_game_asset.glb',
+            '/glb/free_porsche_911_carrera_4s.glb',
+            'glb/car 1.glb',
+            'glb/naruto_shippuden-_naruto.glb', -->
+</body>
+</html>
