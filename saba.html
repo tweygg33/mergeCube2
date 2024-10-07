@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +39,19 @@
             overflow-y: auto;
             width: 300px;
         }
+        #loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10;
+            display: none;
+        }
         #camera-select {
             width: 100%;
             padding: 10px;
@@ -77,9 +90,13 @@
         <button id="start-ar-button">Start AR</button>
     </div>
  
+    <div id="loading-indicator">Loading AR Experience...</div>
+ 
     <div id="ar-container"></div>
  
     <script>
+        let modelEntity;
+ 
         async function initCameraSelection() {
             try {
                 const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -115,6 +132,7 @@
  
                 document.getElementById('start-ar-button').addEventListener('click', async () => {
                     if (selectedDevice) {
+                        document.getElementById('loading-indicator').style.display = 'block';
                         overrideGetUserMedia(selectedDevice.deviceId);
                         await initializeARScene();
                         document.getElementById('ar-container').style.display = 'block';
@@ -160,51 +178,121 @@
                             rotation="0 0 0">
                     </a-entity>
                 </a-marker>
-                <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="0 -90 90">
-                    </a-entity>
-                </a-marker>
-                <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="0 90 -90">
-                    </a-entity>
-                </a-marker>
-                <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="-90 0 0">
-                    </a-entity>
-                </a-marker>
-                <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="90 0 180">
-                    </a-entity>
-                </a-marker>
-                <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="0 0 180">
-                    </a-entity>
-                </a-marker>
-               
-                <a-entity camera></a-entity>
-            </a-scene>
  
+                <!-- zweite markers -->
+                <a-entity camera></a-entity>
+ 
+                <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
+                        <a-entity id="model2" gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.09 0.09 0.09"
+                                  position="0 0 90">
+                        </a-entity>
+                    </a-marker>
+               
+                <!-- Dritte markers -->
+                <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
+                        <a-entity id="model3" gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.09 0.09 0.09"
+                                  position="180 0 0">
+                        </a-entity>
+                </a-marker>
+ 
+ 
+                <!-- Vierte markers -->
+                <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
+                        <a-entity id="model4" gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.09 0.09 0.09"
+                                  position="0 -60 0">
+                        </a-entity>
+                </a-marker>
+ 
+ 
+ 
+                <!-- Fünfte markers -->
+ 
+                <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
+                        <a-entity id="model5" gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.09 0.09 0.09"
+                                  position="0 0 90">
+                        </a-entity>
+                    </a-marker>
+ 
+                    <!-- Marker for the sixth face of the cube -->
+                    <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
+                        <a-entity id="model6" gltf-model="url(glb/futuristic_building(1).glb)"
+                                  scale="0.09 0.09 0.09"
+                                  position="0 0 180">
+                        </a-entity>
+                    </a-marker>
+ 
+ 
+ 
+            </a-scene>
             `;
+ 
+            // Add touch/mouse-based rotation
+            modelEntity = document.querySelector('a-entity[gltf-model]');
+            let isMouseDown = false;
+            let lastX, lastY;
+ 
+            arContainer.addEventListener('mousedown', (event) => {
+                isMouseDown = true;
+                lastX = event.clientX;
+                lastY = event.clientY;
+            });
+ 
+            arContainer.addEventListener('mousemove', (event) => {
+                if (isMouseDown) {
+                    const deltaX = event.clientX - lastX;
+                    const deltaY = event.clientY - lastY;
+                    lastX = event.clientX;
+                    lastY = event.clientY;
+                    rotateModel(deltaX, deltaY);
+                }
+            });
+ 
+            arContainer.addEventListener('mouseup', () => {
+                isMouseDown = false;
+            });
+ 
+            arContainer.addEventListener('touchstart', (event) => {
+                isMouseDown = true;
+                const touch = event.touches[0];
+                lastX = touch.clientX;
+                lastY = touch.clientY;
+            });
+ 
+            arContainer.addEventListener('touchmove', (event) => {
+                if (isMouseDown) {
+                    const touch = event.touches[0];
+                    const deltaX = touch.clientX - lastX;
+                    const deltaY = touch.clientY - lastY;
+                    lastX = touch.clientX;
+                    lastY = touch.clientY;
+                    rotateModel(deltaX, deltaY);
+                }
+            });
+ 
+            arContainer.addEventListener('touchend', () => {
+                isMouseDown = false;
+            });
+ 
+            document.getElementById('loading-indicator').style.display = 'none';
         }
  
-        window.addEventListener('load', () => {
-            initCameraSelection();
-        });
+        function rotateModel(deltaX, deltaY) {
+            const currentRotation = modelEntity.getAttribute('rotation');
+            modelEntity.setAttribute('rotation', {
+                x: currentRotation.x + deltaY * 0.5,
+                y: currentRotation.y + deltaX * 0.5,
+                z: currentRotation.z
+            });
+        }
+ 
+        // Initialize camera selection and AR scene
+        initCameraSelection();
     </script>
 </body>
 </html>
+ 
+ 
