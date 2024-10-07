@@ -7,14 +7,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
-    <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    <!-- Statische Einbindung der A-Frame- und AR.js-Skripte mit defer -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js" defer></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" defer></script>
     <style>
         /* 
             Grundlegende Stile für die gesamte Seite
@@ -176,7 +176,7 @@
         <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
 
-    <script>
+    <script defer>
         /**
          * Utility-Funktion, um URL-Parameter abzurufen
          * @param {string} name - Der Name des URL-Parameters
@@ -341,7 +341,7 @@
                                  gltf-model="url(glb/monkey_d._luffy.glb)"
                                  scale="0.8 0.8 0.8"  
                                  position="0 0 0"
-                                rotation="-90 0 0"
+                                 rotation="-90 0 0"
                                  visible="false">
                         </a-entity>
                     </a-marker>
@@ -464,16 +464,19 @@
             let lastX = 0;
             let lastY = 0;
 
-            // Funktion zur Drehung des Modells
+            // Funktion zur Drehung des Modells mit Quaternions
             function rotateModel(deltaX, deltaY) {
                 const model = window.currentModel();
                 if (model) {
-                    const currentRotation = model.getAttribute('rotation');
-                    model.setAttribute('rotation', {
-                        x: currentRotation.x + deltaY * 0.5,
-                        y: currentRotation.y + deltaX * 0.5,
-                        z: currentRotation.z
-                    });
+                    const rotationSpeed = 0.005; // Anpassung für Empfindlichkeit
+                    const euler = new THREE.Euler(
+                        deltaY * rotationSpeed,
+                        deltaX * rotationSpeed,
+                        0,
+                        'XYZ'
+                    );
+                    const quaternion = new THREE.Quaternion().setFromEuler(euler);
+                    model.object3D.quaternion.multiplyQuaternions(quaternion, model.object3D.quaternion);
                 }
             }
 
@@ -573,9 +576,6 @@
             }
         };
     </script>
-    <!--             '/glb/ekana_stadium_low_poly_lucknow_city_game_asset.glb',
-            '/glb/free_porsche_911_carrera_4s.glb',
-            'glb/car 1.glb',
-            'glb/naruto_shippuden-_naruto.glb', -->
+
 </body>
 </html>
