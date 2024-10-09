@@ -289,7 +289,7 @@
         /**
          * Funktion zur Initialisierung der AR-Szene
          * - Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
-         * - Fügt die Rotationslogik hinzu
+         * - Fügt die Rotations- und Zoomlogik hinzu
          */
         async function initializeARScene() {
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
@@ -391,6 +391,9 @@
 
             // Füge die Rotations-Event-Listener hinzu
             initializeRotation();
+
+            // Füge die Zoom-Event-Listener hinzu
+            initializeZoom();
         }
 
         /**
@@ -417,6 +420,9 @@
                     if (model) {
                         model.setAttribute('visible', 'true');
                         currentModel = model;
+                        // Setze die Skalierung auf den Standardwert zurück
+                        scale = 0.4;
+                        model.setAttribute('scale', `${scale} ${scale} ${scale}`);
                     }
 
                     currentVisibleMarker = marker;
@@ -442,6 +448,9 @@
                         if (anotherModel) {
                             anotherModel.setAttribute('visible', 'true');
                             currentModel = anotherModel;
+                            // Setze die Skalierung auf den Standardwert zurück
+                            scale = 0.4;
+                            anotherModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
                         }
                         currentVisibleMarker = anotherVisibleMarker;
                     } else {
@@ -451,7 +460,7 @@
                 });
             });
 
-            // Speichere die aktuelle Modellreferenz global für die Rotationsfunktion
+            // Speichere die aktuelle Modellreferenz global für die Rotations- und Zoomfunktion
             window.currentModel = () => currentModel;
         }
 
@@ -505,14 +514,16 @@
 
             // Touch-Events
             arContainer.addEventListener('touchstart', (event) => {
-                isInteracting = true;
-                const touch = event.touches[0];
-                lastX = touch.clientX;
-                lastY = touch.clientY;
+                if (event.touches.length === 1) {
+                    isInteracting = true;
+                    const touch = event.touches[0];
+                    lastX = touch.clientX;
+                    lastY = touch.clientY;
+                }
             });
 
             arContainer.addEventListener('touchmove', (event) => {
-                if (isInteracting) {
+                if (isInteracting && event.touches.length === 1) {
                     const touch = event.touches[0];
                     const deltaX = touch.clientX - lastX;
                     const deltaY = touch.clientY - lastY;
@@ -524,6 +535,72 @@
 
             arContainer.addEventListener('touchend', () => {
                 isInteracting = false;
+            });
+        }
+
+        /**
+         * Funktion zur Initialisierung der Zoom-Event-Listener
+         * - Ermöglicht das Zoomen des aktuellen Modells mittels Mausrad und Touch-Gesten
+         */
+        function initializeZoom() {
+            const arContainer = document.getElementById('ar-container');
+
+            // Zoom mit dem Mausrad
+            window.addEventListener('wheel', (event) => {
+                event.preventDefault(); // Standard Scroll-Verhalten verhindern
+                const model = window.currentModel();
+                if (model) {
+                    if (event.deltaY < 0) {
+                        // Zoom In
+                        scale += zoomSpeed;
+                    } else {
+                        // Zoom Out
+                        scale -= zoomSpeed;
+                        scale = Math.max(scale, 0.1); // Mindestskalierung verhindern
+                    }
+                    model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                }
+            }, { passive: false });
+
+            // Zoom mit Pinch-Gesten auf Touch-Geräten
+            let lastTouchDistance = null;
+
+            arContainer.addEventListener('touchstart', (event) => {
+                if (event.touches.length === 2) {
+                    const dx = event.touches[0].clientX - event.touches[1].clientX;
+                    const dy = event.touches[0].clientY - event.touches[1].clientY;
+                    lastTouchDistance = Math.hypot(dx, dy);
+                }
+            });
+
+            arContainer.addEventListener('touchmove', (event) => {
+                if (event.touches.length === 2 && lastTouchDistance !== null) {
+                    const dx = event.touches[0].clientX - event.touches[1].clientX;
+                    const dy = event.touches[0].clientY - event.touches[1].clientY;
+                    const currentDistance = Math.hypot(dx, dy);
+                    const delta = currentDistance - lastTouchDistance;
+
+                    const model = window.currentModel();
+                    if (model) {
+                        if (delta > 0) {
+                            // Zoom In
+                            scale += zoomSpeed;
+                        } else {
+                            // Zoom Out
+                            scale -= zoomSpeed;
+                            scale = Math.max(scale, 0.1); // Mindestskalierung verhindern
+                        }
+                        model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                    }
+
+                    lastTouchDistance = currentDistance;
+                }
+            });
+
+            arContainer.addEventListener('touchend', (event) => {
+                if (event.touches.length < 2) {
+                    lastTouchDistance = null;
+                }
             });
         }
 
