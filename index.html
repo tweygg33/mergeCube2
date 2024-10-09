@@ -97,13 +97,12 @@
     <div id="ar-container"></div>
 
     <script>
-        let scale = 0.4; // Standard-Skalierung
         const zoomSpeed = 0.1; // Zoom-Geschwindigkeit
 
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
@@ -180,54 +179,50 @@
         }
 
         async function initializeARScene() {
-            document.getElementById('ar-container').style.display = 'block';
-            document.getElementById('camera-info').style.display = 'none';
-            document.getElementById('info').style.display = 'none';
-
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1" gltf-model="url(glb/futuristic_building(2).glb)" 
-                        scale="0.4 0.4 0.4" 
-                        position="0 0 0" 
-                        rotation="-90 0 0" 
-                        visible="false"></a-entity>
+                                  scale="0.4 0.4 0.4" 
+                                  position="0 0 0" 
+                                  rotation="-90 0 0" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
                         <a-entity id="model-container-2" gltf-model="url(glb/futuristic_building(1).glb)" 
-                        scale="0.07 0.07 0.07" 
-                        position="0 0 0" 
-                        rotation="0 -90 80" 
-                        visible="false"></a-entity>
+                                  scale="0.06 0.06 0.06" 
+                                  position="0 0 0" 
+                                  rotation="0 -90 80" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
                         <a-entity id="model-container-3" gltf-model="url(glb/futuristic_building(2).glb)" 
-                        scale="0.4 0.4 0.4" 
-                        position="0 0 0" 
-                        rotation="-90 0 0" 
-                        visible="false"></a-entity>
+                                  scale="0.5 0.5 0.5" 
+                                  position="0 0 0" 
+                                  rotation="-90 0 0" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
                         <a-entity id="model-container-4" gltf-model="url(glb/futuristic_building(2).glb)" 
-                        scale="0.4 0.4 0.4" 
-                        position="0 0 0" 
-                        rotation="-90 0 0" 
-                        visible="false"></a-entity>
+                                  scale="0.7 0.7 0.7" 
+                                  position="0 0 0" 
+                                  rotation="-90 0 0" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
                         <a-entity id="model-container-5" gltf-model="url(glb/futuristic_building(2).glb)" 
-                        scale="0.4 0.4 0.4" 
-                        position="0 0 0" 
-                        rotation="-90 0 0" 
-                        visible="false"></a-entity>
+                                  scale="0.6 0.6 0.6" 
+                                  position="0 0 0" 
+                                  rotation="-90 0 0" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
                         <a-entity id="model-container-6" gltf-model="url(glb/futuristic_building(2).glb)" 
-                        scale="0.4 0.4 0.4" 
-                        position="0 0 0" 
-                        rotation="-90 0 0" 
-                        visible="false"></a-entity>
+                                  scale="0.5 0.5 0.5" 
+                                  position="0 0 0" 
+                                  rotation="-90 0 0" 
+                                  visible="false"></a-entity>
                     </a-marker>
                     <a-entity camera></a-entity>
                 </a-scene>
@@ -264,8 +259,8 @@
                     if (model) {
                         model.setAttribute('visible', 'true');
                         currentModel = model;
-                        scale = 0.4;
-                        model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                        // Optional: Reset die Rotation, falls gewünscht
+                        // model.setAttribute('rotation', '-90 0 0');
                     }
                     currentVisibleMarker = marker;
                 });
@@ -287,8 +282,8 @@
                         if (anotherModel) {
                             anotherModel.setAttribute('visible', 'true');
                             currentModel = anotherModel;
-                            scale = 0.4;
-                            anotherModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                            // Optional: Reset die Rotation, falls gewünscht
+                            // anotherModel.setAttribute('rotation', '0 -90 80');
                         }
                         currentVisibleMarker = anotherVisibleMarker;
                     } else {
@@ -364,22 +359,33 @@
         function initializeZoom() {
             const arContainer = document.getElementById('ar-container');
 
+            // Zoom mit Mausrad
             window.addEventListener('wheel', (event) => {
                 event.preventDefault();
                 const model = window.currentModel();
                 if (model) {
+                    let currentScale = model.getAttribute('scale');
+                    currentScale = {
+                        x: parseFloat(currentScale.x),
+                        y: parseFloat(currentScale.y),
+                        z: parseFloat(currentScale.z)
+                    };
                     if (event.deltaY < 0) {
-                        scale += zoomSpeed;
+                        currentScale.x += zoomSpeed;
+                        currentScale.y += zoomSpeed;
+                        currentScale.z += zoomSpeed;
                     } else {
-                        scale -= zoomSpeed;
-                        scale = Math.max(scale, 0.05);
+                        currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
+                        currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
+                        currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
                     }
-                    model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                    model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
                 }
             }, { passive: false });
 
             let lastTouchDistance = null;
 
+            // Zoom mit zwei Fingern (Pinch)
             arContainer.addEventListener('touchstart', (event) => {
                 if (event.touches.length === 2) {
                     const dx = event.touches[0].clientX - event.touches[1].clientX;
@@ -397,13 +403,22 @@
 
                     const model = window.currentModel();
                     if (model) {
+                        let currentScale = model.getAttribute('scale');
+                        currentScale = {
+                            x: parseFloat(currentScale.x),
+                            y: parseFloat(currentScale.y),
+                            z: parseFloat(currentScale.z)
+                        };
                         if (delta > 0) {
-                            scale += zoomSpeed;
+                            currentScale.x += zoomSpeed;
+                            currentScale.y += zoomSpeed;
+                            currentScale.z += zoomSpeed;
                         } else {
-                            scale -= zoomSpeed;
-                            scale = Math.max(scale, 0.05);
+                            currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
+                            currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
+                            currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
                         }
-                        model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                        model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
                     }
                     lastTouchDistance = currentDistance;
                 }
