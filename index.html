@@ -263,7 +263,7 @@
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
-                                  scale="0.02 0.02 0.02"  
+                                  scale="0.05 0.05 0.05"  
                                   position="0 0 0"
                                   rotation="0 0 0"
                                   visible="false">
@@ -513,9 +513,9 @@
                         currentScale.y += zoomSpeed;
                         currentScale.z += zoomSpeed;
                     } else {
-                        currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
-                        currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
-                        currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
+                        currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.01);
+                        currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.01);
+                        currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.01);
                     }
                     model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
                 }
