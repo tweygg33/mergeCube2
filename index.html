@@ -416,79 +416,92 @@
          * Funktion zur Initialisierung der Rotations-Event-Listener
          * - Ermöglicht die Drehung des aktuellen Modells mittels Maus oder Touch
          */
-        function initializeRotation() {
-            const arContainer = document.getElementById('ar-container');
-            let isInteracting = false;
-            let lastX = 0;
-            let lastY = 0;
+        /**
+ * Funktion zur Initialisierung der Rotations-Event-Listener
+ * - Ermöglicht die Drehung des aktuellen Modells mittels Maus oder Touch
+ */
+/**
+ * Funktion zur Initialisierung der Rotations-Event-Listener
+ * - Ermöglicht die Drehung des aktuellen Modells mittels Maus oder Touch
+ */
+ /**
+ * Funktion zur Initialisierung der Rotations-Event-Listener
+ * - Ermöglicht die Drehung des aktuellen Modells mittels Maus oder Touch
+ */
+function initializeRotation() {
+    const arContainer = document.getElementById('ar-container');
+    let isInteracting = false;
+    let lastX = 0;
+    let lastY = 0;
 
-            /**
-             * Funktion zur Drehung des Modells
-             * @param {number} deltaX - Veränderung in der X-Achse
-             * @param {number} deltaY - Veränderung in der Y-Achse
-             */
-            function rotateModel(deltaX, deltaY) {
-                const model = window.currentModel();
-                if (model) {
-                    const currentRotation = model.getAttribute('rotation');
-                    model.setAttribute('rotation', {
-                        x: currentRotation.x + deltaY * 0.5,
-                        y: currentRotation.y + deltaX * 0.5,
-                        z: currentRotation.z
-                    });
-                }
-            }
-
-            // Maus-Events
-            arContainer.addEventListener('mousedown', (event) => {
-                isInteracting = true;
-                lastX = event.clientX;
-                lastY = event.clientY;
-            });
-
-            arContainer.addEventListener('mousemove', (event) => {
-                if (isInteracting) {
-                    const deltaX = event.clientX - lastX;
-                    const deltaY = event.clientY - lastY;
-                    lastX = event.clientX;
-                    lastY = event.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
-
-            arContainer.addEventListener('mouseup', () => {
-                isInteracting = false;
-            });
-
-            arContainer.addEventListener('mouseleave', () => {
-                isInteracting = false;
-            });
-
-            // Touch-Events
-            arContainer.addEventListener('touchstart', (event) => {
-                if (event.touches.length === 1) {
-                    isInteracting = true;
-                    const touch = event.touches[0];
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                }
-            });
-
-            arContainer.addEventListener('touchmove', (event) => {
-                if (isInteracting && event.touches.length === 1) {
-                    const touch = event.touches[0];
-                    const deltaX = touch.clientX - lastX;
-                    const deltaY = touch.clientY - lastY;
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
-
-            arContainer.addEventListener('touchend', () => {
-                isInteracting = false;
+    /**
+     * Funktion zur Drehung des Modells
+     * @param {number} deltaX - Veränderung in der X-Achse
+     * @param {number} deltaY - Veränderung in der Y-Achse
+     */
+    function rotateModel(deltaX, deltaY) {
+        const model = window.currentModel();
+        if (model) {
+            const currentRotation = model.getAttribute('rotation');
+            model.setAttribute('rotation', {
+                x: currentRotation.x - deltaX * 0.5,  // Oben/Unten beeinflusst x (negativer Wert für gegenteilige Richtung)
+                y: currentRotation.y + deltaY * 0.5,  // Links/Rechts beeinflusst y
+                z: currentRotation.z
             });
         }
+    }
+
+    // Maus-Events
+    arContainer.addEventListener('mousedown', (event) => {
+        isInteracting = true;
+        lastX = event.clientX;
+        lastY = event.clientY;
+    });
+
+    arContainer.addEventListener('mousemove', (event) => {
+        if (isInteracting) {
+            const deltaX = event.clientX - lastX;
+            const deltaY = event.clientY - lastY;
+            lastX = event.clientX;
+            lastY = event.clientY;
+            rotateModel(deltaX, deltaY);
+        }
+    });
+
+    arContainer.addEventListener('mouseup', () => {
+        isInteracting = false;
+    });
+
+    arContainer.addEventListener('mouseleave', () => {
+        isInteracting = false;
+    });
+
+    // Touch-Events
+    arContainer.addEventListener('touchstart', (event) => {
+        if (event.touches.length === 1) {
+            isInteracting = true;
+            const touch = event.touches[0];
+            lastX = touch.clientX;
+            lastY = touch.clientY;
+        }
+    });
+
+    arContainer.addEventListener('touchmove', (event) => {
+        if (isInteracting && event.touches.length === 1) {
+            const touch = event.touches[0];
+            const deltaX = touch.clientX - lastX;
+            const deltaY = touch.clientY - lastY;
+            lastX = touch.clientX;
+            lastY = touch.clientY;
+            rotateModel(deltaX, deltaY);
+        }
+    });
+
+    arContainer.addEventListener('touchend', () => {
+        isInteracting = false;
+    });
+}
+
 
         /**
          * Funktion zur Initialisierung der Zoom-Event-Listener
