@@ -3,296 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR.js Merge Cube Simulation</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    <title>3D Rotating Plane Model - Debug Version</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        #info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            z-index: 10;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #camera-info {
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            max-height: 80vh;
-            overflow-y: auto;
-            width: 300px;
-        }
-        #loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            display: none;
-        }
-        #camera-select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        #start-ar-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #start-ar-button:hover {
-            background-color: #218838;
-        }
-        #ar-container {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
+        body { margin: 0; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
-    <div id="info">
-        <h2>AR.js Merge Cube Simulation</h2>
-        <p>Rotate the cube in the physical world to interact with the virtual model.</p>
-    </div>
- 
-    <div id="camera-info">
-        <h3>Available Cameras:</h3>
-        <select id="camera-select"></select>
-        <p id="selected-camera">Choose a camera to start the AR experience.</p>
-        <button id="start-ar-button">Start AR</button>
-    </div>
- 
-    <div id="loading-indicator">Loading AR Experience...</div>
- 
-    <div id="ar-container"></div>
- 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script>
-        let modelEntity;
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xcccccc); // Light gray background
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
  
-        async function initCameraSelection() {
-            try {
-                const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                initialStream.getTracks().forEach(track => track.stop());
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
  
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
  
-                if (videoInputDevices.length === 0) {
-                    throw new Error('No video cameras found.');
-                }
+        // Create a variable to store our model
+        let planeModel;
  
-                const cameraSelect = document.getElementById('camera-select');
-                videoInputDevices.forEach((device, index) => {
-                    const option = document.createElement('option');
-                    option.value = device.deviceId;
-                    option.text = device.label || `Camera ${index + 1}`;
-                    cameraSelect.appendChild(option);
-                });
+        // Load the GLB model
+        const loader = new THREE.GLTFLoader();
+        loader.load(
+            'glb/plane.glb',
+            function (gltf) {
+                console.log('Model loaded successfully');
+                planeModel = gltf.scene;
+                scene.add(planeModel);
  
-                let selectedDevice = videoInputDevices.find(device =>
-                    device.label.toLowerCase().includes('rear') ||
-                    device.label.toLowerCase().includes('back')
-                ) || videoInputDevices[0];
+                // Center the model
+                const box = new THREE.Box3().setFromObject(planeModel);
+                const center = box.getCenter(new THREE.Vector3());
+                planeModel.position.sub(center);
  
-                cameraSelect.value = selectedDevice.deviceId;
-                document.getElementById('selected-camera').textContent = `Active Camera: ${selectedDevice.label || 'Unknown Camera'}`;
- 
-                cameraSelect.addEventListener('change', () => {
-                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
-                    document.getElementById('selected-camera').textContent = `Active Camera: ${selectedDevice.label || 'Unknown Camera'}`;
-                });
- 
-                document.getElementById('start-ar-button').addEventListener('click', async () => {
-                    if (selectedDevice) {
-                        document.getElementById('loading-indicator').style.display = 'block';
-                        overrideGetUserMedia(selectedDevice.deviceId);
-                        await initializeARScene();
-                        document.getElementById('ar-container').style.display = 'block';
-                        document.getElementById('camera-info').style.display = 'none';
-                        document.getElementById('info').style.display = 'none';
-                    } else {
-                        alert('Please select a camera.');
-                    }
-                });
- 
-            } catch (error) {
-                console.error('Error accessing the camera:', error);
-                document.getElementById('selected-camera').textContent = 'Error accessing the camera.';
-            }
-        }
- 
-        function overrideGetUserMedia(selectedDeviceId) {
-            const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-            navigator.mediaDevices.getUserMedia = function(constraints) {
-                if (constraints.video && selectedDeviceId) {
-                    constraints.video = {
-                        ...constraints.video,
-                        deviceId: { exact: selectedDeviceId }
-                    };
-                }
-                return originalGetUserMedia(constraints);
-            };
-        }
- 
-        async function initializeARScene() {
-            document.getElementById('ar-container').style.display = 'block';
-            document.getElementById('camera-info').style.display = 'none';
-            document.getElementById('info').style.display = 'none';
- 
-            const arContainer = document.getElementById('ar-container');
-            arContainer.innerHTML = `
-                <a-scene embedded arjs='sourceType: webcam;'>
-                <!-- Define the cube with 6 markers, each marker corresponding to a cube face, replaced with 3D models -->
-                <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
-                    <a-entity gltf-model="url(glb/futuristic_building(1).glb)"
-                            scale="0.09 0.09 0.09"
-                            position="0 0 0"
-                            rotation="0 0 0">
-                    </a-entity>
-                </a-marker>
- 
-                <!-- zweite markers -->
-                <a-entity camera></a-entity>
- 
-                <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
-                        <a-entity id="model2" gltf-model="url(glb/futuristic_building(1).glb)"
-                                  scale="0.09 0.09 0.09"
-                                  position="0 0 90">
-                        </a-entity>
-                    </a-marker>
+                // Adjust the camera to fit the model
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const fov = camera.fov * (Math.PI / 180);
+                let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2));
+                camera.position.z = cameraZ * 1.5;
                
-                <!-- Dritte markers -->
-                <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
-                        <a-entity id="model3" gltf-model="url(glb/futuristic_building(1).glb)"
-                                  scale="0.09 0.09 0.09"
-                                  position="180 0 0">
-                        </a-entity>
-                </a-marker>
+                camera.updateProjectionMatrix();
+                controls.update();
+            },
+            function (xhr) {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            function (error) {
+                console.error('An error happened', error);
+            }
+        );
  
- 
-                <!-- Vierte markers -->
-                <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
-                        <a-entity id="model4" gltf-model="url(glb/futuristic_building(1).glb)"
-                                  scale="0.09 0.09 0.09"
-                                  position="0 -60 0">
-                        </a-entity>
-                </a-marker>
- 
- 
- 
-                <!-- Fünfte markers -->
- 
-                <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
-                        <a-entity id="model5" gltf-model="url(glb/futuristic_building(1).glb)"
-                                  scale="0.09 0.09 0.09"
-                                  position="0 0 90">
-                        </a-entity>
-                    </a-marker>
- 
-                    <!-- Marker for the sixth face of the cube -->
-                    <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
-                        <a-entity id="model6" gltf-model="url(glb/futuristic_building(1).glb)"
-                                  scale="0.09 0.09 0.09"
-                                  position="0 0 180">
-                        </a-entity>
-                    </a-marker>
- 
- 
- 
-            </a-scene>
-            `;
- 
-            // Add touch/mouse-based rotation
-            modelEntity = document.querySelector('a-entity[gltf-model]');
-            let isMouseDown = false;
-            let lastX, lastY;
- 
-            arContainer.addEventListener('mousedown', (event) => {
-                isMouseDown = true;
-                lastX = event.clientX;
-                lastY = event.clientY;
-            });
- 
-            arContainer.addEventListener('mousemove', (event) => {
-                if (isMouseDown) {
-                    const deltaX = event.clientX - lastX;
-                    const deltaY = event.clientY - lastY;
-                    lastX = event.clientX;
-                    lastY = event.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
- 
-            arContainer.addEventListener('mouseup', () => {
-                isMouseDown = false;
-            });
- 
-            arContainer.addEventListener('touchstart', (event) => {
-                isMouseDown = true;
-                const touch = event.touches[0];
-                lastX = touch.clientX;
-                lastY = touch.clientY;
-            });
- 
-            arContainer.addEventListener('touchmove', (event) => {
-                if (isMouseDown) {
-                    const touch = event.touches[0];
-                    const deltaX = touch.clientX - lastX;
-                    const deltaY = touch.clientY - lastY;
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
- 
-            arContainer.addEventListener('touchend', () => {
-                isMouseDown = false;
-            });
- 
-            document.getElementById('loading-indicator').style.display = 'none';
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
         }
+        animate();
  
-        function rotateModel(deltaX, deltaY) {
-            const currentRotation = modelEntity.getAttribute('rotation');
-            modelEntity.setAttribute('rotation', {
-                x: currentRotation.x + deltaY * 0.5,
-                y: currentRotation.y + deltaX * 0.5,
-                z: currentRotation.z
-            });
+        // Handle window resizing
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         }
- 
-        // Initialize camera selection and AR scene
-        initCameraSelection();
     </script>
 </body>
 </html>
- 
  

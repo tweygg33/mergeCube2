@@ -3,29 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Cube with Mouse Controls</title>
+    <title>3D GLB Model with Mouse Controls</title>
     <style>
         body { margin: 0; }
-        canvas { display: block; }
     </style>
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         // Set up the scene, camera, and renderer
         const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xaaaaaa);  // Add a gray background for visibility
+        
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Create the cube
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
         camera.position.z = 5;
+
+        // Add ambient lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
+        scene.add(ambientLight);
+
+        // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5).normalize();
+        scene.add(directionalLight);
+
+        // Add a grid helper to visualize the scene
+        const gridHelper = new THREE.GridHelper(10, 10);
+        scene.add(gridHelper);
+
+        // Load the GLB model
+        const loader = new THREE.GLTFLoader();
+        let model;  // Variable to store the loaded model
+
+        loader.load(
+            'glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb',
+            function(gltf) {
+                model = gltf.scene;
+                model.scale.set(1, 1, 1);  // Set scale to 1 to ensure it's visible
+                model.position.set(0, 0, 0);  // Reset position
+                scene.add(model);
+                console.log("Model loaded successfully:", model);
+            },
+            undefined,
+            function(error) {
+                console.error("Error loading model:", error);
+            }
+        );
 
         // Variables to track mouse movement
         let isMouseDown = false;
@@ -44,13 +72,13 @@
         });
 
         document.addEventListener('mousemove', function(event) {
-            if (!isMouseDown) return;
+            if (!isMouseDown || !model) return;  // Ensure the model is loaded before interacting
 
             const deltaX = event.clientX - lastMouseX;
             const deltaY = event.clientY - lastMouseY;
 
-            cube.rotation.y += deltaX * 0.01;
-            cube.rotation.x += deltaY * 0.01;
+            model.rotation.y += deltaX * 0.01;
+            model.rotation.x += deltaY * 0.01;
 
             lastMouseX = event.clientX;
             lastMouseY = event.clientY;
