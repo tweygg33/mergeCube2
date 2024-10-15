@@ -261,79 +261,67 @@
                     
                     <!-- Marker 1 -->
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-1"
-                                      gltf-model="#model1"
-                                      scale="0.1 0.1 0.1"  
-                                      position="0 0 0"
-                                      rotation="-90 0 10"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-1"
+                                  gltf-model="#model1"
+                                  scale="0.1 0.1 0.1"  
+                                  position="0 0 0"
+                                  rotation="-90 0 10"
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 2 -->
                     <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-2"
-                                      gltf-model="#model2"
-                                      scale="0.06 0.06 0.06"  
-                                      position="0 0 0"
-                                      rotation="0 -90 80" 
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-2"
+                                  gltf-model="#model2"
+                                  scale="0.06 0.06 0.06"  
+                                  position="0 0 0"
+                                  rotation="0 -90 80" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 3 -->
                     <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-3"
-                                      gltf-model="#model3"
-                                      scale="0.5 0.5 0.5"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-3"
+                                  gltf-model="#model3"
+                                  scale="0.5 0.5 0.5"  
+                                  position="0 0 0"
+                                  rotation="-90 0 0"
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 4 -->
                     <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-4"
-                                      gltf-model="#model4"
-                                      scale="0.7 0.7 0.7" 
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-4"
+                                  gltf-model="#model4"
+                                  scale="0.7 0.7 0.7" 
+                                  position="0 0 0"
+                                  rotation="-90 0 0"
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 5 -->
                     <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-5"
-                                      gltf-model="#model5"
-                                      scale="0.6 0.6 0.6"   
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-5"
+                                  gltf-model="#model5"
+                                  scale="0.6 0.6 0.6"   
+                                  position="0 0 0"
+                                  rotation="-90 0 0"
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 6 -->
                     <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
-                        <a-entity class="model-wrapper" rotation="0 0 0" visible="false">
-                            <a-entity id="model-container-6"
-                                      gltf-model="#model6"
-                                      scale="0.5 0.5 0.5"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-6"
+                                  gltf-model="#model6"
+                                  scale="0.5 0.5 0.5"  
+                                  position="0 0 0"
+                                  rotation="-90 0 0"
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
@@ -369,23 +357,23 @@
         function initializeMarkerEvents() {
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
-            let currentModelWrapper = null;
+            let currentModel = null;
 
             markers.forEach(marker => {
                 marker.addEventListener('markerFound', () => {
                     if (currentVisibleMarker && currentVisibleMarker !== marker) {
                         // Verstecke das vorherige Modell
-                        const previousModel = currentVisibleMarker.querySelector('.model-wrapper');
+                        const previousModel = currentVisibleMarker.querySelector('a-entity');
                         if (previousModel) {
                             previousModel.setAttribute('visible', 'false');
                         }
                     }
 
                     // Zeige das aktuelle Modell
-                    const modelWrapper = marker.querySelector('.model-wrapper');
-                    if (modelWrapper) {
-                        modelWrapper.setAttribute('visible', 'true');
-                        currentModelWrapper = modelWrapper;
+                    const model = marker.querySelector('a-entity');
+                    if (model) {
+                        model.setAttribute('visible', 'true');
+                        currentModel = model;
                     }
 
                     currentVisibleMarker = marker;
@@ -393,9 +381,9 @@
 
                 marker.addEventListener('markerLost', () => {
                     // Verstecke das Modell, wenn der Marker verloren geht
-                    const lostModelWrapper = marker.querySelector('.model-wrapper');
-                    if (lostModelWrapper) {
-                        lostModelWrapper.setAttribute('visible', 'false');
+                    const lostModel = marker.querySelector('a-entity');
+                    if (lostModel) {
+                        lostModel.setAttribute('visible', 'false');
                     }
 
                     // Suche nach einem anderen sichtbaren Marker
@@ -407,21 +395,21 @@
                     });
 
                     if (anotherVisibleMarker) {
-                        const anotherModelWrapper = anotherVisibleMarker.querySelector('.model-wrapper');
-                        if (anotherModelWrapper) {
-                            anotherModelWrapper.setAttribute('visible', 'true');
-                            currentModelWrapper = anotherModelWrapper;
+                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                        if (anotherModel) {
+                            anotherModel.setAttribute('visible', 'true');
+                            currentModel = anotherModel;
                         }
                         currentVisibleMarker = anotherVisibleMarker;
                     } else {
                         currentVisibleMarker = null;
-                        currentModelWrapper = null;
+                        currentModel = null;
                     }
                 });
             });
 
-            // Speichere die aktuelle Modell-Wrapper-Referenz global für die Rotations- und Zoom-Funktion
-            window.currentModelWrapper = () => currentModelWrapper;
+            // Speichere die aktuelle Modellreferenz global für die Rotations- und Zoom-Funktion
+            window.currentModel = () => currentModel;
         }
 
         /**
@@ -440,10 +428,10 @@
              * @param {number} deltaY - Veränderung in der Y-Achse
              */
             function rotateModel(deltaX, deltaY) {
-                const modelWrapper = window.currentModelWrapper();
-                if (modelWrapper) {
-                    const currentRotation = modelWrapper.getAttribute('rotation');
-                    modelWrapper.setAttribute('rotation', {
+                const model = window.currentModel();
+                if (model) {
+                    const currentRotation = model.getAttribute('rotation');
+                    model.setAttribute('rotation', {
                         x: currentRotation.x + deltaY * 0.5,
                         y: currentRotation.y + deltaX * 0.5,
                         z: currentRotation.z
@@ -512,27 +500,24 @@
             // Zoom mit Mausrad
             window.addEventListener('wheel', (event) => {
                 event.preventDefault();
-                const modelWrapper = window.currentModelWrapper();
-                if (modelWrapper) {
-                    const model = modelWrapper.querySelector('a-entity');
-                    if (model) {
-                        let currentScale = model.getAttribute('scale');
-                        currentScale = {
-                            x: parseFloat(currentScale.x),
-                            y: parseFloat(currentScale.y),
-                            z: parseFloat(currentScale.z)
-                        };
-                        if (event.deltaY < 0) {
-                            currentScale.x += zoomSpeed;
-                            currentScale.y += zoomSpeed;
-                            currentScale.z += zoomSpeed;
-                        } else {
-                            currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
-                            currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
-                            currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
-                        }
-                        model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
+                const model = window.currentModel();
+                if (model) {
+                    let currentScale = model.getAttribute('scale');
+                    currentScale = {
+                        x: parseFloat(currentScale.x),
+                        y: parseFloat(currentScale.y),
+                        z: parseFloat(currentScale.z)
+                    };
+                    if (event.deltaY < 0) {
+                        currentScale.x += zoomSpeed;
+                        currentScale.y += zoomSpeed;
+                        currentScale.z += zoomSpeed;
+                    } else {
+                        currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
+                        currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
+                        currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
                     }
+                    model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
                 }
             }, { passive: false });
 
@@ -554,27 +539,24 @@
                     const currentDistance = Math.hypot(dx, dy);
                     const delta = currentDistance - lastTouchDistance;
 
-                    const modelWrapper = window.currentModelWrapper();
-                    if (modelWrapper) {
-                        const model = modelWrapper.querySelector('a-entity');
-                        if (model) {
-                            let currentScale = model.getAttribute('scale');
-                            currentScale = {
-                                x: parseFloat(currentScale.x),
-                                y: parseFloat(currentScale.y),
-                                z: parseFloat(currentScale.z)
-                            };
-                            if (delta > 0) {
-                                currentScale.x += zoomSpeed;
-                                currentScale.y += zoomSpeed;
-                                currentScale.z += zoomSpeed;
-                            } else {
-                                currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
-                                currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
-                                currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
-                            }
-                            model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
+                    const model = window.currentModel();
+                    if (model) {
+                        let currentScale = model.getAttribute('scale');
+                        currentScale = {
+                            x: parseFloat(currentScale.x),
+                            y: parseFloat(currentScale.y),
+                            z: parseFloat(currentScale.z)
+                        };
+                        if (delta > 0) {
+                            currentScale.x += zoomSpeed;
+                            currentScale.y += zoomSpeed;
+                            currentScale.z += zoomSpeed;
+                        } else {
+                            currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
+                            currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
+                            currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
                         }
+                        model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
                     }
                     lastTouchDistance = currentDistance;
                 }
