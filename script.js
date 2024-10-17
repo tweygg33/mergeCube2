@@ -17,7 +17,7 @@ async function kameraAuswahl(){
         initialStream.getTracks().forEach(track => track.stop());
         //Liste aller Geräte intern
         const devices = await navigator.mediaDevices.enumerateDevices();
-        console.log(videoInputDevices)
+        console.log(devices)
         //Filtern geräte nur auf Video
         let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
         console.log(videoInputDevices)
