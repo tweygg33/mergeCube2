@@ -1,0 +1,82 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body,html{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#head {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    width: 30%;
+    gap: 2rem;
+}
+#info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: rgb(212, 254, 0);
+    font-family: Arial, sans-serif;
+    z-index: 10;
+    background-color: rgba(21, 0, 255, 0.838);
+    padding: 16px;
+    border-radius: 5px;
+    width: 50%;
+    padding: 2rem;
+}
+
+#camera-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: white;
+    font-family: Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    padding: 2rem;
+}
+#camera-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+#start-ar-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#start-ar-button:hover {
+    background-color: #218838;
+}
+#main {
+    display: flex;
+    width: 100%;
+}
+#ar-container {
+    display: none; /* Versteckt die AR-Szene initial */
+    width: 100%;
+    height: 100%;
+}
+#loading-indicator {
+    transform: translate(-50%, -50%);
+    color: white;
+    font-family: Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 10;
+    display: none;
+}

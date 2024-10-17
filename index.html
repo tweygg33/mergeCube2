@@ -1,45 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>NeuesCube</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+</head>
+<body>
+    <div id="head">
+        <div id="info">
+            <h2>AR-DRV</h2>
+            <p>Scanne verschiedene Marker</p>
+        </div>
+        <div id="camera-info">
+            <h3>Verfügbare Kameras:</h3>
+            <select id="camera-select"></select> <!-- Dropdown-Menü für Kameras -->
+            <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p>
+            <button id="start-ar-button">AR starten</button> <!-- Button zum Starten der AR-Szene -->
+        </div>
+        <div id="kamerainfo"></div>
+    </div>
 
-// Gibt den URL-Namen zurück
-// Kamera ID wird zurückgegeben 
-function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    const results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
+    <div id="main">
+        <div id="loading-indicator">AR-Erfahrung wird geladen...</div>
+        <div id="ar-container">
+            <!-- AR.js scene wird hier dynamisch geladen -->
+        </div>
+    </div>
 
-async function kameraAuswahl(){
-    try {
-        //Aktiviere Kamera um die Namen herauszubekommen wegen der Berechtigung
-        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true});
-        console.log(initialStream)
-        //Stoppt alle Kameras
-        initialStream.getTracks().forEach(track => track.stop());
-        //Liste aller Geräte intern
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        //Filtern geräte nur auf Video
-        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-        console.log(videoInputDevices)
-        if (videoInputDevices.length === 0) {
-            throw new Error('Keine Videokameras gefunden.');
-        }
-         // Liste der Kameras in Kamera-Select hinzufügen
-        const cameraSelect = document.getElementById('camera-select');
-        videoInputDevices.forEach((device, index) => {
-            const option = document.createElement('option');
-            option.value = device.deviceId;
-            option.text = device.label || `Kamera ${index + 1}`;
-            cameraSelect.appendChild(option);
-        });
-        const kameraliste = document.getElementById('kamerainfo');
-        videoInputDevices.forEach(geraet=>{
-            const para = document.createElement('p');
-            para.textContent = geraet.label;
-            kameraliste.appendChild(para)
-        })
-        
-    } catch {
 
-    }
-};
-kameraAuswahl()
+
+
+    <script src="script.js"></script>
+</body>
+</html>

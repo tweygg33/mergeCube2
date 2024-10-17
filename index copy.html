@@ -11,131 +11,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <style>
-        /* Grundlegende Stile für die gesamte Seite */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        
-        /* Stil für das Informationsfeld oben links */
-        #info {
-            display: none;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            z-index: 10;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        /* Stil für das Kamera-Informations- und Auswahlfeld */
-        #camera-info {
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            max-height: 80vh;
-            overflow-y: auto;
-            width: 300px;
-        }
-
-        /* Stil für das Dropdown-Menü zur Kamerawahl */
-        #camera-select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        /* Stil für den "AR starten" Button */
-        #start-ar-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Hover-Effekt für den "AR starten" Button */
-        #start-ar-button:hover {
-            background-color: #218838;
-        }
-
-        /* Stil für den AR-Container */
-        #ar-container {
-            display: none; /* Versteckt die AR-Szene initial */
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Stil für den Ladeindikator */
-        #loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            display: none;
-        }
-    </style>
 </head>
 <body>
-    <!-- Informationsbereich mit Titel und Beschreibung -->
-    <div id="info">
-        <h2>AR.js Würfel QR-Code mc2</h2>
-        <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
-    </div>
-
-    <!-- Kameraauswahl- und Steuerungsbereich -->
-    <div id="camera-info">
-        <h3>Verfügbare Kameras:</h3>
-        <select id="camera-select"></select> <!-- Dropdown-Menü für Kameras -->
-        <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p>
-        <button id="start-ar-button">AR starten</button> <!-- Button zum Starten der AR-Szene -->
-    </div>
-
-    <!-- Ladeindikator für die AR-Szene -->
-    <div id="loading-indicator">AR-Erfahrung wird geladen...</div>
-
-    <!-- Container für die AR-Szene, wird dynamisch mit A-Frame-Inhalten gefüllt -->
-    <div id="ar-container">
-        <!-- AR.js scene wird hier dynamisch geladen -->
-    </div>
-
     <script>
         const zoomSpeed = 0.1; // Zoom-Geschwindigkeit
-
-        /**
-         * Utility-Funktion, um URL-Parameter abzurufen
-         * @param {string} name - Der Name des URL-Parameters
-         * @returns {string} - Der Wert des URL-Parameters oder leerer String
-         */
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            const results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-
         /**
          * Funktion zur Initialisierung der Kameraauswahl
          * - Fordert Kamerazugriff an
@@ -144,27 +23,6 @@
          */
         async function initCameraSelection() {
             try {
-                // Erlaubnis zum Kamerazugriff einholen
-                const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
-
-                // Geräte auflisten
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-
-                if (videoInputDevices.length === 0) {
-                    throw new Error('Keine Videokameras gefunden.');
-                }
-
-                // Liste der Kameras im HTML anzeigen
-                const cameraSelect = document.getElementById('camera-select');
-                videoInputDevices.forEach((device, index) => {
-                    const option = document.createElement('option');
-                    option.value = device.deviceId;
-                    option.text = device.label || `Kamera ${index + 1}`;
-                    cameraSelect.appendChild(option);
-                });
-
                 // Automatisch die erste Rückkamera auswählen, falls vorhanden
                 let selectedDevice = videoInputDevices.find(device => 
                     device.label.toLowerCase().includes('rear') || 
