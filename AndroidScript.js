@@ -10,13 +10,8 @@ function getUrlParameter(name) {
 
 async function kameraAuswahl(){
     try {
-        const constraints = {
-            video: { 
-                facingMode: { exact: 'environment' }  // 'environment' wählt die Rückkamera
-            }
-        };
         //Aktiviere Kamera um die Namen herauszubekommen wegen der Berechtigung
-        const initialStream = await navigator.mediaDevices.getUserMedia(constraints);
+        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true});
         console.log(initialStream)
         //Stoppt alle Kameras
         initialStream.getTracks().forEach(track => track.stop());
