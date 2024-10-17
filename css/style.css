@@ -12,7 +12,7 @@ body,html{
     display: flex;
     flex-direction: column;
     margin: 2rem;
-    width: 30%;
+    width: 50%;
     gap: 2rem;
 }
 #info {
@@ -27,7 +27,7 @@ body,html{
     background-color: rgba(21, 0, 255, 0.838);
     padding: 16px;
     border-radius: 5px;
-    width: 50%;
+    width: 100%;
     padding: 2rem;
 }
 
@@ -40,7 +40,7 @@ body,html{
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 10px;
-    width: 50%;
+    width: 100%;
     padding: 2rem;
 }
 #camera-select {
