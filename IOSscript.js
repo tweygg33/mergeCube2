@@ -1,4 +1,3 @@
-
 // Gibt den URL-Namen zurück
 // Kamera ID wird zurückgegeben 
 function getUrlParameter(name) {
@@ -8,10 +7,12 @@ function getUrlParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
+let selectedDeviceId = null;// Globale Variable zur Speicherung der gewählten Kamera
+
 async function kameraAuswahl(){
     try {
         //Aktiviere Kamera um die Berechtigung zu erhalten
-        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true});
+        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
         console.log(initialStream)
         //Stoppt alle Kameras
         initialStream.getTracks().forEach(track => track.stop());
@@ -47,150 +48,116 @@ async function kameraAuswahl(){
             kameraliste.appendChild(para);
         });
 
-        //Die ertse RÜCKKAMERA automatisch auswählen und 
-        let selectedDevice = videoInputDevices.find(device=>
+        //Die erste RÜCKKAMERA automatisch auswählen und 
+    let selectedDevice = videoInputDevices.find(device =>
             device.label.toLowerCase().includes('rear') ||
             device.label.toLocaleLowerCase().includes('back') ||
             device.label.toLocaleLowerCase().includes('rück')
         ) || videoInputDevices[0];
         cameraSelect.value = selectedDevice.deviceId;
+        selectedDeviceId = selectedDevice.deviceId; // Setze die ausgewählte Kamera als aktuelle Kamera**
         document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
-        // Event Listener für Kamerawechsel
-        cameraSelect.addEventListener('change', ()=>{
-            selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
-            document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
-        })
 
-        //AR-BUTTON -AR-Starten 
-        document.getElementById('start-ar-button').addEventListener('click',async()=>{
-            if(selectedDevice) {
-                document.getElementById('loading-indicator').style.display='block';
+        // Event Listener für Kamerawechsel
+        cameraSelect.addEventListener('change', () => {
+            selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+            selectedDeviceId = cameraSelect.value; // Aktualisiere die ausgewählte Kamera
+            document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
+        });
+
+        //AR-BUTTON - AR-Starten
+        document.getElementById('start-ar-button').addEventListener('click', async () => {
+            if (selectedDeviceId) { // Verwende die gespeicherte ausgewählte Kamera
+                document.getElementById('loading-indicator').style.display = 'block';
                 try {
-                      // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                    // das kommt beim anderen Script hier erstmal nicht
-                    //   overrideGetUserMedia(selectedDevice.deviceId);
-                    document.getElementById('ar-container').style.display = 'block';
-                    // AN DIESER STELLE KOMMEN PAAR FEATURES
-                    await initializeARScene();
-                    // document.getElementById('ar-container').style.display = 'block';
-                }catch(error){
-                    console.error("Fehler beim initialisieren der AR-SZene:",error);
-                    alert("Fehler beim starten der AT-Anwendung")
-                }finally {
+                    // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
+                    await startARWithSelectedCamera(selectedDeviceId) // Starte AR-Szene mit der ausgewählten Kamera
+                } catch (error) {
+                    console.error("Fehler beim Initialisieren der AR-Szene:", error);
+                    alert("Fehler beim Starten der AR-Anwendung");
+                } finally {
                     document.getElementById("loading-indicator").style.display = "none";
                 }
-            }else {
+            } else {
                 alert("Bitte wähle eine Kamera aus");
             }
         });
-    } catch(error) {
-            console.error("Fehler beim Zugriff auf die Kamere:",error);
-            document.getAnimations("selected-camera").textContent = "Fehler beim Zugriff auf die Kamera";
+    } catch (error) {
+        console.error("Fehler beim Zugriff auf die Kamera:", error);
+        document.getElementById('selected-camera').textContent = "Fehler beim Zugriff auf die Kamera";
     }
-    
-};
-        /**
-         * Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
-        //  * @param {string} selectedDeviceId - Die deviceId der ausgewählten Kamera
-       
-        function overrideGetUserMedia(selectedDeviceId) {
-            const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
 
-            navigator.mediaDevices.getUserMedia = function(constraints) {
-                if (constraints.video && selectedDeviceId) {
-                    // Setze deviceId in den Video-Constraints
-                    constraints.video = {
-                        ...constraints.video,
-                        deviceId: { exact: selectedDeviceId }
-                    };
-                }
-                return originalGetUserMedia(constraints);
-            };
-        }  */
+/**
+ * Funktion zur Verwendung einer spezifischen Kamera für die AR-Szene
+ */
+    async function startARWithSelectedCamera(deviceId) {
+    const constraints = {
+        video: {
+            deviceId: { exact: deviceId } // Verwende die ausgewählte Kamera
+        }
+    };
 
-            async function  initializeARScene() {
-                const arContainer = document.getElementById('ar-container');
+    const stream = await navigator.mediaDevices.getUserMedia(constraints); // Zugriff auf die Kamera mit der ausgewählten deviceId
+
+    const arContainer = document.getElementById('ar-container');
     arContainer.innerHTML = `
-                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
-                    <!-- Assets vorab laden -->
-                    <a-assets>
-                        <a-asset-item id="model1" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
-                        <a-asset-item id="model2" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
-                        <a-asset-item id="model3" src="glb/futuristic_building(2).glb"></a-asset-item>
-                        <a-asset-item id="model4" src="glb/futuristic_building(2).glb"></a-asset-item>
-                        <a-asset-item id="model5" src="glb/futuristic_building(2).glb"></a-asset-item>
-                        <a-asset-item id="model6" src="glb/futuristic_building(2).glb"></a-asset-item>
-                    </a-assets>
+        <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+            <!-- Assets vorab laden -->
+            <a-assets>
+                <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
+                <!-- Füge hier deine Modelle und Marker ein -->
+            </a-assets>
+            <!-- Kamera in der Szene -->
+            <a-entity camera></a-entity>
+        </a-scene>
+    `;
 
-                    <!-- Marker für die 6 Seiten eines Würfels -->
-                    
-                    <!-- Marker 1 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
-                        <a-entity id="model-container-1"
-                                  gltf-model="#model1"
-                                  scale="0.1 0.1 0.1"  
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+    document.getElementById('ar-container').style.display = 'block';
+}
 
-                    <!-- Marker 2 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
-                        <a-entity id="model-container-2"
-                                  gltf-model="#model2"
-                                  scale="0.06 0.06 0.06"  
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+async function initializeARScene() {
+    const arContainer = document.getElementById('ar-container');
+    arContainer.innerHTML = `
+        <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+            <!-- Assets vorab laden -->
+            <a-assets>
+                <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
+                <a-asset-item id="model2" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
+                <a-asset-item id="model3" src="glb/futuristic_building(2).glb"></a-asset-item>
+                <a-asset-item id="model4" src="glb/futuristic_building(2).glb"></a-asset-item>
+                <a-asset-item id="model5" src="glb/futuristic_building(2).glb"></a-asset-item>
+                <a-asset-item id="model6" src="glb/futuristic_building(2).glb"></a-asset-item>
+            </a-assets>
 
-                    <!-- Marker 3 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
-                        <a-entity id="model-container-3"
-                                  gltf-model="#model3"
-                                  scale="0.5 0.5 0.5"  
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+            <!-- Marker für die 6 Seiten eines Würfels -->
+            <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
+                <a-entity id="model-container-1" gltf-model="#model1" scale="0.1 0.1 0.1" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
-                    <!-- Marker 4 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
-                        <a-entity id="model-container-4"
-                                  gltf-model="#model4"
-                                  scale="0.7 0.7 0.7" 
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+            <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
+                <a-entity id="model-container-2" gltf-model="#model2" scale="0.06 0.06 0.06" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
-                    <!-- Marker 5 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
-                        <a-entity id="model-container-5"
-                                  gltf-model="#model5"
-                                  scale="0.6 0.6 0.6"   
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+            <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
+                <a-entity id="model-container-3" gltf-model="#model3" scale="0.5 0.5 0.5" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
-                    <!-- Marker 6 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
-                        <a-entity id="model-container-6"
-                                  gltf-model="#model6"
-                                  scale="0.5 0.5 0.5"  
-                                  position="0 0 0"
-                                  visible="false">
-                        </a-entity>
-                    </a-marker>
+            <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
+                <a-entity id="model-container-4" gltf-model="#model4" scale="0.7 0.7 0.7" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
-                    <!-- Kamera in der Szene -->
-                    <a-entity camera></a-entity>
-                </a-scene>
-            `;
+            <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
+                <a-entity id="model-container-5" gltf-model="#model5" scale="0.6 0.6 0.6" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
-            }
-    
+            <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
+                <a-entity id="model-container-6" gltf-model="#model6" scale="0.5 0.5 0.5" position="0 0 0" visible="false"></a-entity>
+            </a-marker>
 
+            <a-entity camera></a-entity>
+        </a-scene>
+    `;
+}
 
-kameraAuswahl()
+kameraAuswahl();
