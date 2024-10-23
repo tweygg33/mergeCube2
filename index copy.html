@@ -62,7 +62,7 @@
         /**
          * Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
          * @param {string} selectedDeviceId - Die deviceId der ausgewählten Kamera
-         */
+       
         function overrideGetUserMedia(selectedDeviceId) {
             const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
 
@@ -76,7 +76,7 @@
                 }
                 return originalGetUserMedia(constraints);
             };
-        }
+        }  */
 
         /**
          * Funktion zur Initialisierung der AR-Szene
