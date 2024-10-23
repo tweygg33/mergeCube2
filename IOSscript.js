@@ -114,7 +114,7 @@ async function kameraAuswahl(){
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
-                        <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
+                        <a-asset-item id="model1" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
                         <a-asset-item id="model3" src="glb/futuristic_building(2).glb"></a-asset-item>
                         <a-asset-item id="model4" src="glb/futuristic_building(2).glb"></a-asset-item>
