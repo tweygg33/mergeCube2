@@ -48,11 +48,11 @@ async function kameraAuswahl(){
         });
 
         //Die ertse RÜCKKAMERA automatisch auswählen und 
-        let selectedDevice = videoInputDevices.find(device=>{
+        let selectedDevice = videoInputDevices.find(device=>
             device.label.toLowerCase().includes('rear') ||
             device.label.toLocaleLowerCase().includes('back') ||
             device.label.toLocaleLowerCase().includes('rück')
-        }) || videoInputDevices[0];
+        ) || videoInputDevices[0];
         cameraSelect.value = selectedDevice.deviceId;
         document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
         // Event Listener für Kamerawechsel
