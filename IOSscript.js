@@ -65,6 +65,7 @@ async function kameraAuswahl(){
         document.getElementById('start-ar-button').addEventListener('click',async()=>{
             if(selectedDevice) {
                 selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+                await initializeARScene();
                 document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
 
                 document.getElementById('loading-indicator').style.display='block';
