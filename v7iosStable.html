@@ -150,8 +150,9 @@
 
                 // Geräte auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
+                console.log(devices)
                 let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-
+                console.log(videoInputDevices)
                 if (videoInputDevices.length === 0) {
                     throw new Error('Keine Videokameras gefunden.');
                 }

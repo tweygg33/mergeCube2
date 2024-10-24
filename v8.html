@@ -3,7 +3,7 @@
 <head>
     <!-- IOS VERSION -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -122,26 +122,6 @@
     </div>
 
     <script>
-        const zoomSpeed = 0.1; // Zoom-Geschwindigkeit
-
-        /**
-         * Utility-Funktion, um URL-Parameter abzurufen
-         * @param {string} name - Der Name des URL-Parameters
-         * @returns {string} - Der Wert des URL-Parameters oder leerer String
-         */
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            const results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-
-        /**
-         * Funktion zur Initialisierung der Kameraauswahl
-         * - Fordert Kamerazugriff an
-         * - Listet verfügbare Videokameras auf
-         * - Ermöglicht dem Benutzer, eine Kamera auszuwählen
-         */
         async function initCameraSelection() {
             try {
                 // Erlaubnis zum Kamerazugriff einholen
@@ -187,7 +167,7 @@
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                            // overrideGetUserMedia(selectedDevice.deviceId);
+                             overrideGetUserMedia(selectedDevice.deviceId);
 
                             // Initialisiere die AR-Szene
                             await initializeARScene();
@@ -329,25 +309,8 @@
                     <a-entity camera></a-entity>
                 </a-scene>
             `;
-
-            // Warte, bis die Szene geladen ist
-            await new Promise(resolve => {
-                const scene = arContainer.querySelector('a-scene');
-                if (scene.hasLoaded) {
-                    resolve();
-                } else {
-                    scene.addEventListener('loaded', () => {
-                        resolve();
-                    });
-                }
-            });
-
             // Füge die Marker-Event-Listener hinzu
             initializeMarkerEvents();
-
-            // Füge die Rotations- und Zoom-Event-Listener hinzu
-            initializeRotation();
-            initializeZoom();
         }
 
         /**
@@ -408,175 +371,10 @@
                 });
             });
 
-            // Speichere die aktuelle Modellreferenz global für die Rotations- und Zoom-Funktion
-            window.currentModel = () => currentModel;
         }
 
-        /**
-         * Funktion zur Initialisierung der Rotations-Event-Listener
-         * - Ermöglicht die Drehung des aktuellen Modells mittels Maus oder Touch
-         */
-        function initializeRotation() {
-            const arContainer = document.getElementById('ar-container');
-            let isInteracting = false;
-            let lastX = 0;
-            let lastY = 0;
-
-            /**
-             * Funktion zur Drehung des Modells
-             * @param {number} deltaX - Veränderung in der X-Achse
-             * @param {number} deltaY - Veränderung in der Y-Achse
-             */
-            function rotateModel(deltaX, deltaY) {
-                const model = window.currentModel();
-                if (model) {
-                    const currentRotation = model.getAttribute('rotation');
-                    model.setAttribute('rotation', {
-                        x: currentRotation.x + deltaY * 0.5,
-                        y: currentRotation.y + deltaX * 0.5,
-                        z: currentRotation.z
-                    });
-                }
-            }
-
-            // Maus-Events
-            arContainer.addEventListener('mousedown', (event) => {
-                isInteracting = true;
-                lastX = event.clientX;
-                lastY = event.clientY;
-            });
-
-            arContainer.addEventListener('mousemove', (event) => {
-                if (isInteracting) {
-                    const deltaX = event.clientX - lastX;
-                    const deltaY = event.clientY - lastY;
-                    lastX = event.clientX;
-                    lastY = event.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
-
-            arContainer.addEventListener('mouseup', () => {
-                isInteracting = false;
-            });
-
-            arContainer.addEventListener('mouseleave', () => {
-                isInteracting = false;
-            });
-
-            // Touch-Events
-            arContainer.addEventListener('touchstart', (event) => {
-                if (event.touches.length === 1) {
-                    isInteracting = true;
-                    const touch = event.touches[0];
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                }
-            });
-
-            arContainer.addEventListener('touchmove', (event) => {
-                if (isInteracting && event.touches.length === 1) {
-                    const touch = event.touches[0];
-                    const deltaX = touch.clientX - lastX;
-                    const deltaY = touch.clientY - lastY;
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                    rotateModel(deltaX, deltaY);
-                }
-            });
-
-            arContainer.addEventListener('touchend', () => {
-                isInteracting = false;
-            });
-        }
-
-        /**
-         * Funktion zur Initialisierung der Zoom-Event-Listener
-         * - Ermöglicht das Zoomen des aktuellen Modells mittels Mausrad oder Pinch-Gesten
-         */
-        function initializeZoom() {
-            const arContainer = document.getElementById('ar-container');
-
-            // Zoom mit Mausrad
-            window.addEventListener('wheel', (event) => {
-                event.preventDefault();
-                const model = window.currentModel();
-                if (model) {
-                    let currentScale = model.getAttribute('scale');
-                    currentScale = {
-                        x: parseFloat(currentScale.x),
-                        y: parseFloat(currentScale.y),
-                        z: parseFloat(currentScale.z)
-                    };
-                    if (event.deltaY < 0) {
-                        currentScale.x += zoomSpeed;
-                        currentScale.y += zoomSpeed;
-                        currentScale.z += zoomSpeed;
-                    } else {
-                        currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
-                        currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
-                        currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
-                    }
-                    model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
-                }
-            }, { passive: false });
-
-            let lastTouchDistance = null;
-
-            // Zoom mit zwei Fingern (Pinch)
-            arContainer.addEventListener('touchstart', (event) => {
-                if (event.touches.length === 2) {
-                    const dx = event.touches[0].clientX - event.touches[1].clientX;
-                    const dy = event.touches[0].clientY - event.touches[1].clientY;
-                    lastTouchDistance = Math.hypot(dx, dy);
-                }
-            });
-
-            arContainer.addEventListener('touchmove', (event) => {
-                if (event.touches.length === 2 && lastTouchDistance !== null) {
-                    const dx = event.touches[0].clientX - event.touches[1].clientX;
-                    const dy = event.touches[0].clientY - event.touches[1].clientY;
-                    const currentDistance = Math.hypot(dx, dy);
-                    const delta = currentDistance - lastTouchDistance;
-
-                    const model = window.currentModel();
-                    if (model) {
-                        let currentScale = model.getAttribute('scale');
-                        currentScale = {
-                            x: parseFloat(currentScale.x),
-                            y: parseFloat(currentScale.y),
-                            z: parseFloat(currentScale.z)
-                        };
-                        if (delta > 0) {
-                            currentScale.x += zoomSpeed;
-                            currentScale.y += zoomSpeed;
-                            currentScale.z += zoomSpeed;
-                        } else {
-                            currentScale.x = Math.max(currentScale.x - zoomSpeed, 0.05);
-                            currentScale.y = Math.max(currentScale.y - zoomSpeed, 0.05);
-                            currentScale.z = Math.max(currentScale.z - zoomSpeed, 0.05);
-                        }
-                        model.setAttribute('scale', `${currentScale.x} ${currentScale.y} ${currentScale.z}`);
-                    }
-                    lastTouchDistance = currentDistance;
-                }
-            });
-
-            arContainer.addEventListener('touchend', (event) => {
-                if (event.touches.length < 2) {
-                    lastTouchDistance = null;
-                }
-            });
-        }
-
-        /**
-         * Event Listener für das Laden der Seite
-         * - Initialisiert die Kameraauswahl UI
-         */
         window.onload = () => {
-
                 initCameraSelection();
-            
         };
     </script>
 
