@@ -30,21 +30,19 @@
     </div>
 
     <!-- Ladeindikator für die AR-Szene -->
-    <div id="loading-indicator" style="display: none;">AR-Erfahrung wird geladen...</div>
+    <div id="loading-indicator">AR-Erfahrung wird geladen...</div>
 
     <!-- Container für die AR-Szene, wird dynamisch mit A-Frame-Inhalten gefüllt -->
-    <div id="ar-container" style="display: none;">
+    <div id="ar-container">
         <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
 
     <script>
-        let activeStream = null; // Variable zur Verfolgung des aktiven Kamerastreams
-
         async function initCameraSelection() {
             try {
                 // Erlaubnis zum Kamerazugriff einholen
-                activeStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                activeStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
+                const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
 
                 // Geräte auflisten
                 const devices = await navigator.mediaDevices.enumerateDevices();
@@ -56,7 +54,6 @@
 
                 // Liste der Kameras im HTML anzeigen
                 const cameraSelect = document.getElementById('camera-select');
-                cameraSelect.innerHTML = ''; // Vorherige Optionen entfernen
                 videoInputDevices.forEach((device, index) => {
                     const option = document.createElement('option');
                     option.value = device.deviceId;
@@ -85,21 +82,13 @@
                     if (selectedDevice) {
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
-                            // Stoppe vorhandene Streams, falls vorhanden
-                            if (activeStream) {
-                                activeStream.getTracks().forEach(track => track.stop());
-                            }
-
-                            // Erhalte den Stream mit der ausgewählten Kamera
-                            activeStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: selectedDevice.deviceId } } });
-
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                            overrideGetUserMedia(selectedDevice.deviceId);
+                             overrideGetUserMedia(selectedDevice.deviceId);
 
                             // Initialisiere die AR-Szene
                             await initializeARScene();
 
-                            // Zeige den AR-Container und halte die Kameraauswahl und Info sichtbar
+                            // Zeige den AR-Container und verstecke die Kameraauswahl und Info
                             document.getElementById('ar-container').style.display = 'block';
                             document.getElementById('camera-info').style.display = 'block';
                             document.getElementById('camera-info').style.position = 'fixed';
@@ -149,11 +138,13 @@
          * - Fügt die Rotations- und Zoom-Logik hinzu
          */
         async function initializeARScene() {
-            // Bereinige den AR-Container vor dem Neuladen
-            const arContainer = document.getElementById('ar-container');
-            arContainer.innerHTML = ''; // Entferne vorherige Szene
+            // Zeige den AR-Container und verstecke die Kameraauswahl und Info
+            document.getElementById('ar-container').style.display = 'block';
+            document.getElementById('camera-info').style.display = 'none';
+            document.getElementById('info').style.display = 'none';
 
             // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
+            const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
@@ -299,10 +290,11 @@
                     }
                 });
             });
+
         }
 
         window.onload = () => {
-            initCameraSelection();
+                initCameraSelection();
         };
     </script>
 
