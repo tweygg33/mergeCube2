@@ -12,12 +12,12 @@
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>   -->
    
     <style>
-      body {
+      /* body {
         touch-action: none;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         user-select: none;
-      }
+      } */
     </style>
  
     <script>
@@ -54,41 +54,41 @@
     //     }
     //   };
  
-      document.addEventListener('DOMContentLoaded', function() {
-        document.addEventListener('touchstart', function(e) {
-          if (e.touches.length > 1) {
-            e.preventDefault();
-          }
-        }, { passive: false });
+    //   document.addEventListener('DOMContentLoaded', function() {
+    //     document.addEventListener('touchstart', function(e) {
+    //       if (e.touches.length > 1) {
+    //         e.preventDefault();
+    //       }
+    //     }, { passive: false });
  
-        document.addEventListener('touchmove', function(e) {
-          if (e.touches.length > 1) {
-            e.preventDefault();
-          }
-        }, { passive: false });
+    //     document.addEventListener('touchmove', function(e) {
+    //       if (e.touches.length > 1) {
+    //         e.preventDefault();
+    //       }
+    //     }, { passive: false });
  
-        // setTimeout(() => {
-        //   const video = document.querySelector('video');
-        //   if (video) {
-        //     video.style.objectFit = 'cover';
-        //     if (video.srcObject) {
-        //       const track = video.srcObject.getVideoTracks()[0];
-        //       if (track && track.getCapabilities && track.getConstraints) {
-        //         const capabilities = track.getCapabilities();
-        //         if (capabilities.zoom) {
-        //           track.applyConstraints({
-        //             advanced: [{ zoom: 1.0 }]
-        //           }).catch(console.error);
-        //         }
-        //       }
-        //     }
-        //   }
-        // }, 1000);
-      });
+    //     setTimeout(() => {
+    //       const video = document.querySelector('video');
+    //       if (video) {
+    //         video.style.objectFit = 'cover';
+    //         if (video.srcObject) {
+    //           const track = video.srcObject.getVideoTracks()[0];
+    //           if (track && track.getCapabilities && track.getConstraints) {
+    //             const capabilities = track.getCapabilities();
+    //             if (capabilities.zoom) {
+    //               track.applyConstraints({
+    //                 advanced: [{ zoom: 1.0 }]
+    //               }).catch(console.error);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }, 1000);
+    //   });
     </script>
   </head>
   <body style="margin: 0; overflow: hidden;">
-    <h1 style="color: rgb(236, 232, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque enim molestias voluptate, animi commodi culpa porro optio possimus minima perspiciatis ipsum provident nulla? Fugiat consectetur fuga, itaque omnis tenetur nihil?</h1>
+    <h1 style="color: rgb(236, 0, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque enim molestias voluptate, animi commodi culpa porro optio possimus minima perspiciatis ipsum provident nulla? Fugiat consectetur fuga, itaque omnis tenetur nihil?</h1>
     <a-scene
       vr-mode-ui="enabled: false;"
       loading-screen="enabled: false;"
