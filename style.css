@@ -1,92 +1,85 @@
-*{
-    margin: 0;
-    padding: 0;
-}
-body,html{
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
 
-#head {
-    width: 100%;
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 1rem;
-}
-#info {
-    width: 50%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    color: rgb(212, 254, 0);
-    font-family: Arial, sans-serif;
-    z-index: 10;
-    background-color: rgba(21, 0, 255, 0.838);
-    padding: 16px;
-    border-radius: 5px;
-    padding: 2rem;
-}
+        /* Grundlegende Stile für die gesamte Seite */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        /* Stil für das Informationsfeld oben links */
+        #info {
+            display: none;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
 
-#camera-info {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content:center ;
-    align-items: center;
-    gap: 1rem;
-    color: white;
-    font-family: Arial, sans-serif;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    padding: 2rem;
-}
-#camera-select {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-#camera-info, #selected-camera {
-    max-width: 50%;
-    max-height: auto;
-    flex-shrink: 0;
-}
+        /* Stil für das Kamera-Informations- und Auswahlfeld */
+        #camera-info {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 300px;
+        }
 
-#start-ar-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #28a745;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-#start-ar-button:hover {
-    background-color: #218838;
-}
-#main {
-    display: flex;
-    width: 100%;
-}
-#ar-container {
-    display: none; /* Versteckt die AR-Szene initial */
-    width: 100%;
-    height: 100%;
-}
-#loading-indicator {
-    transform: translate(-50%, -50%);
-    color: white;
-    font-family: Arial, sans-serif;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    z-index: 10;
-    display: none;
-}
+        /* Stil für das Dropdown-Menü zur Kamerawahl */
+        #camera-select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Stil für den "AR starten" Button */
+        #start-ar-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Hover-Effekt für den "AR starten" Button */
+        #start-ar-button:hover {
+            background-color: #218838;
+        }
+
+        /* Stil für den AR-Container */
+        #ar-container {
+            display: none; /* Versteckt die AR-Szene initial */
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Stil für den Ladeindikator */
+        #loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10;
+            display: none;
+        }
