@@ -3,7 +3,7 @@
 <head>
     <!-- IOS VERSION -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -246,17 +246,7 @@
             // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
-            <a-scene embedded arjs="sourceType: webcam;
-            sourceWidth: 1280;
-            sourceHeight: 720;
-            displayWidth: 1280;
-            displayHeight: 720;
-            debugUIEnabled: false;
-            detectionMode: mono_and_matrix;
-            matrixCodeType: 3x3;
-            patternRatio: 0.75;
-            maxDetectionRate: 30;
-            trackingMethod: best">
+                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
@@ -584,15 +574,9 @@
          * - Initialisiert die Kameraauswahl UI
          */
         window.onload = () => {
-            const cameraId = getUrlParameter('cameraId');
-            if (cameraId) {
-                // Falls eine cameraId vorhanden ist, überschreibe getUserMedia und initialisiere die AR-Szene
-                overrideGetUserMedia(cameraId);
-                initializeARScene();
-            } else {
-                // Andernfalls zeige die Kameraauswahl UI
+
                 initCameraSelection();
-            }
+            
         };
     </script>
 
