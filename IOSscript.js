@@ -116,7 +116,7 @@ async function kameraAuswahl(){
                                   scale="0.1 0.1 0.1"  
                                   position="0 0 0"
                                   rotation="0 0 0" 
-                                  >
+                                  visible="true">
                         </a-entity>
                     </a-marker>
 
@@ -126,7 +126,7 @@ async function kameraAuswahl(){
                                   gltf-model="#model2"
                                   scale="0.06 0.06 0.06"  
                                   position="0 0 0"
-
+                                  visible="true"
 >
                         </a-entity>
                     </a-marker>
