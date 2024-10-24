@@ -67,28 +67,28 @@
           }
         }, { passive: false });
  
-        // setTimeout(() => {
-        //   const video = document.querySelector('video');
-        //   if (video) {
-        //     video.style.objectFit = 'cover';
-        //     if (video.srcObject) {
-        //       const track = video.srcObject.getVideoTracks()[0];
-        //       if (track && track.getCapabilities && track.getConstraints) {
-        //         const capabilities = track.getCapabilities();
-        //         if (capabilities.zoom) {
-        //           track.applyConstraints({
-        //             advanced: [{ zoom: 1.0 }]
-        //           }).catch(console.error);
-        //         }
-        //       }
-        //     }
-        //   }
-        // }, 1000);
+        setTimeout(() => {
+          const video = document.querySelector('video');
+          if (video) {
+            video.style.objectFit = 'cover';
+            if (video.srcObject) {
+              const track = video.srcObject.getVideoTracks()[0];
+              if (track && track.getCapabilities && track.getConstraints) {
+                const capabilities = track.getCapabilities();
+                if (capabilities.zoom) {
+                  track.applyConstraints({
+                    advanced: [{ zoom: 1.0 }]
+                  }).catch(console.error);
+                }
+              }
+            }
+          }
+        }, 1000);
       });
     </script>
   </head>
   <body style="margin: 0; overflow: hidden;">
-    <h1 style="color: rgb(67, 71, 62);">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque enim molestias voluptate, animi commodi culpa porro optio possimus minima perspiciatis ipsum provident nulla? Fugiat consectetur fuga, itaque omnis tenetur nihil?</h1>
+    <h1 style="color: rgb(130, 236, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque enim molestias voluptate, animi commodi culpa porro optio possimus minima perspiciatis ipsum provident nulla? Fugiat consectetur fuga, itaque omnis tenetur nihil?</h1>
     <a-scene
       vr-mode-ui="enabled: false;"
       loading-screen="enabled: false;"
