@@ -64,14 +64,11 @@ async function kameraAuswahl(){
         //AR-BUTTON -AR-Starten 
         document.getElementById('start-ar-button').addEventListener('click',async()=>{
             if(selectedDevice) {
-                selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
-                await initializeARScene();
-                document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || "Kein Kamera-Label vorhanden"}`;
-
                 document.getElementById('loading-indicator').style.display='block';
                 try {
                       // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                    // das kommt beim anderen Script hier erstmal nicht
+                    overrideGetUserMedia(selectedDevice.deviceId);
+
                     document.getElementById('ar-container').style.display = 'block';
                     // AN DIESER STELLE KOMMEN PAAR FEATURES
                     
@@ -93,6 +90,21 @@ async function kameraAuswahl(){
     }
     
 };
+        // Überschreibt die getUsermieda-Methode um das ausgewählte im Select auch zu übernehmen für die Szene
+        function overrideGetUserMedia(selectedDeviceId) {
+            const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                if (constraints.video && selectedDeviceId) {
+                    // Setze deviceId in den Video-Constraints
+                    constraints.video = {
+                        ...constraints.video,
+                        deviceId: { exact: selectedDeviceId }
+                    };
+                }
+                return originalGetUserMedia(constraints);
+            };
+        }
 
 
             async function  initializeARScene() {
@@ -179,6 +191,8 @@ async function kameraAuswahl(){
 
             }
     
+            window.onload = () => {
+                kameraAuswahl()
+            };
 
 
-kameraAuswahl()
