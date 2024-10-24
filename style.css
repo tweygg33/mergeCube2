@@ -17,7 +17,7 @@ body,html{
     gap: 1rem;
 }
 #info {
-    width: 80%;
+    width: 50%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -33,9 +33,11 @@ body,html{
 }
 
 #camera-info {
-    width: 80%;
+    width: 50%;
     display: flex;
     flex-direction: column;
+    justify-content:center ;
+    align-items: center;
     gap: 1rem;
     color: white;
     font-family: Arial, sans-serif;
@@ -45,7 +47,7 @@ body,html{
     padding: 2rem;
 }
 #camera-select {
-    width: 100%;
+    width: 50%;
     padding: 10px;
     margin-bottom: 20px;
     font-size: 16px;
