@@ -82,6 +82,7 @@
                     if (selectedDevice) {
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
+                            await initializeARScene();
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                              overrideGetUserMedia(selectedDevice.deviceId);
 
