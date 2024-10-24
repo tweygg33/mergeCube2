@@ -67,7 +67,7 @@ async function kameraAuswahl(){
                 document.getElementById('loading-indicator').style.display='block';
                 try {
                       // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                    overrideGetUserMedia(selectedDevice.deviceId);
+                    // overrideGetUserMedia(selectedDevice.deviceId);
 
                     document.getElementById('ar-container').style.display = 'block';
                     // AN DIESER STELLE KOMMEN PAAR FEATURES
@@ -110,7 +110,17 @@ async function kameraAuswahl(){
             async function  initializeARScene() {
                 const arContainer = document.getElementById('ar-container');
     arContainer.innerHTML = `
-                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+            <a-scene embedded arjs="sourceType: webcam;
+            sourceWidth: 1280;
+            sourceHeight: 720;
+            displayWidth: 1280;
+            displayHeight: 720;
+            debugUIEnabled: false;
+            detectionMode: mono_and_matrix;
+            matrixCodeType: 3x3;
+            patternRatio: 0.75;
+            maxDetectionRate: 30;
+            trackingMethod: best">
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
