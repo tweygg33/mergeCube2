@@ -90,8 +90,12 @@
 
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
                             document.getElementById('ar-container').style.display = 'block';
-                            document.getElementById('camera-info').style.display = 'none';
-                            document.getElementById('info').style.display = 'none';
+                            document.getElementById('camera-info').style.display = 'block';
+                            document.getElementById('camera-info').style.position = 'fixed';
+                            
+                            document.getElementById('info').style.display = 'block';
+                            document.getElementById('info').style.position = 'fixed';
+                            
                         } catch (error) {
                             console.error('Fehler beim Initialisieren der AR-Szene:', error);
                             alert('Fehler beim Starten der AR-Anwendung.');
