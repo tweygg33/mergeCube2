@@ -261,34 +261,6 @@
                     }
 
                     currentVisibleMarker = marker;
-                    let isMouseDown = false;
-                    let lastMouseX = 0;
-                    let lastMouseY = 0;
-            
-                    // Event listeners for mouse interaction
-                    document.addEventListener('mousedown', function(event) {
-                        isMouseDown = true;
-                        lastMouseX = event.clientX;
-                        lastMouseY = event.clientY;
-                    });
-            
-                    document.addEventListener('mouseup', function() {
-                        isMouseDown = false;
-                    });
-            
-                    document.addEventListener('mousemove', function(event) {
-                        if (!isMouseDown || !model) return;  // Ensure the model is loaded before interacting
-            
-                        const deltaX = event.clientX - lastMouseX;
-                        const deltaY = event.clientY - lastMouseY;
-            
-                        model.rotation.y += deltaX * 0.01;
-                        model.rotation.x += deltaY * 0.01;
-            
-                        lastMouseX = event.clientX;
-                        lastMouseY = event.clientY;
-                    });
-            
                 });
 
                 marker.addEventListener('markerLost', () => {
@@ -321,8 +293,6 @@
             });
 
         }
-
-        //ROtation
         
 
         window.onload = () => {
