@@ -7,6 +7,15 @@
             height: 100%;
             overflow: hidden;
         }
+        a-scene {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: scale(1);
+            transform-origin: center;
+        }
         
         /* Stil für das Informationsfeld oben links */
         #info {
