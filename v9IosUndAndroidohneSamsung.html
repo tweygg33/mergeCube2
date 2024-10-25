@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <!-- IOS-Android VERSION ohne Samsung Browser-->
+    <!-- IOS-Android ohne Samung Browser VERSION-->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no "/>
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -15,6 +15,7 @@
     
 </head>
 <body>
+    <h1 style="background-color: red;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis dolorum ratione reprehenderit repellat quos numquam, deleniti itaque facilis officiis totam quae debitis laboriosam dignissimos, tenetur vitae! Inventore ex placeat illo?</h1>
     <!-- Informationsbereich mit Titel und Beschreibung -->
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
@@ -149,7 +150,7 @@
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
-                        <a-asset-item id="model1" src="glb/CPUgerade1.glb"></a-asset-item>
+                        <a-asset-item id="model1" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/futuristic_building(1).glb"></a-asset-item>
                         <a-asset-item id="model3" src="glb/futuristic_building(2).glb"></a-asset-item>
                         <a-asset-item id="model4" src="glb/futuristic_building(2).glb"></a-asset-item>
@@ -163,7 +164,7 @@
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
-                                  scale="0.1 0.1 0.1"  
+                                  scale="4 4 4"  
                                   position="0 0 0"
                                   rotation="-90 0 10"
                                   visible="false">
@@ -229,7 +230,7 @@
                     <a-entity camera></a-entity>
                 </a-scene>
             `;
-            // Füge die Marker-Event-Listener hinzu
+
             initializeMarkerEvents();
         }
 
@@ -237,13 +238,16 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
-        function initializeMarkerEvents() {
+         function initializeMarkerEvents() {
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
-            let currentModel = null;
-
+            let isProcessing = false; // Flag zur Synchronisierung
+        
             markers.forEach(marker => {
                 marker.addEventListener('markerFound', () => {
+                    if (isProcessing) return; // Wenn bereits ein Marker verarbeitet wird, ignoriere neue Events
+                    isProcessing = true;
+        
                     if (currentVisibleMarker && currentVisibleMarker !== marker) {
                         // Verstecke das vorherige Modell
                         const previousModel = currentVisibleMarker.querySelector('a-entity');
@@ -251,48 +255,46 @@
                             previousModel.setAttribute('visible', 'false');
                         }
                     }
-
+        
                     // Zeige das aktuelle Modell
                     const model = marker.querySelector('a-entity');
                     if (model) {
                         model.setAttribute('visible', 'true');
-                        currentModel = model;
+                        currentVisibleMarker = marker;
                     }
-
-                    currentVisibleMarker = marker;
+        
+                    isProcessing = false;
                 });
-
+        
                 marker.addEventListener('markerLost', () => {
-                    // Verstecke das Modell, wenn der Marker verloren geht
-                    const lostModel = marker.querySelector('a-entity');
-                    if (lostModel) {
-                        lostModel.setAttribute('visible', 'false');
-                    }
-
-                    // Suche nach einem anderen sichtbaren Marker
-                    let anotherVisibleMarker = null;
-                    markers.forEach(m => {
-                        if (m.object3D.visible && m !== marker) {
-                            anotherVisibleMarker = m;
+                    if (marker === currentVisibleMarker) {
+                        // Verstecke das aktuelle Modell
+                        const lostModel = marker.querySelector('a-entity');
+                        if (lostModel) {
+                            lostModel.setAttribute('visible', 'false');
                         }
-                    });
-
-                    if (anotherVisibleMarker) {
-                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
-                        if (anotherModel) {
-                            anotherModel.setAttribute('visible', 'true');
-                            currentModel = anotherModel;
-                        }
-                        currentVisibleMarker = anotherVisibleMarker;
-                    } else {
+        
                         currentVisibleMarker = null;
-                        currentModel = null;
+        
+                        // Suche nach einem anderen sichtbaren Marker
+                        let anotherVisibleMarker = null;
+                        markers.forEach(m => {
+                            if (m.object3D.visible && m !== marker) {
+                                anotherVisibleMarker = m;
+                            }
+                        });
+        
+                        if (anotherVisibleMarker) {
+                            const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                            if (anotherModel) {
+                                anotherModel.setAttribute('visible', 'true');
+                                currentVisibleMarker = anotherVisibleMarker;
+                            }
+                        }
                     }
                 });
             });
-
-        }
-
+        };
         window.onload = () => {
                 initCameraSelection();
         };
