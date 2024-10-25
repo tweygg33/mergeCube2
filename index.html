@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <!-- IOS VERSION -->
+    <!-- IOS-Android ohne Samsung Browser VERSION-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no "/>
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
@@ -12,7 +12,6 @@
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
     <h1 style="background-color: red;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis dolorum ratione reprehenderit repellat quos numquam, deleniti itaque facilis officiis totam quae debitis laboriosam dignissimos, tenetur vitae! Inventore ex placeat illo?</h1>
@@ -39,6 +38,12 @@
     </div>
 
     <script>
+        // Globale Variablen für Maus- und Touch-Interaktion
+        let isMouseDown = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let currentModel = null; // Global definiert
+
         async function initCameraSelection() {
             try {
                 // Erlaubnis zum Kamerazugriff einholen
@@ -84,7 +89,7 @@
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                             overrideGetUserMedia(selectedDevice.deviceId);
+                            overrideGetUserMedia(selectedDevice.deviceId);
 
                             // Initialisiere die AR-Szene
                             await initializeARScene();
@@ -166,7 +171,8 @@
                                   gltf-model="#model1"
                                   scale="4 4 4"  
                                   position="0 0 0"
-                                  rotation="-90 0 10"
+                                  rotation="0 0 0"
+                                  rotation-order="XYZ" 
                                   visible="false">
                         </a-entity>
                     </a-marker>
@@ -231,6 +237,14 @@
                 </a-scene>
             `;
 
+            // Rotation Order Komponente hinzufügen
+            AFRAME.registerComponent('rotation-order', {
+                schema: { type: 'string', default: 'XYZ' },
+                init: function () {
+                    this.el.object3D.rotation.order = this.data;
+                }
+            });
+
             initializeMarkerEvents();
         }
 
@@ -238,68 +252,117 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
-         let currentModel = null; // Global definiert
+        function initializeMarkerEvents() {
+            const markers = document.querySelectorAll('a-marker');
+            let currentVisibleMarker = null;
 
-         function initializeMarkerEvents() {
-             const markers = document.querySelectorAll('a-marker');
-             let currentVisibleMarker = null;
-         
-             markers.forEach(marker => {
-                 marker.addEventListener('markerFound', () => {
-                     if (currentVisibleMarker && currentVisibleMarker !== marker) {
-                         // Verstecke das vorherige Modell
-                         const previousModel = currentVisibleMarker.querySelector('a-entity');
-                         if (previousModel) {
-                             previousModel.setAttribute('visible', 'false');
-                         }
-                     }
-         
-                     // Zeige das aktuelle Modell
-                     const model = marker.querySelector('a-entity');
-                     if (model) {
-                         model.setAttribute('visible', 'true');
-                         currentModel = model; // Aktuelles Modell setzen
-                     }
-         
-                     currentVisibleMarker = marker;
-                 });
-         
-                 marker.addEventListener('markerLost', () => {
-                     // Verstecke das Modell, wenn der Marker verloren geht
-                     const lostModel = marker.querySelector('a-entity');
-                     if (lostModel) {
-                         lostModel.setAttribute('visible', 'false');
-                     }
-         
-                     // Suche nach einem anderen sichtbaren Marker
-                     let anotherVisibleMarker = null;
-                     markers.forEach(m => {
-                         if (m.object3D.visible && m !== marker) {
-                             anotherVisibleMarker = m;
-                         }
-                     });
-         
-                     if (anotherVisibleMarker) {
-                         const anotherModel = anotherVisibleMarker.querySelector('a-entity');
-                         if (anotherModel) {
-                             anotherModel.setAttribute('visible', 'true');
-                             currentModel = anotherModel; // Aktuelles Modell aktualisieren
-                         }
-                         currentVisibleMarker = anotherVisibleMarker;
-                     } else {
-                         currentVisibleMarker = null;
-                         currentModel = null; // Kein Modell sichtbar
-                     }
-                 });
-             });
-         }
-         
-        
+            markers.forEach(marker => {
+                marker.addEventListener('markerFound', () => {
+                    if (currentVisibleMarker && currentVisibleMarker !== marker) {
+                        // Verstecke das vorherige Modell
+                        const previousModel = currentVisibleMarker.querySelector('a-entity');
+                        if (previousModel) {
+                            previousModel.setAttribute('visible', 'false');
+                        }
+                    }
+
+                    // Zeige das aktuelle Modell
+                    const model = marker.querySelector('a-entity');
+                    if (model) {
+                        model.setAttribute('visible', 'true');
+                        currentModel = model; // Aktuelles Modell setzen
+                    }
+
+                    currentVisibleMarker = marker;
+                });
+
+                marker.addEventListener('markerLost', () => {
+                    // Verstecke das Modell, wenn der Marker verloren geht
+                    const lostModel = marker.querySelector('a-entity');
+                    if (lostModel) {
+                        lostModel.setAttribute('visible', 'false');
+                    }
+
+                    // Suche nach einem anderen sichtbaren Marker
+                    let anotherVisibleMarker = null;
+                    markers.forEach(m => {
+                        if (m.object3D.visible && m !== marker) {
+                            anotherVisibleMarker = m;
+                        }
+                    });
+
+                    if (anotherVisibleMarker) {
+                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                        if (anotherModel) {
+                            anotherModel.setAttribute('visible', 'true');
+                            currentModel = anotherModel; // Aktuelles Modell aktualisieren
+                        }
+                        currentVisibleMarker = anotherVisibleMarker;
+                    } else {
+                        currentVisibleMarker = null;
+                        currentModel = null; // Kein Modell sichtbar
+                    }
+                });
+            });
+        }
+
+        // Event Listener für Maus- und Touch-Interaktion hinzufügen
+        document.addEventListener('mousedown', function(event) {
+            isMouseDown = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        });
+
+        document.addEventListener('mouseup', function() {
+            isMouseDown = false;
+        });
+
+        document.addEventListener('mousemove', function(event) {
+            if (!isMouseDown || !currentModel) return;  // Sicherstellen, dass das Modell geladen ist
+
+            const deltaX = event.clientX - lastMouseX;
+            const deltaY = event.clientY - lastMouseY;
+
+            // Zugriff auf das Three.js Objekt
+            let object3D = currentModel.object3D;
+
+            // Rotation anpassen
+            object3D.rotation.y += deltaX * 0.01;
+            object3D.rotation.x += deltaY * 0.01;
+
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        });
+
+        // Touch-Unterstützung für mobile Geräte
+        document.addEventListener('touchstart', function(event) {
+            isMouseDown = true;
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function() {
+            isMouseDown = false;
+        });
+
+        document.addEventListener('touchmove', function(event) {
+            if (!isMouseDown || !currentModel) return;
+
+            const deltaX = event.touches[0].clientX - lastMouseX;
+            const deltaY = event.touches[0].clientY - lastMouseY;
+
+            let object3D = currentModel.object3D;
+
+            object3D.rotation.y += deltaX * 0.01;
+            object3D.rotation.x += deltaY * 0.01;
+
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
 
         window.onload = () => {
-                initCameraSelection();
+            initCameraSelection();
         };
     </script>
-
 </body>
 </html>
