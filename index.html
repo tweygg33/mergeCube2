@@ -230,6 +230,11 @@
                 </a-scene>
             `;
             // Füge die Marker-Event-Listener hinzu
+            document.querySelector('a-scene').addEventListener('loaded', () => {
+            window.addEventListener('resize', () => {
+            document.querySelector('a-scene').style.transform = 'scale(1)';
+        });
+    });
             initializeMarkerEvents();
         }
 
