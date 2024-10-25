@@ -96,11 +96,11 @@
 
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
                             document.getElementById('ar-container').style.display = 'block';
-                            document.getElementById('camera-info').style.display = 'block';
-                            document.getElementById('camera-info').style.position = 'fixed';
+                            document.getElementById('camera-info').style.display = 'none';
+                           // document.getElementById('camera-info').style.position = 'fixed';
                             
-                            document.getElementById('info').style.display = 'block';
-                            document.getElementById('info').style.position = 'fixed';
+                            document.getElementById('info').style.display = 'none';
+                            //document.getElementById('info').style.position = 'fixed';
                             
                         } catch (error) {
                             console.error('Fehler beim Initialisieren der AR-Szene:', error);
@@ -169,7 +169,7 @@
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
-                                  scale="4 4 4"  
+                                  scale="1 1 1"  
                                   position="0 0 0"
                                   rotation="0 0 0"
                                   rotation-order="XYZ" 
@@ -183,7 +183,8 @@
                                   gltf-model="#model2"
                                   scale="0.06 0.06 0.06"  
                                   position="0 0 0"
-                                  rotation="0 -90 80" 
+                                  rotation="0 0 0" 
+                                  rotation-order="XYZ" 
                                   visible="false">
                         </a-entity>
                     </a-marker>
