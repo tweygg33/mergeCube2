@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <!-- IOS-Android ohne Samung Browser VERSION-->
+    <!-- IOS VERSION -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no "/>
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
@@ -238,16 +238,13 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
-         function initializeMarkerEvents() {
+        function initializeMarkerEvents() {
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
-            let isProcessing = false; // Flag zur Synchronisierung
-        
+            let currentModel = null;
+
             markers.forEach(marker => {
                 marker.addEventListener('markerFound', () => {
-                    if (isProcessing) return; // Wenn bereits ein Marker verarbeitet wird, ignoriere neue Events
-                    isProcessing = true;
-        
                     if (currentVisibleMarker && currentVisibleMarker !== marker) {
                         // Verstecke das vorherige Modell
                         const previousModel = currentVisibleMarker.querySelector('a-entity');
@@ -255,46 +252,48 @@
                             previousModel.setAttribute('visible', 'false');
                         }
                     }
-        
+
                     // Zeige das aktuelle Modell
                     const model = marker.querySelector('a-entity');
                     if (model) {
                         model.setAttribute('visible', 'true');
-                        currentVisibleMarker = marker;
+                        currentModel = model;
                     }
-        
-                    isProcessing = false;
+
+                    currentVisibleMarker = marker;
                 });
-        
+
                 marker.addEventListener('markerLost', () => {
-                    if (marker === currentVisibleMarker) {
-                        // Verstecke das aktuelle Modell
-                        const lostModel = marker.querySelector('a-entity');
-                        if (lostModel) {
-                            lostModel.setAttribute('visible', 'false');
+                    // Verstecke das Modell, wenn der Marker verloren geht
+                    const lostModel = marker.querySelector('a-entity');
+                    if (lostModel) {
+                        lostModel.setAttribute('visible', 'false');
+                    }
+
+                    // Suche nach einem anderen sichtbaren Marker
+                    let anotherVisibleMarker = null;
+                    markers.forEach(m => {
+                        if (m.object3D.visible && m !== marker) {
+                            anotherVisibleMarker = m;
                         }
-        
+                    });
+
+                    if (anotherVisibleMarker) {
+                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                        if (anotherModel) {
+                            anotherModel.setAttribute('visible', 'true');
+                            currentModel = anotherModel;
+                        }
+                        currentVisibleMarker = anotherVisibleMarker;
+                    } else {
                         currentVisibleMarker = null;
-        
-                        // Suche nach einem anderen sichtbaren Marker
-                        let anotherVisibleMarker = null;
-                        markers.forEach(m => {
-                            if (m.object3D.visible && m !== marker) {
-                                anotherVisibleMarker = m;
-                            }
-                        });
-        
-                        if (anotherVisibleMarker) {
-                            const anotherModel = anotherVisibleMarker.querySelector('a-entity');
-                            if (anotherModel) {
-                                anotherModel.setAttribute('visible', 'true');
-                                currentVisibleMarker = anotherVisibleMarker;
-                            }
-                        }
+                        currentModel = null;
                     }
                 });
             });
-        };
+
+        }
+
         window.onload = () => {
                 initCameraSelection();
         };
