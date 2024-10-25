@@ -8,10 +8,13 @@
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
-    <!-- GLTFLoader wird in A-Frame bereits unterstützt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- <h1 style="background-color: red;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis dolorum ratione reprehenderit repellat quos numquam, deleniti itaque facilis officiis totam quae debitis laboriosam dignissimos, tenetur vitae! Inventore ex placeat illo?</h1> -->
     <!-- Informationsbereich mit Titel und Beschreibung -->
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
@@ -31,7 +34,7 @@
 
     <!-- Container für die AR-Szene, wird dynamisch mit A-Frame-Inhalten gefüllt -->
     <div id="ar-container">
-        <!-- AR.js Szene wird hier dynamisch geladen -->
+        <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
 
     <script>
@@ -39,7 +42,7 @@
         let isMouseDown = false;
         let lastMouseX = 0;
         let lastMouseY = 0;
-        let currentModelWrapper = null; // Verwenden des Wrappers
+        let currentModel = null; // Global definiert
 
         async function initCameraSelection() {
             try {
@@ -94,7 +97,11 @@
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
                             document.getElementById('ar-container').style.display = 'block';
                             document.getElementById('camera-info').style.display = 'none';
+                           // document.getElementById('camera-info').style.position = 'fixed';
+                            
                             document.getElementById('info').style.display = 'none';
+                            //document.getElementById('info').style.position = 'fixed';
+                            
                         } catch (error) {
                             console.error('Fehler beim Initialisieren der AR-Szene:', error);
                             alert('Fehler beim Starten der AR-Anwendung.');
@@ -160,79 +167,73 @@
                     
                     <!-- Marker 1 -->
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
-                        <a-entity id="model-wrapper-1" rotation-order="XYZ">
-                            <a-entity id="model-container-1"
-                                      gltf-model="#model1"
-                                      scale="1 1 1"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-1"
+                                  gltf-model="#model1"
+                                  scale="1 1 1"  
+                                  position="0 0 0"
+                                  rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 2 -->
                     <a-marker type="pattern" url="pattern2/pattern-a2.patt" id="marker2">
-                        <a-entity id="model-wrapper-2" rotation-order="XYZ">
-                            <a-entity id="model-container-2"
-                                      gltf-model="#model2"
-                                      scale="0.01 0.01 0.01"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-2"
+                                  gltf-model="#model2"
+                                  scale="0.01 0.01 0.01"  
+                                  position="0 0 0"
+                                   rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 3 -->
                     <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
-                        <a-entity id="model-wrapper-3" rotation-order="XYZ">
-                            <a-entity id="model-container-3"
-                                      gltf-model="#model3"
-                                      scale="0.01 0.01 0.01"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-3"
+                                  gltf-model="#model3"9
+                                  scale="0.01 0.01 0.01"  
+                                  position="0 0 0"
+                                   rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 4 -->
                     <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
-                        <a-entity id="model-wrapper-4" rotation-order="XYZ">
-                            <a-entity id="model-container-4"
-                                      gltf-model="#model4"
-                                      scale="0.01 0.01 0.01"   
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-4"
+                                  gltf-model="#model4"
+                                  scale="0.01 0.01 0.01"   
+                                  position="0 0 0"
+                                   rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 5 -->
                     <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
-                        <a-entity id="model-wrapper-5" rotation-order="XYZ">
-                            <a-entity id="model-container-5"
-                                      gltf-model="#model5"
-                                      scale="0.01 0.01 0.01"  
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-5"
+                                  gltf-model="#model5"
+                                  scale="0.01 0.01 0.01"  
+                                  position="0 0 0"
+                                   rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
                     <!-- Marker 6 -->
                     <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
-                        <a-entity id="model-wrapper-6" rotation-order="XYZ">
-                            <a-entity id="model-container-6"
-                                      gltf-model="#model6"
-                                      scale="0.01 0.01 0.01"   
-                                      position="0 0 0"
-                                      rotation="-90 0 0"
-                                      visible="false">
-                            </a-entity>
+                        <a-entity id="model-container-6"
+                                  gltf-model="#model6"
+                                  scale="0.01 0.01 0.01"   
+                                  position="0 0 0"
+                                   rotation="-90 0 0"
+                                  rotation-order="XYZ" 
+                                  visible="false">
                         </a-entity>
                     </a-marker>
 
@@ -241,7 +242,7 @@
                 </a-scene>
             `;
 
-            // Rotation Order Komponente hinzufügen (falls noch nicht vorhanden)
+            // Rotation Order Komponente hinzufügen
             AFRAME.registerComponent('rotation-order', {
                 schema: { type: 'string', default: 'XYZ' },
                 init: function () {
@@ -263,32 +264,49 @@
             markers.forEach(marker => {
                 marker.addEventListener('markerFound', () => {
                     if (currentVisibleMarker && currentVisibleMarker !== marker) {
-                        // Verstecke den vorherigen Wrapper
-                        const previousWrapper = currentVisibleMarker.querySelector('[id^="model-wrapper"]');
-                        if (previousWrapper) {
-                            previousWrapper.setAttribute('visible', 'false');
+                        // Verstecke das vorherige Modell
+                        const previousModel = currentVisibleMarker.querySelector('a-entity');
+                        if (previousModel) {
+                            previousModel.setAttribute('visible', 'false');
                         }
                     }
 
-                    // Zeige den aktuellen Wrapper
-                    const wrapper = marker.querySelector('[id^="model-wrapper"]');
-                    if (wrapper) {
-                        wrapper.setAttribute('visible', 'true');
-                        currentModelWrapper = wrapper; // Aktuellen Wrapper setzen
+                    // Zeige das aktuelle Modell
+                    const model = marker.querySelector('a-entity');
+                    if (model) {
+                        model.setAttribute('visible', 'true');
+                        currentModel = model; // Aktuelles Modell setzen
                     }
 
                     currentVisibleMarker = marker;
                 });
 
                 marker.addEventListener('markerLost', () => {
-                    // Verstecke den Wrapper, wenn der Marker verloren geht
-                    const lostWrapper = marker.querySelector('[id^="model-wrapper"]');
-                    if (lostWrapper) {
-                        lostWrapper.setAttribute('visible', 'false');
+                    // Verstecke das Modell, wenn der Marker verloren geht
+                    const lostModel = marker.querySelector('a-entity');
+                    if (lostModel) {
+                        lostModel.setAttribute('visible', 'false');
                     }
 
-                    currentVisibleMarker = null;
-                    currentModelWrapper = null; // Kein Modell sichtbar
+                    // Suche nach einem anderen sichtbaren Marker
+                    let anotherVisibleMarker = null;
+                    markers.forEach(m => {
+                        if (m.object3D.visible && m !== marker) {
+                            anotherVisibleMarker = m;
+                        }
+                    });
+
+                    if (anotherVisibleMarker) {
+                        const anotherModel = anotherVisibleMarker.querySelector('a-entity');
+                        if (anotherModel) {
+                            anotherModel.setAttribute('visible', 'true');
+                            currentModel = anotherModel; // Aktuelles Modell aktualisieren
+                        }
+                        currentVisibleMarker = anotherVisibleMarker;
+                    } else {
+                        currentVisibleMarker = null;
+                        currentModel = null; // Kein Modell sichtbar
+                    }
                 });
             });
         }
@@ -305,13 +323,13 @@
         });
 
         document.addEventListener('mousemove', function(event) {
-            if (!isMouseDown || !currentModelWrapper) return;  // Sicherstellen, dass der Wrapper geladen ist
+            if (!isMouseDown || !currentModel) return;  // Sicherstellen, dass das Modell geladen ist
 
             const deltaX = event.clientX - lastMouseX;
             const deltaY = event.clientY - lastMouseY;
 
-            // Zugriff auf das Three.js Objekt des Wrappers
-            let object3D = currentModelWrapper.object3D;
+            // Zugriff auf das Three.js Objekt
+            let object3D = currentModel.object3D;
 
             // Rotation anpassen
             object3D.rotation.y += deltaX * 0.01;
@@ -333,12 +351,12 @@
         });
 
         document.addEventListener('touchmove', function(event) {
-            if (!isMouseDown || !currentModelWrapper) return;
+            if (!isMouseDown || !currentModel) return;
 
             const deltaX = event.touches[0].clientX - lastMouseX;
             const deltaY = event.touches[0].clientY - lastMouseY;
 
-            let object3D = currentModelWrapper.object3D;
+            let object3D = currentModel.object3D;
 
             object3D.rotation.y += deltaX * 0.01;
             object3D.rotation.x += deltaY * 0.01;
