@@ -17,7 +17,6 @@
 <body>
     <!-- <h1 style="background-color: red;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis dolorum ratione reprehenderit repellat quos numquam, deleniti itaque facilis officiis totam quae debitis laboriosam dignissimos, tenetur vitae! Inventore ex placeat illo?</h1> -->
     <!-- Informationsbereich mit Titel und Beschreibung -->
-    <div id="browser-info">Browser: Erkennung läuft...</div>
     <div id="info">
         <h2>AR.js Würfel QR-Code mc2</h2>
         <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
@@ -45,26 +44,7 @@
         let lastMouseX = 0;
         let lastMouseY = 0;
         let currentModel = null; // Global definiert
-        function detectBrowser() {
-            const userAgent = navigator.userAgent;
-            let browser;
 
-            if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
-                browser = "Chrome";
-            } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
-                browser = "Safari";
-            } else if (userAgent.includes("Firefox")) {
-                browser = "Firefox";
-            } else if (userAgent.includes("Edg")) {
-                browser = "Edge";
-            } else if (userAgent.includes("SamsungBrowser")) {
-                browser = "Samsung Internet";
-            } else {
-                browser = "Unbekannter Browser";
-            }
-
-            document.getElementById("browser-info").textContent = `Browser: ${browser}`;
-        }
         async function initCameraSelection() {
             try {
                 // Erlaubnis zum Kamerazugriff einholen
@@ -390,7 +370,6 @@
         });
 
         window.onload = () => {
-            detectBrowser();
             initCameraSelection();
         };
     </script>
