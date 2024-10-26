@@ -82,6 +82,7 @@
             position: fixed;
             top: 0;
             left: 0;
+           transform:  translateX(50%) translateY(50%);
         }
 
         /* Stil für den Ladeindikator */
