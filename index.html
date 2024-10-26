@@ -90,8 +90,8 @@
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
                            // Hier kann man es initial nachher machen
-                          let viewport = document.querySelector('meta[name="viewport"]');
-                        viewport.setAttribute("content", "width=device-width, initial-scale=0.4, maximum-scale=1.0, user-scalable=no");
+                          //let viewport = document.querySelector('meta[name="viewport"]');
+                        //viewport.setAttribute("content", "width=device-width, initial-scale=0.4, maximum-scale=1.0, user-scalable=no");
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                             overrideGetUserMedia(selectedDevice.deviceId);
 
