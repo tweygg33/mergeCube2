@@ -8,13 +8,13 @@
             overflow: hidden;
         }
         html body #ar-container a-scene {
-        border: 3px solid yellow;
         width: 100vw !important;
         height: 100vh !important;
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
-        transform: scale(0.9) !important;
+        border: 2px solid yellow;
+        transform: scale(1) !important;
         transform-origin: center !important;
     }
 
