@@ -3,7 +3,7 @@
 <head>
     <!-- IOS-Android ohne Samsung Browser VERSION-->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.4, maximum-scale=1.0, user-scalable=no "/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no "/>
     <!-- <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"> -->
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
@@ -90,8 +90,8 @@
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
                            // Hier kann man es initial nachher machen
-                           // let viewport = document.querySelector('meta[name="viewport"]');
-                             //   viewport.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+                          // let viewport = document.querySelector('meta[name="viewport"]');
+                        //viewport.setAttribute("content", "width=device-width, initial-scale=0.4, maximum-scale=1.0, user-scalable=no");
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                             overrideGetUserMedia(selectedDevice.deviceId);
 
