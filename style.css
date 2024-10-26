@@ -8,6 +8,7 @@
             overflow: hidden;
         }
         html body #ar-container a-scene {
+            border: 20px solid black;
             width: 100vw !important;
             height: 100vh !important;
             position: fixed !important;
