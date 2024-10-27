@@ -6,19 +6,23 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            max-width: 1000px;
-            max-height: 1000px;
+        }
+                /* Stil für den AR-Container */
+        #ar-container {
+            display: none; /* Versteckt die AR-Szene initial */
+            width: 100%;
+            height: 100%;
+            border: 2px solid red;
         }
         html body #ar-container a-scene {
-        width: 100% !important;
-        height: 100% !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        overflow: hidden !important;
+        width: 100vw ;
+        height: 100vh;
+        position: fixed ;
+        top: 0;
+        left: 0 ;
         border: 2px solid yellow;
-
-        transform-origin: center !important;
+        transform: scale(0.5) ;
+        transform-origin: center ;
     }
 
         
@@ -76,12 +80,7 @@
             background-color: #218838;
         }
 
-        /* Stil für den AR-Container */
-        #ar-container {
-            display: none; /* Versteckt die AR-Szene initial */
-            width: 100%;
-            height: 100%;
-        }
+
 
         /* Stil für den Ladeindikator */
         #loading-indicator {
