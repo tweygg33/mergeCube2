@@ -1,6 +1,7 @@
 
         /* Grundlegende Stile für die gesamte Seite */
         body, html {
+            min-height: 960px;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -15,7 +16,7 @@
         left: 0 !important;
         border: 2px solid yellow;
         transform: scale(1) !important;
-        transform-origin: center !important;
+        /* transform-origin: center !important; */
     }
 
         
