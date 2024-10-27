@@ -17,7 +17,7 @@
         left: 0 !important;
         overflow: hidden !important;
         border: 2px solid yellow;
-        transform: scale(1) !important;
+
         transform-origin: center !important;
     }
 
