@@ -3,7 +3,7 @@
 <head>
     <!-- IOS-Android ohne Samsung Browser VERSION-->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.1, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=0.2, maximum-scale=1.0, user-scalable=no"/>
     <!-- <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"> -->
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
@@ -39,11 +39,11 @@
     </div>
 
     <script>
-        if (window.navigator.userAgent.includes("SamsungBrowser")) {
+    /*    if (window.navigator.userAgent.includes("SamsungBrowser")) {
             alert("You are using Samsung Internet");
         } else {
             alert("You are not using Samsung Internet");
-        }
+        }*/
         // Globale Variablen für Maus- und Touch-Interaktion
         let isMouseDown = false;
         let lastMouseX = 0;
@@ -181,7 +181,7 @@
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   scale="1 1 1"  
-                                  position="0 0 1"
+                                  position="0 0 0"
                                   rotation="-90 0 0"
                                   rotation-order="XYZ" 
                                   visible="false">
