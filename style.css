@@ -28,7 +28,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            border: 2px solid yellow;
+            border: 5px solid yellow;
             /* transform: scale(1); */
             transform-origin: center;
         }
