@@ -9,7 +9,7 @@
         }
                 /* Stil für den AR-Container */
         #ar-container {
-            display: block; /* Ensure container is visible */
+            display: none; /* Ensure container is visible */
             position: relative; /* Allows for absolute positioning of children */
             width: 100%; /* Full width of its parent */
             height: 100%; /* Full height of its parent */
