@@ -9,21 +9,24 @@
         }
                 /* Stil für den AR-Container */
         #ar-container {
-            display: none; /* Versteckt die AR-Szene initial */
-            width: 100vw;
-            height: 100vh;
-            border: 5px solid red;
+            display: block; /* Ensure container is visible */
+            position: relative; /* Allows for absolute positioning of children */
+            width: 100%; /* Full width of its parent */
+            height: 100%; /* Full height of its parent */
+            border: 5px solid red; /* Your specified border */
+            overflow: hidden; /* Ensures no overflow from children */
         }
-        html body #ar-container a-scene {
-        width: 100vw ;
-        height: 100vh;
-        position: fixed ;
-        top: 0;
-        left: 0 ;
-        border: 2px solid yellow;
-        transform: scale(1) ;
-        transform-origin: center ;
-    }
+        
+        #ar-container a-scene {
+            position: absolute; /* Allows full control over positioning */
+            top: 0;
+            left: 0;
+            width: 100%; /* Scale to container width */
+            height: 100%; /* Scale to container height */
+            border: 2px solid yellow; /* Your specified border */
+            transform: scale(1);
+            transform-origin: center;
+        }
 
         
         /* Stil für das Informationsfeld oben links */
