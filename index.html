@@ -99,7 +99,7 @@
                             await initializeARScene();
 
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
-                            document.getElementById('ar-container').style.display = 'none';
+                           // document.getElementById('ar-container').style.display = 'none';
                             document.getElementById('camera-info').style.display = 'none';
                            // document.getElementById('camera-info').style.position = 'fixed';
                             
@@ -150,6 +150,7 @@
          * - Fügt die Rotations- und Zoom-Logik hinzu
          */
         async function initializeARScene() {
+            document.querySelector('body').style.transform = 'scale(0.5)';
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
             document.getElementById('ar-container').style.display = 'none';
             document.getElementById('camera-info').style.display = 'none';
