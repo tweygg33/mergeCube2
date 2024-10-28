@@ -39,6 +39,11 @@
     </div>
 
     <script>
+        if (window.navigator.userAgent.includes("SamsungBrowser")) {
+            alert("You are using Samsung Internet");
+        } else {
+            alert("You are not using Samsung Internet");
+        }
         // Globale Variablen für Maus- und Touch-Interaktion
         let isMouseDown = false;
         let lastMouseX = 0;
@@ -137,7 +142,7 @@
                         ...constraints.video,
                         deviceId: { exact: selectedDeviceId },
                         width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                       height: { ideal: 720 }
                     };
                 }
                 return originalGetUserMedia(constraints);
