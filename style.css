@@ -7,7 +7,7 @@
         body {
             width: 100%;
             height: 100%;
-            /* transform: scale(0.7); */
+            transform: scale(0.5);
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -21,14 +21,14 @@
             border: 5px solid red;
         }
         html body #ar-container a-scene {
-        width: 100vw ;
-        height: 100vh;
-        position: fixed ;
-        top: 0;
-        left: 0;
-        border: 2px solid yellow;
-        transform: scale(1) ;
-        transform-origin: center ;
+            transform: scale(2); /* Counteracts body scale of 0.5 */
+            transform-origin: top left;
+            width: 200vw; /* Adjust to counter scaling and cover full viewport */
+            height: 200vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
     }
 
         
