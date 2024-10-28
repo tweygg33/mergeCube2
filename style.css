@@ -7,8 +7,11 @@
         body {
             width: 100%;
             height: 100%;
-            transform: scale(0.7);
+            /* transform: scale(0.7); */
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
                 /* Stil für den AR-Container */
         #ar-container {
