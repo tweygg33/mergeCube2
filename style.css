@@ -22,7 +22,7 @@
         top: 0;
         left: 0 ;
         border: 2px solid yellow;
-        transform: scale(0.5) ;
+        transform: scale(1) ;
         transform-origin: center ;
     }
 
