@@ -99,7 +99,7 @@
                             await initializeARScene();
 
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
-                           // document.getElementById('ar-container').style.display = 'none';
+                            document.getElementById('ar-container').style.display = 'block';
                             document.getElementById('camera-info').style.display = 'none';
                            // document.getElementById('camera-info').style.position = 'fixed';
                             
@@ -151,12 +151,12 @@
          */
         async function initializeARScene() {
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
-            document.getElementById('ar-container').style.display = 'none';
+            document.getElementById('ar-container').style.display = 'block';
             document.getElementById('camera-info').style.display = 'none';
             document.getElementById('info').style.display = 'none';
 
             // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
-            const arContainer = document.querySelector('body');
+            const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
