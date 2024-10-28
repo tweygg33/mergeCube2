@@ -39,11 +39,20 @@
     </div>
 
     <script>
-    /*    if (window.navigator.userAgent.includes("SamsungBrowser")) {
-            alert("You are using Samsung Internet");
-        } else {
-            alert("You are not using Samsung Internet");
-        }*/
+        function adjustContainerHeight() {
+            if (window.navigator.userAgent.includes("SamsungBrowser")) {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                document.getElementById('ar-container').style.height = `calc(var(--vh) * 100)`;
+            } else {
+               
+          }
+           
+        }
+
+        window.addEventListener('resize', adjustContainerHeight);
+        window.addEventListener('load', adjustContainerHeight);
+  
         // Globale Variablen für Maus- und Touch-Interaktion
         let isMouseDown = false;
         let lastMouseX = 0;
