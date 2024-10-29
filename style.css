@@ -32,7 +32,7 @@
             top: 0;
             left: 0;
             border: 5px solid yellow;
-            /* transform: scale(1); */
+            transform: scale(0.5);
             transform-origin: center;
         }
         
