@@ -81,13 +81,13 @@
                 ) || videoInputDevices[0];
 
                 cameraSelect.value = selectedDevice.deviceId;
-                document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                // document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
 
                 // Event Listener für Kameraauswahl
-                cameraSelect.addEventListener('change', () => {
-                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
-                    document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
-                });
+                // cameraSelect.addEventListener('change', () => {
+                    // selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+                    // document.getElementById('selected-camera').textContent = `Aktive Kamera: ${selectedDevice.label || 'Unbekannte Kamera'}`;
+                // });
 
                 // Event Listener für "AR starten" Button
                 document.getElementById('start-ar-button').addEventListener('click', async () => {
@@ -159,7 +159,7 @@
           if (window.navigator.userAgent.includes("SamsungBrowser")) {
             console.log("SamsungBrowser")
             let viewport = document.querySelector('meta[name="viewport"]');
-            viewport.setAttribute("content", "width=device-width, initial-scale=0.1, maximum-scale=1.0, user-scalable=no");
+            viewport.setAttribute("content", "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=no");
             
         } else {
             console.log("Keins davon")
