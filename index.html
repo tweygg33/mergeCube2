@@ -154,8 +154,8 @@
 
                  if (navigator.userAgent.includes("SamsungBrowser")) {
                 // Für Geräte außer Samsung die Auflösung setzen
-                constraints.video.width = { max: 640 };
-                constraints.video.height = { max: 480 };
+                constraints.video.width = { max: 1080 };
+                constraints.video.height = { max: 720 };
                 console.log("SAMSUNG S9999999999999999999999999999999999999")
             }
                 return originalGetUserMedia(constraints);
