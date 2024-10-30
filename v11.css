@@ -121,6 +121,25 @@
                 padding: 1rem 2.5rem;
             }
         }
+
+
+        @media (max-width: 370px){
+            h1 {
+                font-size: 1.5rem;
+            }
+            .description {
+                font-size: 0.8rem
+            }
+            .hero-content {
+                width: 100vw;
+                height: auto;
+                padding: 1rem;
+                margin: .5rem;
+            }
+
+
+
+        }
         
         /* Stil für den AR-Container */
         #ar-container {
