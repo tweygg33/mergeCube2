@@ -166,29 +166,6 @@
             transform-origin: center;
         }
         
-
-
-
-        /* Stil für das Kamera-Informations- und Auswahlfeld */
-
-        /* Stil für den "AR starten" Button */
-        #start-ar-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Hover-Effekt für den "AR starten" Button */
-        #start-ar-button:hover {
-            background-color: #218838;
-        }
-
-
-
         /* Stil für den Ladeindikator */
         #loading-indicator {
             position: absolute;
