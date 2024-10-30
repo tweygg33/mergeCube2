@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MergeCube Erlebnis</title>
+ 
+    <!-- AR.js, A-Frame, and Three.js Scripts -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <link rel="stylesheet" href="khutsi.css">
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <div class="logo">MergeCube</div>
+        </div>
+    </nav>
+ 
+    <!-- Hero Section with Start Button -->
+    <main class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Erlebe Erweiterte Realität</h1>
+            <p class="description">
+                Verwandle deine Welt mit MergeCube. Interagiere mit 3D-Objekten, lerne und entdecke auf eine völlig neue Art und Weise.
+            </p>
+            <button class="start-button" id="start-ar-button">Starten</button>
+        </div>
+    </main>
+ 
+    <!-- AR.js Content Section -->
+    <!-- <div id="info" style="text-align:center; padding: 1rem;">
+        <h2>AR.js Würfel QR-Code mc2</h2>
+        <p>Scanne verschiedene QR-Codes, um die Ansicht des Modells zu ändern.</p>
+    </div> -->
+    <!-- <div id="camera-info" style="text-align:center; padding: 1rem;"> -->
+        <!-- <h3>Verfügbare Kameras:</h3> -->
+        <!-- <select id="camera-select"></select> -->
+        <!-- <p id="selected-camera">Wähle eine Kamera aus, um die AR-Anwendung zu starten.</p> -->
+    <!-- </div> -->
+    <!-- <div id="loading-indicator" style="display:none; text-align:center;">AR-Erfahrung wird geladen...</div> -->
+    <!-- <div id="ar-container" style="display:none;"></div> -->
+ 
+    <script>
+        document.getElementById('start-ar-button').addEventListener('click', async function() {
+            // Hide the hero section and navbar when starting AR
+            document.getElementById('hero').style.display = 'none';
+            document.getElementById('navbar').style.display = 'none';
+ 
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+ 
+            // Show loading indicator and initialize AR
+            document.getElementById('loading-indicator').style.display = 'block';
+            try {
+                await initCameraSelection();
+                await initializeARScene();
+                document.getElementById('ar-container').style.display = 'block';
+                document.getElementById('camera-info').style.display = 'none';
+                document.getElementById('info').style.display = 'none';
+            } catch (error) {
+                console.error('Fehler beim Starten der AR-Anwendung:', error);
+                alert('Fehler beim Starten der AR-Anwendung.');
+            } finally {
+                document.getElementById('loading-indicator').style.display = 'none';
+            }
+        });
+ 
+        async function initCameraSelection() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+               
+                if (videoInputDevices.length === 0) {
+                    throw new Error('Keine Videokameras gefunden.');
+                }
+ 
+                const cameraSelect = document.getElementById('camera-select');
+                videoInputDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+ 
+                cameraSelect.addEventListener('change', () => {
+                    document.getElementById('selected-camera').textContent =
+                        `Aktive Kamera: ${cameraSelect.options[cameraSelect.selectedIndex].text}`;
+                });
+            } catch (error) {
+                console.error('Fehler beim Zugriff auf die Kamera:', error);
+                document.getElementById('selected-camera').textContent = 'Fehler beim Zugriff auf die Kamera.';
+            }
+        }
+ 
+        async function initializeARScene() {
+            const arContainer = document.getElementById('ar-container');
+            arContainer.innerHTML = `
+                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+                    <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
+                        <a-entity id="model-container-1" gltf-model="url(glb/CPU.glb)"
+                                  scale="0.4 0.4 0.4"
+                                  position="0 0 0"
+                                  rotation="0 0 0"
+                                  visible="false"></a-entity>
+                    </a-marker>
+                    <!-- Add other markers similarly here -->
+                    <a-entity camera></a-entity>
+                </a-scene>
+            `;
+            initializeMarkerEvents();
+        }
+ 
+        function initializeMarkerEvents() {
+            const markers = document.querySelectorAll('a-marker');
+            let currentModel = null;
+ 
+            markers.forEach(marker => {
+                marker.addEventListener('markerFound', () => {
+                    if (currentModel) {
+                        currentModel.setAttribute('visible', 'false');
+                    }
+                    currentModel = marker.querySelector('a-entity');
+                    currentModel.setAttribute('visible', 'true');
+                });
+ 
+                marker.addEventListener('markerLost', () => {
+                    if (currentModel) {
+                        currentModel.setAttribute('visible', 'false');
+                    }
+                });
+            });
+           
+        }
+    </script>
+</body>
+</html>
