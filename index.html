@@ -144,7 +144,20 @@
                         width: { ideal: 1280 },
                        height: { ideal: 720 }
                     };
-                }
+                
+                    
+                } if (!navigator.userAgent.includes("SamsungBrowser")) {
+                // Für Geräte außer Samsung die Auflösung setzen
+                constraints.video.width = { ideal: 1280 };
+                constraints.video.height = { ideal: 720 };
+            }
+
+                 if (navigator.userAgent.includes("SamsungBrowser")) {
+                // Für Geräte außer Samsung die Auflösung setzen
+                constraints.video.width = { max: 640 };
+                constraints.video.height = { max: 480 };
+                console.log("SAMSUNG S9999999999999999999999999999999999999")
+            }
                 return originalGetUserMedia(constraints);
             };
         }
