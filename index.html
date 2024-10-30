@@ -146,7 +146,7 @@
                     };
                 
                     
-                } if (!navigator.userAgent.includes("SamsungBrowser")) {
+                } if (navigator.userAgent.includes("SamsungBrowser")) {
                 // Für Geräte außer Samsung die Auflösung setzen
                 constraints.video.width = { ideal: 1280 };
                 constraints.video.height = { ideal: 720 };
