@@ -18,8 +18,8 @@
             position: fixed; /* Bleibt im Sichtbereich */
             top: 0;
             left: 0;
-            width:1080px;
-            height: 720px;
+            width:100%;
+            height: 100%;
             border: 5px solid red;
             margin: 0; /* Entfernt jegliche Standard-Abstände */
             padding: 0; /* Entfernt jegliche Standard-Innenabstände */
@@ -35,7 +35,6 @@
             border: 5px solid yellow;
             transform: scale(1);
             transform-origin: center;
-            object-fit: cover; 
         }
         
 
