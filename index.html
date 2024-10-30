@@ -151,13 +151,6 @@
                 constraints.video.width = { ideal: 1280 };
                 constraints.video.height = { ideal: 720 };
             }
-
-                 if (navigator.userAgent.includes("SamsungBrowser")) {
-                // Für Geräte außer Samsung die Auflösung setzen
-                constraints.video.width = { max: 1080 };
-                constraints.video.height = { max: 720 };
-                console.log("SAMSUNG S9999999999999999999999999999999999999")
-            }
                 return originalGetUserMedia(constraints);
             };
         }
@@ -172,7 +165,7 @@
           if (window.navigator.userAgent.includes("SamsungBrowser")) {
             console.log("SamsungBrowser")
             let viewport = document.querySelector('meta[name="viewport"]');
-            viewport.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+            viewport.setAttribute("content", "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=no");
             
         } else {
             console.log("Keins davon")
