@@ -90,9 +90,10 @@
                 // Event Listener für "AR starten" Button
                 document.getElementById('start-ar-button').addEventListener('click', async () => {
                     if (selectedDevice) {
-                        if (navigator.userAgent.includes("SamsungBrowser")) {
-                        document.body.style.zoom = "100%";
-        }
+                        if (window.navigator.userAgent.includes("SamsungBrowser")) {
+                        document.body.style.zoom = "30%";
+                       
+                    }
                         document.getElementById('loading-indicator').style.display = 'block';
                         try {
                            // Hier kann man es initial nachher machen
@@ -144,14 +145,8 @@
                         deviceId: { exact: selectedDeviceId },
                         width: { ideal: 1280 },
                        height: { ideal: 720 }
-                    };
-               
-                   
-                } if (navigator.userAgent.includes("SamsungBrowser")) {
-                // Für Samsung Browser
-                constraints.video.width = { ideal: 2220};
-                constraints.video.height = { ideal: 1080};
-            }
+                    };  
+                }
                 return originalGetUserMedia(constraints);
             };
         }
