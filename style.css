@@ -121,7 +121,7 @@ h1 {
 }
 /* Hallo */
  
-@media (max-width: 320px){
+@media (max-width: 370px){
     h1 {
         font-size: 1.5rem;
     }
