@@ -44,7 +44,7 @@
     </div>
  
     <script>
-        const MIN_SCALE = 0.25;
+        const MIN_SCALE = 0.001;
         const MAX_SCALE = 3.0;
         // Globale Variablen für Maus- und Touch-Interaktion
         let isMouseDown = false;
@@ -194,10 +194,10 @@
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/CPU mit animation.glb"></a-asset-item>
-                        <a-asset-item id="model3" src="glb/combat_ninja_inspired_by_jin-roh_wolf_brigade.glb"></a-asset-item>
-                        <a-asset-item id="model4" src="glb/futuristic_building(2).glb"></a-asset-item>
-                        <a-asset-item id="model5" src="glb/futuristic_building(1).glb"></a-asset-item>
-                        <a-asset-item id="model6" src="glb/futuristic_building(2).glb"></a-asset-item>
+                        <a-asset-item id="model3" src="glb/CPU mit animation.glb"></a-asset-item>
+                        <a-asset-item id="model4" src="glb/CPU mit animation.glb"></a-asset-item>
+                        <a-asset-item id="model5" src="glb/CPU mit animation.glb"></a-asset-item>
+                        <a-asset-item id="model6" src="glb/CPU mit animation.glb"></a-asset-item>
                     </a-assets>
  
                     <!-- Marker für die 6 Seiten eines Würfels -->
@@ -231,8 +231,9 @@
                     <!-- Marker 3 -->
                     <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
                         <a-entity id="model-container-3"
-                                  gltf-model="#model3"9
-                                  scale="0.1 0.1 0.1"  
+                                  gltf-model="#model3"
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
+                                  scale="0.01 0.01 0.01"  
                                   position="0 0 0"
                                    rotation="-90 0 0"
                                   rotation-order="XYZ"
@@ -244,7 +245,8 @@
                     <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker4">
                         <a-entity id="model-container-4"
                                   gltf-model="#model4"
-                                  scale="0.5 0.5 0.5"  
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
+                                  scale="0.05 0.05 0.05"  
                                   position="0 0 0"
                                    rotation="-90 0 0"
                                   rotation-order="XYZ"
@@ -256,7 +258,8 @@
                     <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
                         <a-entity id="model-container-5"
                                   gltf-model="#model5"
-                                  scale="0.1 0.1 0.1"  
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
+                                  scale="0.001 0.001 0.001"  
                                   position="0 0 0"
                                   rotation="-90 0 0"
                                   rotation-order="XYZ"
@@ -268,7 +271,8 @@
                     <a-marker type="pattern" url="pattern2/pattern-a6.patt" id="marker6">
                         <a-entity id="model-container-6"
                                   gltf-model="#model6"
-                                  scale="0.5 0.5 0.5"  
+                                  scale="0.005 0.005 0.005"
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"  
                                   position="0 0 0"
                                    rotation="-90 0 0"
                                   rotation-order="XYZ"
