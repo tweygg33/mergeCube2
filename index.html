@@ -282,8 +282,7 @@
                     <!-- Kamera in der Szene -->
                     <a-entity camera></a-entity>
                 </a-scene>
-            `;
- 
+            `; 
             // Rotation Order Komponente hinzufügen
             AFRAME.registerComponent('rotation-order', {
                 schema: { type: 'string', default: 'XYZ' },
@@ -293,8 +292,7 @@
             });
  
             initializeMarkerEvents();
-        }
- 
+        } 
         /**
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
@@ -351,8 +349,7 @@
                     }
                 });
             });
-        }
- 
+        } 
         // Event Listener für Maus- und Touch-Interaktion hinzufügen
         document.addEventListener('mousedown', function(event) {
             isMouseDown = true;
@@ -422,7 +419,6 @@
                     currentModel.object3D.scale.set(newScale, newScale, newScale);
                 }
             });
- 
             // Touch events for mobile pinch-to-zoom
             document.addEventListener('touchstart', function(event) {
                 if (event.touches.length === 2) {
@@ -431,7 +427,6 @@
                     initialScale = currentModel ? currentModel.object3D.scale.x : 1;
                 }
             });
- 
             document.addEventListener('touchmove', function(event) {
                 if (event.touches.length === 2 && currentModel) {
                     // Calculate the new pinch distance and scale
@@ -443,14 +438,12 @@
                     currentModel.object3D.scale.set(newScale, newScale, newScale);
                 }
             });
- 
             // Helper function to calculate distance between two touch points
             function getPinchDistance(touches) {
                 const dx = touches[0].clientX - touches[1].clientX;
                 const dy = touches[0].clientY - touches[1].clientY;
                 return Math.sqrt(dx * dx + dy * dy);
             }
- 
         window.onload = () => {
             initCameraSelection();
         };
