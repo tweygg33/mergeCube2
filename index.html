@@ -7,9 +7,10 @@
     <!-- <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"> -->
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
-    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -18,6 +19,7 @@
         <!-- Navbar Section -->
         <nav class="navbar" id="navbar">
             <div class="navbar-content">
+                
                 <div class="logo">MergeCube</div>
             </div>
         </nav>
@@ -199,7 +201,7 @@
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
-                                  animation-mixer="clip: Take 001; loop:once"
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
                                   scale="1 1 1"  
                                   position="0 0 0"
                                   rotation="-90 0 0"
