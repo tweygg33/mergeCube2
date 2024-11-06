@@ -142,9 +142,6 @@
             document.getElementById('ar-container').style.width = "50%";
             document.getElementById('ar-container').style.height = "50%";
             document.getElementById('ar-container').style.border ="5px solid green";
-            document.querySelector('a-scene').style.width = "100%";
-            document.querySelector('a-scene').style.height = "100%";
-            document.querySelector('a-scene').border = "2px solid yellow";
            
         } else {
             console.log("Keins davon")
@@ -163,7 +160,7 @@
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
-                        <a-asset-item id="model2" src="glb/CPU mit animation kleiner.glb"></a-asset-item>
+                        <a-asset-item id="model2" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
                         <a-asset-item id="model3" src="glb/CPU mit animation.glb"></a-asset-item>
                         <a-asset-item id="model4" src="glb/CPU mit animation.glb"></a-asset-item>
                         <a-asset-item id="model5" src="glb/CPU mit animation.glb"></a-asset-item>
@@ -186,11 +183,11 @@
                     </a-marker>
  
                     <!-- Marker 2 -->
-                    <a-marker type="pattern" url="pattern2/pattern-cpu4.patt" id="marker2">
+                    <a-marker type="pattern" url="pattern2/ssdsaba.patt" id="marker2">
                         <a-entity id="model-container-2"
                                   gltf-model="#model2"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
-                                  scale="0.1 0.1 0.1"  
+                                  scale="1 1 1"  
                                   position="0 0 0"
                                   rotation="0 0 0"
                                   rotation-order="XYZ"
