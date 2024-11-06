@@ -135,17 +135,28 @@
          */
         async function initializeARScene() {
  
-          if (window.navigator.userAgent.includes("SamsungBrowser")) {
-            console.log("SamsungBrowser")
-            let viewport = document.querySelector('meta[name="viewport"]');
-            viewport.setAttribute("content", "width=device-width, initial-scale=0.2, maximum-scale=1.0, user-scalable=yes");
-            // document.getElementById('ar-container').style.width = "50%";
-            // document.getElementById('ar-container').style.height = "50%";
-            // document.getElementById('ar-container').style.border ="5px solid green";
-           
-        } else {
-            console.log("Keins davon")
-        }
+            if (window.navigator.userAgent.includes("SamsungBrowser")) {
+                    console.log("Samsung Browser detected");
+
+                    // Select all marker entities
+                    const markerPositions = [
+                        document.querySelector("#model-container-1"),
+                        document.querySelector("#model-container-2"),
+                        document.querySelector("#model-container-3"),
+                        document.querySelector("#model-container-4"),
+                        document.querySelector("#model-container-5"),
+                        document.querySelector("#model-container-6")
+                    ];
+
+                    // Set position specifically for Samsung Browser
+                    markerPositions.forEach(marker => {
+                        if (marker) {
+                            marker.setAttribute("position", "0 0 0.7");
+                        }
+                    });
+                } else {
+                    console.log("Non-Samsung Browser");
+                }
            
            
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
@@ -174,8 +185,8 @@
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
-                                  scale="0.7 0.7 0.7"  
-                                  position="0 0 1"
+                                  scale="0 0 0"  
+                                  position="0 0 0.7"
                                   rotation="-90 0 0"
                                   rotation-order="XYZ"
                                   visible="false">
