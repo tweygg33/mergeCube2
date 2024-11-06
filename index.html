@@ -271,11 +271,12 @@
         ];
 
         markerPositions.forEach(marker => {
-            if (marker) {
-                marker.setAttribute("position", "0 0 2");
-            }
-        });
-    }
+        if (marker) {
+            // Dynamische Z-Position auf Basis der Fensterhöhe
+            const zPosition = -window.innerHeight / 2000; // Beispielwert, passt die Position für unterschiedliche Geräte an
+            marker.setAttribute("position", `0 0 ${zPosition}`);
+        }
+    });
 }
          
         /**
