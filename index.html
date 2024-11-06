@@ -156,7 +156,7 @@
             // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
-                <a-scene  embedded arjs='patternRatio: 0.9; sourceType: webcam; detectionMode: mono;'>
+                <a-scene  embedded arjs='patternRatio: 0.5; sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
@@ -170,12 +170,12 @@
                     <!-- Marker für die 6 Seiten eines Würfels -->
                    
                     <!-- Marker 1 -->
-                    <a-marker type="pattern" url="pattern2/pattern-SSD.patt" id="marker1">
+                    <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
                                   scale="1 1 1"  
-                                  position="0 0.8 0"
+                                  position="0 0 4"
                                   rotation="-90 0 0"
                                   rotation-order="XYZ"
                                   visible="false">
