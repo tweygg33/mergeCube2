@@ -135,15 +135,15 @@
          */
         async function initializeARScene() {
  
-        //   if (window.navigator.userAgent.includes("SamsungBrowser")) {
-        //     document.querySelector('body').style.width=""
-        //     console.log("SamsungBrowser")
-        //     let viewport = document.querySelector('meta[name="viewport"]');
-        //     viewport.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+          if (window.navigator.userAgent.includes("SamsungBrowser")) {
+            document.querySelector('body').style.width=""
+            console.log("SamsungBrowser")
+            let viewport = document.querySelector('meta[name="viewport"]');
+            viewport.setAttribute("content", "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=no");
            
-        // } else {
-        //     console.log("Keins davon")
-        // }
+        } else {
+            console.log("Keins davon")
+        }
            
            
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info

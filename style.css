@@ -175,7 +175,6 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    transform: scale(0.5);
     /* border: 5px solid yellow; */
     transform: scale(1);
     transform-origin: center;
