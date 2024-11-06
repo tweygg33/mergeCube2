@@ -146,12 +146,14 @@
                         document.querySelector("#model-container-4"),
                         document.querySelector("#model-container-5"),
                         document.querySelector("#model-container-6")
+                       
                     ];
 
                     // Set position specifically for Samsung Browser
                     markerPositions.forEach(marker => {
                         if (marker) {
                             marker.setAttribute("position", "0 0 2");
+                            alert(marker.getAttribute("position"));
                         }
                     });
                 } else {
