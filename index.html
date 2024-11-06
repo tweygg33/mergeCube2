@@ -82,14 +82,6 @@
             if (selectedDevice) {
                 document.getElementById('loading-indicator').style.display = 'block';
                 try {
-                    // Initialisierung für Samsung-Browser
-                    if (window.navigator.userAgent.includes("SamsungBrowser")) {
-                        scene.style.width = '100vw';
-                        scene.style.height = '100vh';
-                        scene.style.transform = 'scale(0.5)'; // Passe diesen Wert an
-                        scene.style.transformOrigin = 'center';
-                    }
-
                     // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                     overrideGetUserMedia(selectedDevice.deviceId);
 
