@@ -135,21 +135,33 @@
          */
         async function initializeARScene() {
  
-          if (window.navigator.userAgent.includes("SamsungBrowser")) {
-            console.log("SamsungBrowser")
-            let viewport = document.querySelector('meta[name="viewport"]');
-            viewport.setAttribute("content", "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes");
-            document.getElementById('ar-container').style.width = "50%";
-            document.getElementById('ar-container').style.height = "50%";
-            document.getElementById('ar-container').style.border ="5px solid green";
-            document.querySelector('a-scene').style.width = "50%";
-            document.querySelector('a-scene').style.height = "50%";
-            document.querySelector('a-scene').border = "2px solid yellow";
-           
-        } else {
-            console.log("Keins davon")
-        }
-           
+            if (window.navigator.userAgent.includes("SamsungBrowser")) {
+    console.log("SamsungBrowser");
+
+    let viewport = document.querySelector('meta[name="viewport"]');
+    viewport.setAttribute("content", "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes");
+
+    // Setze den AR-Container auf 50%
+    const arContainer = document.getElementById('ar-container');
+    arContainer.style.width = "50%";
+    arContainer.style.height = "50%";
+    arContainer.style.border = "5px solid green";
+
+    // Füge einen umschließenden <div> für das <a-scene> hinzu, um eine Umrandung anzuwenden
+    const aScene = document.querySelector('a-scene');
+    aScene.style.width = "100%"; // innerhalb des Containers auf 100% setzen
+    aScene.style.height = "100%";
+    
+    // Optional: Verwende ein div oder style-Element für `<a-scene>`
+    const sceneWrapper = document.createElement('div');
+    sceneWrapper.style.border = "2px solid yellow";
+    sceneWrapper.style.width = "100%";
+    sceneWrapper.style.height = "100%";
+    sceneWrapper.appendChild(aScene);
+    arContainer.appendChild(sceneWrapper);
+} else {
+    console.log("Keins davon");
+}           
            
             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
             document.getElementById('ar-container').style.display = 'block';
