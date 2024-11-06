@@ -135,34 +135,44 @@
          */
         async function initializeARScene() {
             if (window.navigator.userAgent.includes("SamsungBrowser")) {
-                    console.log("Samsung Browser detected");
-                    let viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute("content", "width=device-width, initial-scale=0.2, maximum-scale=1.0, user-scalable=yes");
-                    // Select all marker entities
-                    const markerPositions = [
-                        document.querySelector("#model-container-1"),
-                        document.querySelector("#model-container-2"),
-                        document.querySelector("#model-container-3"),
-                        document.querySelector("#model-container-4"),
-                        document.querySelector("#model-container-5"),
-                        document.querySelector("#model-container-6")
-                       
-                    ];
+    console.log("Samsung Browser detected");
 
-                    // Set position specifically for Samsung Browser
-                    markerPositions.forEach(marker => {
-                        if (marker) {
-                            marker.setAttribute("position", "0 0 2");
-                            let h2 = document.createElement("h2");
-                            h2.textContent="Hallo Samsung"
-                            document.getElementById("ar-container").appendChild(h2)
-                            alert(marker.getAttribute("position"));
-                        }
-                    });
-                } else {
-                    console.log("Kein-Samsung Browser");
-                }
-           
+    let viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+        viewport.setAttribute("content", "width=device-width, initial-scale=0.2, maximum-scale=1.0, user-scalable=yes");
+    } else {
+        console.log("Viewport meta tag not found");
+    }
+
+    // Selektiere alle Marker-Entities
+    const markerPositions = [
+            document.querySelector("#model-container-1"),
+            document.querySelector("#model-container-2"),
+            document.querySelector("#model-container-3"),
+            document.querySelector("#model-container-4"),
+            document.querySelector("#model-container-5"),
+            document.querySelector("#model-container-6")
+        ];
+
+        console.log("Marker positions:", markerPositions); // Überprüfen, ob die Marker gefunden wurden
+
+        // Ein einziges <h2>-Element erstellen und hinzufügen, falls es nur einmal benötigt wird
+        let h2 = document.createElement("h2");
+        h2.textContent = "Hallo Samsung";
+        document.getElementById("ar-container").appendChild(h2);
+
+        // Setze Position für jeden gefundenen Marker
+        markerPositions.forEach(marker => {
+            if (marker) {
+                marker.setAttribute("position", "0 0 2");
+                console.log("Position gesetzt für:", marker.id, marker.getAttribute("position")); // Zeige die Position an
+            } else {
+                console.log("Ein Marker wurde nicht gefunden.");
+            }
+        });
+    } else {
+        console.log("Kein-Samsung Browser");
+    }
 
  
           if (window.navigator.userAgent.includes("SamsungBrowser")) {
