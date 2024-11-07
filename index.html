@@ -283,6 +283,16 @@
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
         function initializeMarkerEvents() {
+            document.addEventListener('touchstart', function(event) {
+  if (event.touches.length > 1) {
+    event.preventDefault(); // Verhindert Pinch-to-Zoom bei Mehrfingergesten
+  }
+}, { passive: false });
+
+document.addEventListener('gesturestart', function(event) {
+  event.preventDefault();
+});
+
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
  
@@ -364,15 +374,6 @@
         });
  
         // Touch-Unterstützung für mobile Geräte
-        document.addEventListener('touchstart', function(event) {
-  if (event.touches.length > 1) {
-    event.preventDefault(); // Verhindert Pinch-to-Zoom bei Mehrfingergesten
-  }
-}, { passive: false });
-
-document.addEventListener('gesturestart', function(event) {
-  event.preventDefault();
-});
 
         document.addEventListener('touchstart', function(event) {
             isMouseDown = true;
@@ -439,6 +440,7 @@ document.addEventListener('gesturestart', function(event) {
                 const dy = touches[0].clientY - touches[1].clientY;
                 return Math.sqrt(dx * dx + dy * dy);
             }
+
         window.onload = () => {
             initCameraSelection();
         };
