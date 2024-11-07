@@ -424,6 +424,16 @@
                     currentModel.object3D.scale.set(newScale, newScale, newScale);
                 }
             });
+            window.addEventListener(
+            "touchmove",
+            function (event) {
+                if (event.touches.length > 1) {
+                    // Mehrfingergesten (z.B. Pinch) verhindern das Standardverhalten (Zoom)
+                    event.preventDefault();
+                }
+            },
+            { passive: false }
+        );
             // Helper function to calculate distance between two touch points
             function getPinchDistance(touches) {
                 const dx = touches[0].clientX - touches[1].clientX;
