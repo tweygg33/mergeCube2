@@ -283,16 +283,7 @@
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
         function initializeMarkerEvents() {
-            document.addEventListener('touchstart', function(event) {
-  if (event.touches.length > 1) {
-    event.preventDefault(); // Verhindert Pinch-to-Zoom bei Mehrfingergesten
-  }
-}, { passive: false });
-
-document.addEventListener('gesturestart', function(event) {
-  event.preventDefault();
-});
-
+            
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
  
