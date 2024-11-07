@@ -1,0 +1,1 @@
+let browser = window.navigator.userAgent
