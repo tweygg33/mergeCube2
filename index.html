@@ -373,13 +373,7 @@
         document.addEventListener('touchend', function() {
             isMouseDown = false;
         });
-        document.addEventListener('touchmove', function(event) {
-    if (event.touches.length > 1) {
-        // Mehrfingergesten (z.B. Pinch) verhindern das Standardverhalten (Zoom)
-        event.preventDefault();
-    }
-}, { passive: false });
-
+        
  
         document.addEventListener('touchmove', function(event) {
             if (!isMouseDown || !currentModel) return;
