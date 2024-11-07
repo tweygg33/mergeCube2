@@ -14,10 +14,6 @@
     }
  
     body {
-        touch-action: none;
-        -ms-touch-action: none;
-        overflow: hidden;
-        overscroll-behavior: none;
     background-color: var(--background-color);
     color: var(--text-color);
     width: 100%;
@@ -160,14 +156,6 @@ h1 {
 }
  /* Stil für den AR-Container */
 #ar-container {
-    touch-action: none;
-        -ms-touch-action: none;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
     display: none; /* Sicherstellen, dass der Container sichtbar ist */
     position: fixed; /* Bleibt im Sichtbereich */
     top: 0;
