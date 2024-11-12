@@ -100,8 +100,14 @@ h1 {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
- 
- 
+ @media (max-width:828px) {
+    h1 {
+        font-size: 3rem;
+    }
+    .description {
+        font-size: 1.125rem;
+    }
+ }
 @media (max-width: 768px) {
     h1 {
         font-size: 2.5rem;
@@ -120,6 +126,32 @@ h1 {
         padding: 1rem 2.5rem;
     }
 }
+
+@media (max-width:675px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    .description {
+        font-size: 1rem;
+    }
+    .start-button {
+        font-size: 1rem;
+    }
+  }
+
+  @media (max-width:505px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    .description {
+        font-size: 1rem;
+    }
+    .start-button {
+        font-size: .8rem;
+    }
+  }
+
+
 /* Hallo */
  
 @media (max-width: 370px){
@@ -135,9 +167,21 @@ h1 {
         padding: 1rem;
         margin: .5rem;
     }
- 
- 
- 
+}
+
+@media (max-width: 307px){
+    h1 {
+        font-size: 1rem;
+    }
+    .description {
+        font-size: 0.8rem
+    }
+    .hero-content {
+        width: 100%;
+        height: auto;
+        padding: .9rem;
+        margin: .3rem;
+    }
 }
  
  
