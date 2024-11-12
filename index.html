@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <!-- IOS-Android ohne Samsung Browser VERSION-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <!-- <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"> -->
     <title>AR.js Würfel mit QR-Codes und Drehfunktion</title>
     <!-- Statische Einbindung der A-Frame- und AR.js-Skripte -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
-    <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
         <!-- Navbar Section -->
         <nav class="navbar" id="navbar">
             <div class="navbar-content">
-
                 <div class="logo">MergeCube</div>
             </div>
-        </nav>
-     
+        </nav>    
         <!-- Hero Section with Start Button -->
         <main class="hero" id="hero">
             <div class="hero-content">
@@ -34,7 +28,6 @@
                 <button class="start-button" id="start-ar-button">Starten</button>
             </div>
         </main>
-   
     <!-- Ladeindikator für die AR-Szene -->
     <div id="loading-indicator">AR-Erfahrung wird geladen...</div>
  
