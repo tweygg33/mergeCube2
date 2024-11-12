@@ -78,7 +78,8 @@ h1 {
     color: var(--primary-color);
 }
 .description {
-    font-size: 1.25rem;
+    font-size: 1.75rem;
+    font-weight: 800;
     margin-bottom: 2.5rem;
     line-height: 1.6;
 }
@@ -95,7 +96,7 @@ h1 {
     transition: transform 0.2s, box-shadow 0.2s;
     text-decoration: none;
 }
- 
+
 .start-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
@@ -105,7 +106,7 @@ h1 {
         font-size: 3rem;
     }
     .description {
-        font-size: 1.125rem;
+        font-size: 1.5rem;
     }
  }
 @media (max-width: 768px) {
@@ -114,7 +115,7 @@ h1 {
     }
  
     .description {
-        font-size: 1.125rem;
+        font-size: 1.5rem;
     }
  
     .hero-content {
@@ -132,7 +133,7 @@ h1 {
         font-size: 1.8rem;
     }
     .description {
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
     .start-button {
         font-size: 1rem;
@@ -144,7 +145,7 @@ h1 {
         font-size: 1.5rem;
     }
     .description {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     .start-button {
         font-size: .8rem;
@@ -156,10 +157,10 @@ h1 {
  
 @media (max-width: 370px){
     h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
     }
     .description {
-        font-size: 0.8rem
+        font-size: 1.5rem
     }
     .hero-content {
         width: 100vw;
@@ -174,7 +175,7 @@ h1 {
         font-size: 1rem;
     }
     .description {
-        font-size: 0.8rem
+        font-size: 1.5rem
     }
     .hero-content {
         width: 100%;
