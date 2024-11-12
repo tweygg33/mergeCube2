@@ -25,7 +25,8 @@
     min-height: 100vh;
 }
 .navbar {
-    padding: 1.5rem;
+    width: 100%;
+    padding: 1.2rem;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -33,7 +34,7 @@
     width: 100%;
     margin: 0 auto;
     display: flex;
-    justify-content:left;
+    justify-content:center;
     align-items: center;
 }
 .logo {
@@ -177,10 +178,10 @@ h1 {
 
 }
 
-@media (max-width: 321px){
+@media (max-width: 322px){
     
     h1 {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     .start-button {
         font-size: 1.2rem;
