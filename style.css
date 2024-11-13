@@ -144,7 +144,7 @@ h1 {
   @media (max-width:505px) {
     .hero{
         position: relative;
-        top: -80px;
+        top: -90px;
     }
 
     h1 {
