@@ -1,131 +1,284 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<html>
+<head>
+<style>
 
-    <title>AR.js App - No Zoom on Android</title>
-   
-    <!-- Core scripts -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
-    <!-- <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>   -->
-   
-    <style>
-      /* body {
-        touch-action: none;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-      } */
-    </style>
- 
-    <script>
-    //   Override getUserMedia before any other scripts run
-    //   const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-    //   navigator.mediaDevices.getUserMedia = async function(constraints) {
-    //     if (constraints.video) {
-    //       constraints.video = {
-    //         ...constraints.video,
-    //         width: { min: 640, ideal: 1280, max: 1920 },
-    //         height: { min: 480, ideal: 720, max: 1080 },
-    //         facingMode: { exact: 'environment' },
-    //         zoom: false,
-    //         focusMode: 'continuous',
-    //         advanced: [
-    //           { zoom: 0 },
-    //           { focusDistance: { ideal: 0 } }
-    //         ]
-    //       };
-    //     }
-    //     try {
-    //       return await originalGetUserMedia(constraints);
-    //     } catch (error) {
-    //       console.error('MediaDevices error:', error);
-    //       if (constraints.video) {
-    //         constraints.video = {
-    //           facingMode: 'environment',
-    //           width: { ideal: 1280 },
-    //           height: { ideal: 720 }
-    //         };
-    //         return await originalGetUserMedia(constraints);
-    //       }
-    //       throw error;
-    //     }
-    //   };
- 
-    //   document.addEventListener('DOMContentLoaded', function() {
-    //     document.addEventListener('touchstart', function(e) {
-    //       if (e.touches.length > 1) {
-    //         e.preventDefault();
-    //       }
-    //     }, { passive: false });
- 
-    //     document.addEventListener('touchmove', function(e) {
-    //       if (e.touches.length > 1) {
-    //         e.preventDefault();
-    //       }
-    //     }, { passive: false });
- 
-    //     setTimeout(() => {
-    //       const video = document.querySelector('video');
-    //       if (video) {
-    //         video.style.objectFit = 'cover';
-    //         if (video.srcObject) {
-    //           const track = video.srcObject.getVideoTracks()[0];
-    //           if (track && track.getCapabilities && track.getConstraints) {
-    //             const capabilities = track.getCapabilities();
-    //             if (capabilities.zoom) {
-    //               track.applyConstraints({
-    //                 advanced: [{ zoom: 1.0 }]
-    //               }).catch(console.error);
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }, 1000);
-    //   });
-    </script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <h1 style="color: rgb(220, 236, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque enim molestias voluptate, animi commodi culpa porro optio possimus minima perspiciatis ipsum provident nulla? Fugiat consectetur fuga, itaque omnis tenetur nihil?</h1>
-    <a-scene
-      vr-mode-ui="enabled: false;"
-      loading-screen="enabled: false;"
-      renderer="logarithmicDepthBuffer: true;"
-      arjs="sourceType: webcam; detectionMode: mono;"
-      id="scene"
-      embedded
-      gesture-detector
-    >
-      <a-assets>
-        <a-asset-item id="animated-asset" src="glb/cat.glb"></a-asset-item>
-      </a-assets>
-      <a-marker
-        id="animated-marker"
-        type="pattern"
-        preset="custom"
-        url="pattern2/pattern-a1.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-      >
-        <a-entity
-          id="cat-model"
-          scale="4.98 4.98 4.98"
-          animation-mixer="loop: repeat"
-          gltf-model="#animated-asset"
-          class="clickable"
-          gesture-handler="minScale: 0.25; maxScale: 10"
-        ></a-entity>
-      </a-marker>
-      <a-entity></a-entity>
-    </a-scene>
-  </body>
+    body {
+
+      background: #1a1a1a;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      min-height: 100vh;
+
+      margin: 0;
+
+      font-family: sans-serif;
+
+    }
+
+    .scene {
+
+      width: 200px;
+
+      height: 200px;
+
+      perspective: 800px;
+
+      margin: 100px auto;
+
+    }
+
+    .cube {
+
+      width: 100%;
+
+      height: 100%;
+
+      position: relative;
+
+      transform-style: preserve-3d;
+
+      animation: rotate 12s infinite linear;
+
+    }
+
+    .face {
+
+      position: absolute;
+
+      width: 196px;
+
+      height: 196px;
+
+      border: 2px solid rgba(255, 255, 255, 0.3);
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      font-size: 40px;
+
+      color: white;
+
+      opacity: 0.9;
+
+      transform-style: preserve-3d;
+
+    }
+
+    .face::before {
+
+      content: '';
+
+      position: absolute;
+
+      width: 100%;
+
+      height: 100%;
+
+      background: inherit;
+
+      transform: translateZ(-100px);
+
+      opacity: 0.7;
+
+    }
+
+    .face::after {
+
+      content: '';
+
+      position: absolute;
+
+      width: 100px;  /* 두께 증가 */
+
+      height: 100%;
+
+      background: inherit;
+
+      opacity: 0.5;
+
+      transform-origin: left;
+
+      transform: rotateY(90deg);
+
+      left: 100%;
+
+      top: 0;
+
+    }
+
+    .front  { 
+
+      background: rgba(90, 90, 255, 0.7);
+
+      animation: splitFront 6s infinite ease-in-out;
+
+    }
+
+    .back   { 
+
+      background: rgba(255, 90, 90, 0.7);
+
+      animation: splitBack 6s infinite ease-in-out;
+
+    }
+
+    .right  { 
+
+      background: rgba(90, 255, 90, 0.7);
+
+      animation: splitRight 6s infinite ease-in-out;
+
+    }
+
+    .left   { 
+
+      background: rgba(255, 255, 90, 0.7);
+
+      animation: splitLeft 6s infinite ease-in-out;
+
+    }
+
+    .top    { 
+
+      background: rgba(255, 90, 255, 0.7);
+
+      animation: splitTop 6s infinite ease-in-out;
+
+    }
+
+    .bottom { 
+
+      background: rgba(90, 255, 255, 0.7);
+
+      animation: splitBottom 6s infinite ease-in-out;
+
+    }
+
+    /* 각 면에 두께를 주기 위한 추가 스타일 */
+
+    .face .side {
+
+      position: absolute;
+
+      width: 100px; /* 두께 */
+
+      height: 100%;
+
+      background: inherit;
+
+      transform-origin: left;
+
+      transform: rotateY(90deg);
+
+      left: 100%;
+
+      top: 0;
+
+      opacity: 0.6;
+
+    }
+
+    @keyframes rotate {
+
+      0% { transform: rotateX(-25deg) rotateY(15deg); }
+
+      100% { transform: rotateX(335deg) rotateY(375deg); }
+
+    }
+
+    @keyframes splitFront {
+
+      0%, 35%, 100% { transform: rotateY(0deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateY(0deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+
+    @keyframes splitBack {
+
+      0%, 35%, 100% { transform: rotateY(180deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateY(180deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+
+    @keyframes splitRight {
+
+      0%, 35%, 100% { transform: rotateY(90deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateY(90deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+
+    @keyframes splitLeft {
+
+      0%, 35%, 100% { transform: rotateY(-90deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateY(-90deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+
+    @keyframes splitTop {
+
+      0%, 35%, 100% { transform: rotateX(90deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateX(90deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+
+    @keyframes splitBottom {
+
+      0%, 35%, 100% { transform: rotateX(-90deg) translateZ(100px); }
+
+      50%, 85% { transform: rotateX(-90deg) translateZ(300px); } /* 분리 거리 증가 */
+
+    }
+</style>
+</head>
+<body>
+<div class="scene">
+<div class="cube">
+<div class="face front">
+
+        F
+<div class="side"></div>
+</div>
+<div class="face back">
+
+        B
+<div class="side"></div>
+</div>
+<div class="face right">
+
+        R
+<div class="side"></div>
+</div>
+<div class="face left">
+
+        L
+<div class="side"></div>
+</div>
+<div class="face top">
+
+        T
+<div class="side"></div>
+</div>
+<div class="face bottom">
+
+        B
+<div class="side"></div>
+</div>
+</div>
+</div>
+</body>
 </html>
  
