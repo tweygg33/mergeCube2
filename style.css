@@ -255,7 +255,7 @@ h1 {
     margin-left: 1rem; /* Abstand zum Start-Button */
     display: inline-block;
     vertical-align: middle;
-    z-index: 1000000000000000;
+    z-index: -1;
 }
 
 /* Der Würfel */
