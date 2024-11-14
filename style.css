@@ -259,6 +259,7 @@ h1 {
     display: inline-block;
     vertical-align: middle;
     z-index: -1;
+    display: none;
 }
 
 /* Der Würfel */
@@ -282,7 +283,7 @@ h1 {
     font-size: 0.4rem;
     color: white;
     transform-style: preserve-3d;
-    border: 10px solid black;
+    border: 3px solid black;
    
 }
 
@@ -335,27 +336,27 @@ h1 {
 
 /* Animationen für das Öffnen und Schließen jeder Seite */
 @keyframes openCloseFront {
-    0%, 100% { transform: rotateY(0deg) translateZ(200px); }
+    0%, 100% { transform: rotateY(0deg) translateZ(250px); }
     50%, 65% { transform: rotateY(0deg) translateZ(175px); }
 }
 @keyframes openCloseBack {
-    0%, 100% { transform: rotateY(180deg) translateZ(200px); }
+    0%, 100% { transform: rotateY(180deg) translateZ(250px); }
     50%, 65% { transform: rotateY(180deg) translateZ(175px); }
 }
 @keyframes openCloseRight {
-    0%, 100% { transform: rotateY(90deg) translateZ(200px); }
+    0%, 100% { transform: rotateY(90deg) translateZ(250px); }
     50%, 65% { transform: rotateY(90deg) translateZ(175px); }
 }
 @keyframes openCloseLeft {
-    0%, 100% { transform: rotateY(-90deg) translateZ(200px); }
+    0%, 100% { transform: rotateY(-90deg) translateZ(250px); }
     50%, 65% { transform: rotateY(-90deg) translateZ(175px); }
 }
 @keyframes openCloseTop {
-    0%, 100% { transform: rotateX(90deg) translateZ(200px); }
+    0%, 100% { transform: rotateX(90deg) translateZ(250px); }
     50%, 65% { transform: rotateX(90deg) translateZ(175px); }
 }
 @keyframes openCloseBottom {
-    0%, 100% { transform: rotateX(-90deg) translateZ(200px); }
+    0%, 100% { transform: rotateX(-90deg) translateZ(250px); }
     50%, 65% { transform: rotateX(-90deg) translateZ(175px); }
 }
 img {
