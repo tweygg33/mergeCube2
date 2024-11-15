@@ -422,7 +422,7 @@
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    if (!isZoomed) {
+                    if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
                     } else {
