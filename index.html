@@ -404,40 +404,48 @@
                 const warningText = document.createElement("div");
                 warningText.id = "samsung-warning";
                 warningText.className = "warning-text"; // Klasse für CSS
-                warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
+                warningText.innerText = "Warte auf Szene...";
                 document.body.appendChild(warningText);
             
                 const scene = document.querySelector('a-scene');
-                if (!scene) return; // Keine Szene vorhanden
             
-                // Ursprüngliche Maße der Szene speichern
-                const initialRect = scene.getBoundingClientRect();
-                warningText.innerText = `Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}`;
+                if (!scene) {
+                    console.error("Keine <a-scene> gefunden.");
+                    return;
+                }
             
-                // Intervall zur Überwachung der Skalierung
-                setInterval(() => {
-                    const currentRect = scene.getBoundingClientRect();
+                // Warte darauf, dass die Szene gerendert wird
+                scene.addEventListener("render-target-loaded", () => {
+                    // Ursprüngliche Maße der Szene speichern
+                    const initialRect = scene.getBoundingClientRect();
+                    warningText.innerText = `Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}`;
             
-                    // Vergleich der aktuellen Größe mit der ursprünglichen
-                    const isZoomed =
-                        Math.abs(currentRect.width - initialRect.width) > 5 ||
-                        Math.abs(currentRect.height - initialRect.height) > 5;
+                    // Intervall zur Überwachung der Skalierung
+                    setInterval(() => {
+                        const currentRect = scene.getBoundingClientRect();
             
-                    // Aktualisiere die Warntext-Inhalte mit aktuellen Werten
-                    warningText.innerText = `
-                        Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}
-                        Aktuelle Maße - Breite: ${currentRect.width}, Höhe: ${currentRect.height}
-                        Zoom erkannt: ${isZoomed ? 'Ja' : 'Nein'}
-                    `;
+                        // Vergleich der aktuellen Größe mit der ursprünglichen
+                        const isZoomed =
+                            Math.abs(currentRect.width - initialRect.width) > 5 ||
+                            Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    // Warntext anzeigen oder ausblenden
-                    if (isZoomed) {
-                        warningText.style.display = 'block';
-                    } else {
-                        warningText.style.display = 'none';
-                    }
-                }, 500); // Überprüfung alle 500 ms
+                        // Aktualisiere die Warntext-Inhalte mit aktuellen Werten
+                        warningText.innerText = `
+                            Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}
+                            Aktuelle Maße - Breite: ${currentRect.width}, Höhe: ${currentRect.height}
+                            Zoom erkannt: ${isZoomed ? "Ja" : "Nein"}
+                        `;
+            
+                        // Warntext anzeigen oder ausblenden
+                        if (isZoomed) {
+                            warningText.style.display = "block";
+                        } else {
+                            warningText.style.display = "none";
+                        }
+                    }, 500); // Überprüfung alle 500 ms
+                });
             }
+            
             
 
         window.onload = () => {
