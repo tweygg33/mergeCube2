@@ -402,6 +402,7 @@ h1 {
     font-size: 14px;
     text-align: center;
     animation: fadeIn 0.5s ease-in-out;
+    background: url(kreaAI/Bild\ \(4\).png);
 }
 
 /* Animation für das Einblenden */
