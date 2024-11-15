@@ -412,9 +412,10 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     if (isZoomed) {
-                        scene.pause();
                         // Zeige Warntext, wenn gezoomt wurde
                        zoomFoto.style.display = 'block';
+                       scene.style.width ="200px";
+                       scene.style.height ="200px";
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         zoomFoto.style.display = 'none';
