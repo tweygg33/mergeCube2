@@ -412,7 +412,9 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     if (isZoomed) {
-                        scene.remove()
+                        scene.forEach(e=>{
+                            e.remove()
+                        })
                         // Zeige Warntext, wenn gezoomt wurde
                        zoomFoto.style.display = 'block';
                     } else {
