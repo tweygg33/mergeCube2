@@ -5,6 +5,13 @@
     --background-color: #f8fafc;
     --text-color: #1e293b;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+    touch-action: manipulation;
+}
 
 html, body {
     touch-action: manipulation;
@@ -13,13 +20,6 @@ html, body {
     height: 100%;
 }
  
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: system-ui, -apple-system, sans-serif;
-    touch-action: manipulation;
-}
  
 body {
     background: linear-gradient(135deg, var(--primary-color), var(--complementary-color));
