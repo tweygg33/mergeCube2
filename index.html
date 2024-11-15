@@ -412,7 +412,9 @@
             
                 // Ursprüngliche Maße der Szene speichern
                 const initialRect = scene.getBoundingClientRect();
-                warningText.innerText = `Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}`;                // Intervall zur Überwachung der Skalierung
+                warningText.innerText = `Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}`;
+            
+                // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
                     const currentRect = scene.getBoundingClientRect();
             
@@ -421,11 +423,17 @@
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
+                    // Aktualisiere die Warntext-Inhalte mit aktuellen Werten
+                    warningText.innerText = `
+                        Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}
+                        Aktuelle Maße - Breite: ${currentRect.width}, Höhe: ${currentRect.height}
+                        Zoom erkannt: ${isZoomed ? 'Ja' : 'Nein'}
+                    `;
+            
+                    // Warntext anzeigen oder ausblenden
                     if (isZoomed) {
-                        // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
                     } else {
-                        // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         warningText.style.display = 'none';
                     }
                 }, 500); // Überprüfung alle 500 ms
