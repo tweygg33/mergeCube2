@@ -404,8 +404,6 @@
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    // Debugging: Textinhalt aktualisieren, um den Zoomstatus anzuzeigen
-                   warningText.textContent = isZoomed ? 'Gezoomt' : 'Nicht gezoomt';
                     if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
