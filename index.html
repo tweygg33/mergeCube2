@@ -124,28 +124,8 @@
          // Funktion zur Initialisierung der AR-Szene
          // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
          // Fügt die Rotations- und Zoom-Logik hinzu
-        async function initializeARScene() {   
-            function checkSamsungBrowser() {
-    // Prüfen, ob der Browser der Samsung-Browser ist
-    if (window.navigator.userAgent.includes("SamsungBrowser")) {
-        // Text anzeigen
-        const warningText = document.createElement("div");
-        warningText.id = "samsung-warning";
-        warningText.className = "warning-text"; // Klasse für externe CSS
-        warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
-        document.body.appendChild(warningText);
-
-        // Prüfen, ob der Pinch-Zoom deaktiviert ist
-        let initialScale = window.visualViewport.scale;
-        const interval = setInterval(() => {
-            if (window.visualViewport.scale === initialScale) {
-                // Text entfernen
-                warningText.style.display = "none";
-                clearInterval(interval);
-            }
-        }, 500);
-    }
-}
+        async function initializeARScene() { 
+            monitorARScale()  
     //         if (window.navigator.userAgent.includes("SamsungBrowser")) {
             // Zeige den AR-Container und verstecke die Info
             document.getElementById('ar-container').style.display = 'block';
@@ -437,7 +417,7 @@
 
         window.onload = () => {
             initCameraSelection();
-            monitorARScale()
+           
             document.addEventListener('touchmove', function(event) {
                 if (event.scale !== 1) {
                     event.preventDefault();
