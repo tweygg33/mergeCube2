@@ -81,6 +81,7 @@
             const scene = document.querySelector('a-scene');
             if (selectedDevice) {
                 document.getElementById('loading-indicator').style.display = 'block';
+                document.getElementById('main').style.display="none";
                 try {
                     // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                     overrideGetUserMedia(selectedDevice.deviceId);

@@ -58,7 +58,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url(kreaAI/pc.png) ;
+    /* background: url(kreaAI/pc.png) ; */
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -77,9 +77,10 @@ body {
     border-radius: 50px;
     min-width: 200px;
     z-index: 1;
+    border: 2px solid black;
 }
 
-/* .hero::before {
+.hero::before {
     content: "";
     position: absolute;
     top: 0;
@@ -92,7 +93,7 @@ body {
     z-index: -1;
     background: url(kreaAI/flower.webp);
     background-size: contain;
-} */
+}
 
 .hero-content {
     max-width: 600px;
