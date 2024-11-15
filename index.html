@@ -382,14 +382,18 @@
                 if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
             
                 // Warntext erstellen und ins DOM einfügen
-                const warningText = document.createElement("div");
+               /*  const warningText = document.createElement("div");
                 warningText.id = "samsung-warning";
                 warningText.className = "warning-text"; // Klasse für CSS
                 warningText.textContent = `
                 Sie verwenden den Samsung Browswer.
                 Bitte deaktivieren Sie den Pinch-Zoom 
                 unter den Einstellungen.`
-                document.body.appendChild(warningText);
+                document.body.appendChild(warningText);*/
+
+                const zoomFoto = document.createElement("div");
+                zoomFoto.setAttribute("id","zoomFoto");
+                document.body.appendChild(zoomFoto);
             
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
@@ -409,10 +413,10 @@
             
                     if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
-                        warningText.style.display = 'block';
+                       zoomFoto.style.display = 'block';
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
-                        warningText.style.display = 'none';
+                        zoomFoto.style.display = 'none';
                     }
                 }, 500); // Überprüfung alle 500 ms
             }
