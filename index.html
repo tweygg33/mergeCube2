@@ -407,6 +407,10 @@
                     if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
+                        warningText.textContent = `
+                        Sie verwenden den Samsung Browswer.
+                        Bitte deaktivieren Sie den Pinch-Zoom 
+                        unter den Einstellungen.`
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         warningText.style.display = 'none';
