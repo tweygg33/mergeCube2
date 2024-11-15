@@ -390,17 +390,21 @@
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
             
+                // Ursprüngliche Maße der Szene speichern (außerhalb des Intervalls)
+                const initialRect = scene.getBoundingClientRect();
             
                 // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
-                // Ursprüngliche Maße der Szene speichern
-                    warningText.textContent = 0;
-                    const initialRect = scene.getBoundingClientRect();
+                    // Aktuelle Maße der Szene abrufen
                     const currentRect = scene.getBoundingClientRect();
+            
                     // Vergleich der aktuellen Größe mit der ursprünglichen
                     const isZoomed =
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
+            
+                    // Debugging: Textinhalt aktualisieren, um den Zoomstatus anzuzeigen
+                    warningText.textContent = isZoomed ? 'Gezoomt' : 'Nicht gezoomt';
             
                     if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
@@ -411,7 +415,6 @@
                     }
                 }, 500); // Überprüfung alle 500 ms
             }
-            
             
 
         window.onload = () => {
