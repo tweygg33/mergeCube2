@@ -401,17 +401,17 @@
                 if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
             
                 // Warntext erstellen und ins DOM einfügen
+              
+                if (!scene) return; // Keine Szene vorhanden
                 const scene = document.querySelector('a-scene');
+                // Ursprüngliche Maße der Szene speichern
+                const initialRect = scene.getBoundingClientRect();
                 const warningText = document.createElement("div");
                 warningText.id = "samsung-warning";
                 warningText.className = "warning-text"; // Klasse für CSS
-                document.body.appendChild(warningText);
-            
-                if (!scene) return; // Keine Szene vorhanden
-            
-                // Ursprüngliche Maße der Szene speichern
-                const initialRect = scene.getBoundingClientRect();
                 warningText.innerText = `Sie verwenden Samsung Browser.${initialRect} Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.`;
+                document.body.appendChild(warningText);
+
 
                 // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
