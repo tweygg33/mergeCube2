@@ -405,15 +405,14 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     // Debugging: Textinhalt aktualisieren, um den Zoomstatus anzuzeigen
-                   // warningText.textContent = isZoomed ? 'Gezoomt' : 'Nicht gezoomt';
-                   warningText.textContent = "Hallo"
-       /*             if (isZoomed) {
+                   warningText.textContent = isZoomed ? 'Gezoomt' : 'Nicht gezoomt';
+                    if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         warningText.style.display = 'none';
-                    }*/
+                    }
                 }, 500); // Überprüfung alle 500 ms
             }
             
