@@ -29,12 +29,12 @@
             </div>
             <div class="cube-container">
                 <div class="cube">
-                    <div class="face front"><img src="kreaAI/lernlab-logo.png" alt="" width="75px" height="75x"></div>
-                    <div class="face back"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75x"></div>
-                    <div class="face right"><img src="kreaAI/lernlab-logo.png" alt="" width="75x" height="75x"></div>
-                    <div class="face left"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75x"></div>
-                    <div class="face top"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75x"></div>
-                    <div class="face bottom"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75x"></div>
+                    <div class="face front"><img src="kreaAI/lernlab-logo.png" alt="" width="75px" height="75px"></div>
+                    <div class="face back"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75px"></div>
+                    <div class="face right"><img src="kreaAI/lernlab-logo.png" alt="" width="75x" height="75px"></div>
+                    <div class="face left"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75px"></div>
+                    <div class="face top"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75px"></div>
+                    <div class="face bottom"><img src="img2\drv_prev_ui (2).png" alt="" width="75x" height="75px"></div>
                 </div>
             </div>  
 
@@ -48,6 +48,7 @@
         <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
     <script>
+        
         const MIN_SCALE = 0.01;
         const MAX_SCALE = 3.0;
         // Globale Variablen für Maus- und Touch-Interaktion
@@ -124,16 +125,28 @@
          // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
          // Fügt die Rotations- und Zoom-Logik hinzu
         async function initializeARScene() {   
-    //         if (window.navigator.userAgent.includes("SamsungBrowser")) {
-    //     console.log("Samsung Browser detected");
+            function checkSamsungBrowser() {
+    // Prüfen, ob der Browser der Samsung-Browser ist
+    if (window.navigator.userAgent.includes("SamsungBrowser")) {
+        // Text anzeigen
+        const warningText = document.createElement("div");
+        warningText.id = "samsung-warning";
+        warningText.className = "warning-text"; // Klasse für externe CSS
+        warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
+        document.body.appendChild(warningText);
 
-    //     let viewport = document.querySelector('meta[name="viewport"]');
-    //     if (viewport) {
-    //         viewport.setAttribute("content", "width=device-width, initial-scale=0.2, maximum-scale=1.0, user-scalable=yes");
-    //     }
-    // } else {
-    //     console.log("Kein-Samsung Browser");
-    // }    
+        // Prüfen, ob der Pinch-Zoom deaktiviert ist
+        let initialScale = window.visualViewport.scale;
+        const interval = setInterval(() => {
+            if (window.visualViewport.scale === initialScale) {
+                // Text entfernen
+                warningText.style.display = "none";
+                clearInterval(interval);
+            }
+        }, 500);
+    }
+}
+    //         if (window.navigator.userAgent.includes("SamsungBrowser")) {
             // Zeige den AR-Container und verstecke die Info
             document.getElementById('ar-container').style.display = 'block';
             document.getElementById('navbar').style.display = 'none';
@@ -381,8 +394,33 @@
                 const dy = touches[0].clientY - touches[1].clientY;
                 return Math.sqrt(dx * dx + dy * dy);
             }
+            // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
+            //SAMSUNG BROWSER
+            function checkSamsungBrowser() {
+                // Prüfen, ob der Browser der Samsung-Browser ist
+                if (window.navigator.userAgent.includes("SamsungBrowser")) {
+                    // Text anzeigen
+                    const warningText = document.createElement("div");
+                    warningText.id = "samsung-warning";
+                    warningText.className = "warning-text"; // Klasse für externe CSS
+                    warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
+                    document.body.appendChild(warningText);
+
+                    // Prüfen, ob der Pinch-Zoom deaktiviert ist
+                    let initialScale = window.visualViewport.scale;
+                    const interval = setInterval(() => {
+                        if (window.visualViewport.scale === initialScale) {
+                            // Text entfernen
+                            warningText.style.display = "none";
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                }
+            }
+
         window.onload = () => {
             initCameraSelection();
+            checkSamsungBrowser();
             document.addEventListener('touchmove', function(event) {
                 if (event.scale !== 1) {
                     event.preventDefault();
