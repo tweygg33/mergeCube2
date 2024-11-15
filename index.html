@@ -408,12 +408,12 @@
                     // Prüfen, ob der Pinch-Zoom deaktiviert ist
                     let initialScale = window.visualViewport.scale;
                     const interval = setInterval(() => {
-                        if (window.visualViewport.scale != initialScale) {
+                        if (window.visualViewport.scale === 1) {
                             // Text entfernen
-                            warningText.style.display = "block";
+                            warningText.style.display = "none";
                             clearInterval(interval);
                         }else {
-                            warningText.display="none";
+                            warningText.display="block";
                         }
                     }, 500);
                 }
