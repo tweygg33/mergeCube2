@@ -407,7 +407,6 @@
                 warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
                 document.body.appendChild(warningText);
                 warningText.style.display = 'none'; // Standardmäßig ausgeblendet
-            
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
             
@@ -423,7 +422,7 @@
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    if (isZoomed) {
+                    if (!isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         warningText.style.display = 'block';
                     } else {
