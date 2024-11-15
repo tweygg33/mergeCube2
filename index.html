@@ -394,6 +394,7 @@
                 // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
                 // Ursprüngliche Maße der Szene speichern
+                    warningText.textContent = 0;
                     const initialRect = scene.getBoundingClientRect();
                     const currentRect = scene.getBoundingClientRect();
                     // Vergleich der aktuellen Größe mit der ursprünglichen
