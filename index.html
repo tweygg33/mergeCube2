@@ -412,22 +412,14 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     if (isZoomed) {
-                        const arContainer = document.getElementById('ar-container');
-                        if (arContainer) {
-                            // Entferne den AR-Container
-                            arContainer.remove();
-                            console.log('AR-Container wurde entfernt');
-            
-                            // Zeige Warntext
-                            zoomFoto.style.display = 'block';
-                        }
+                        // Zeige Warntext, wenn gezoomt wurde
+                       zoomFoto.style.display = 'block';
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         zoomFoto.style.display = 'none';
                     }
                 }, 500); // Überprüfung alle 500 ms
             }
-            
             
 
         window.onload = () => {
