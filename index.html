@@ -393,7 +393,10 @@
             
                 // Ursprüngliche Maße der Szene speichern (außerhalb des Intervalls)
                 const initialRect = scene.getBoundingClientRect();
-            
+                setTimeout(() => {
+                    warningText.innerText = "Hallo";
+                }, 1000);
+    
                 // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
                     // Aktuelle Maße der Szene abrufen
