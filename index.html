@@ -125,8 +125,8 @@
          // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
          // Fügt die Rotations- und Zoom-Logik hinzu
         async function initializeARScene() {   
+        //  if (window.navigator.userAgent.includes("SamsungBrowser")) {
             checkSamsungBrowser();
-    //         if (window.navigator.userAgent.includes("SamsungBrowser")) {
             // Zeige den AR-Container und verstecke die Info
             document.getElementById('ar-container').style.display = 'block';
             document.getElementById('navbar').style.display = 'none';
