@@ -391,9 +391,10 @@ h1 {
 }
 #samsung-warning {
     position: fixed;
+    width: 500px;
     top: 10px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%, -50%s);
     background-color: rgba(255, 0, 0, 0.8);
     color: white;
     padding: 10px 20px;

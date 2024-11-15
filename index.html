@@ -393,7 +393,7 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     const warningText = document.getElementById('samsung-warning');
-                    if (isZoomed) {
+                    if (!isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
                         if (warningText) warningText.style.display = 'block';
                     } else {
