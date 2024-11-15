@@ -378,80 +378,48 @@
             // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
             //SAMSUNG BROWSER
             function monitorARScale() {
-                // Selektiere das Warnbild-Element
-                const zoomFoto = document.getElementById("zoomFoto");
-                if (!zoomFoto) {
-                    console.error("Warnbild-Element nicht gefunden!");
-                    return;
-                }
+                // Prüfen, ob der Samsung-Browser genutzt wird
+                if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
+            
+                // Warntext erstellen und ins DOM einfügen
+               /*  const warningText = document.createElement("div");
+                warningText.id = "samsung-warning";
+                warningText.className = "warning-text"; // Klasse für CSS
+                warningText.textContent = `
+                Sie verwenden den Samsung Browswer.
+                Bitte deaktivieren Sie den Pinch-Zoom 
+                unter den Einstellungen.`
+                document.body.appendChild(warningText);*/
+
+                const zoomFoto = document.createElement("div");
+                zoomFoto.setAttribute("id","zoomFoto");
+                document.body.appendChild(zoomFoto);
             
                 const scene = document.querySelector('a-scene');
-                if (!scene) {
-                    console.error("AR-Szene nicht gefunden!");
-                    return;
-                }
+                if (!scene) return; // Keine Szene vorhanden
             
-                // Ursprüngliche Maße der Szene speichern (einmalig)
+                // Ursprüngliche Maße der Szene speichern (außerhalb des Intervalls)
                 const initialRect = scene.getBoundingClientRect();
             
-                // Flag, um den aktuellen Status der Szene zu verfolgen
-                let sceneStopped = false;
-            
-                // Intervall zur Überwachung der Skalierung alle 500 ms
+                // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
+                    // Aktuelle Maße der Szene abrufen
                     const currentRect = scene.getBoundingClientRect();
             
-                    // Prüfen, ob die Szene gezoomt wurde (Größenänderung > 5px)
+                    // Vergleich der aktuellen Größe mit der ursprünglichen
                     const isZoomed =
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    if (isZoomed && !sceneStopped) {
-                        // Wenn gezoomt wurde und die Szene noch nicht gestoppt ist
-                        stopARScene();
-                        sceneStopped = true;
-                    } else if (!isZoomed && sceneStopped) {
-                        // Wenn der Zoom entfernt wurde und die Szene gestoppt ist
-                        startARScene();
-                        sceneStopped = false;
+                    if (isZoomed) {
+                        // Zeige Warntext, wenn gezoomt wurde
+                       zoomFoto.style.display = 'block';
+                    } else {
+                        // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
+                        zoomFoto.style.display = 'none';
                     }
-                }, 500);
+                }, 500); // Überprüfung alle 500 ms
             }
-            
-            // Funktion zum Stoppen der AR-Szene (ausblenden)
-        function stopARScene() {
-            const scene = document.querySelector('a-scene');
-            if (scene) {
-                scene.style.display = 'none';
-                console.log('AR-Szene wurde gestoppt.');
-            } else {
-                console.log('Keine AR-Szene gefunden.');
-            }
-
-            // Zeige das Warnbild an
-            const zoomFoto = document.getElementById("zoomFoto");
-            if (zoomFoto) {
-                zoomFoto.style.display = 'block';
-            }
-        }
-
-        // Funktion zum Starten der AR-Szene (anzeigen)
-        function startARScene() {
-            const scene = document.querySelector('a-scene');
-            if (scene) {
-                scene.style.display = 'block';
-                console.log('AR-Szene wurde gestartet.');
-            } else {
-                console.log('Keine AR-Szene gefunden.');
-            }
-
-            // Verstecke das Warnbild
-            const zoomFoto = document.getElementById("zoomFoto");
-            if (zoomFoto) {
-                zoomFoto.style.display = 'none';
-            }
-        }
-
             
 
         window.onload = () => {
