@@ -403,7 +403,7 @@
                     const warningText = document.createElement("div");
                     warningText.id = "samsung-warning";
                     warningText.className = "warning-text"; // Klasse für externe CSS
-                    warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
+                    warningText.innerText = `Sie verwenden Samsung Browser.${window.visualViewport.scale} Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.`;
                     document.body.appendChild(warningText);
                     // Prüfen, ob der Pinch-Zoom deaktiviert ist
                     let initialScale = window.visualViewport.scale;
