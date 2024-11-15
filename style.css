@@ -393,7 +393,7 @@ h1 {
 .warning-text {
     position: fixed;
     top: 10px;
-    left: 50%;
+    left: 0;
     transform: translateX(-50%);
     background-color: rgba(255, 0, 0, 0.8);
     color: white;
