@@ -397,6 +397,7 @@
             // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
             //SAMSUNG BROWSER
             function monitorARScale() {
+                let initialRect = null;
                 // Prüfen, ob der Samsung-Browser genutzt wird
                 if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
             
@@ -404,48 +405,34 @@
                 const warningText = document.createElement("div");
                 warningText.id = "samsung-warning";
                 warningText.className = "warning-text"; // Klasse für CSS
-                warningText.innerText = "Warte auf Szene...";
+                warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
                 document.body.appendChild(warningText);
             
                 const scene = document.querySelector('a-scene');
+                if (!scene) return; // Keine Szene vorhanden
             
-                if (!scene) {
-                    console.error("Keine <a-scene> gefunden.");
-                    return;
-                }
+                // Ursprüngliche Maße der Szene speichern
+                initialRect = scene.getBoundingClientRect();
             
-                // Warte darauf, dass die Szene gerendert wird
-                scene.addEventListener("render-target-loaded", () => {
-                    // Ursprüngliche Maße der Szene speichern
-                    const initialRect = scene.getBoundingClientRect();
-                    warningText.innerText = `Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}`;
+                // Intervall zur Überwachung der Skalierung
+                setInterval(() => {
+                    warningText.innertext = initialRect.width;
+                    const currentRect = scene.getBoundingClientRect();
             
-                    // Intervall zur Überwachung der Skalierung
-                    setInterval(() => {
-                        const currentRect = scene.getBoundingClientRect();
+                    // Vergleich der aktuellen Größe mit der ursprünglichen
+                    const isZoomed =
+                        Math.abs(currentRect.width - initialRect.width) > 5 ||
+                        Math.abs(currentRect.height - initialRect.height) > 5;
             
-                        // Vergleich der aktuellen Größe mit der ursprünglichen
-                        const isZoomed =
-                            Math.abs(currentRect.width - initialRect.width) > 5 ||
-                            Math.abs(currentRect.height - initialRect.height) > 5;
-            
-                        // Aktualisiere die Warntext-Inhalte mit aktuellen Werten
-                        warningText.innerText = `
-                            Initiale Maße - Breite: ${initialRect.width}, Höhe: ${initialRect.height}
-                            Aktuelle Maße - Breite: ${currentRect.width}, Höhe: ${currentRect.height}
-                            Zoom erkannt: ${isZoomed ? "Ja" : "Nein"}
-                        `;
-            
-                        // Warntext anzeigen oder ausblenden
-                        if (isZoomed) {
-                            warningText.style.display = "block";
-                        } else {
-                            warningText.style.display = "none";
-                        }
-                    }, 500); // Überprüfung alle 500 ms
-                });
+                    if (isZoomed) {
+                        // Zeige Warntext, wenn gezoomt wurde
+                        warningText.style.display = 'block';
+                    } else {
+                        // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
+                        warningText.style.display = 'none';
+                    }
+                }, 500); // Überprüfung alle 500 ms
             }
-            
             
 
         window.onload = () => {
