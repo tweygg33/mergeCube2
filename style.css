@@ -404,8 +404,8 @@ h1 {
     animation: fadeIn 0.5s ease-in-out;
 } */
 #zoomFoto {
-    width: inherit;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-image: url(kreaAI/pinch-zoom.jpg);
     background-repeat: no-repeat;
     background-size: contain;
