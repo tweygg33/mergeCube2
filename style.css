@@ -389,12 +389,11 @@ h1 {
     0%, 100% { transform: rotateX(-90deg) translateZ(150px); }
     50%, 65% { transform: rotateX(-90deg) translateZ(100px); }
 }
-#samsung-warning {
+.warning-text {
     position: fixed;
-    width: 500px;
     top: 10px;
     left: 50%;
-    transform: translateX(-50%, -50%s);
+    transform: translateX(-50%);
     background-color: rgba(255, 0, 0, 0.8);
     color: white;
     padding: 10px 20px;
@@ -405,6 +404,7 @@ h1 {
     text-align: center;
     display: none; /* Standardmäßig ausgeblendet */
 }
+
 
 
 /* Animation für das Einblenden */

@@ -377,6 +377,16 @@
             // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
             //SAMSUNG BROWSER
             function monitorARScale() {
+                // Prüfen, ob der Samsung-Browser genutzt wird
+                if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
+            
+                // Warntext erstellen und ins DOM einfügen
+                const warningText = document.createElement("div");
+                warningText.id = "samsung-warning";
+                warningText.className = "warning-text"; // Klasse für CSS
+                warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
+                document.body.appendChild(warningText);
+            
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
             
@@ -384,7 +394,7 @@
                 const initialRect = scene.getBoundingClientRect();
             
                 // Intervall zur Überwachung der Skalierung
-                const interval = setInterval(() => {
+                setInterval(() => {
                     const currentRect = scene.getBoundingClientRect();
             
                     // Vergleich der aktuellen Größe mit der ursprünglichen
@@ -392,17 +402,16 @@
                         Math.abs(currentRect.width - initialRect.width) > 5 ||
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
-                    const warningText = document.getElementById('samsung-warning');
-                    if (!isZoomed) {
+                    if (isZoomed) {
                         // Zeige Warntext, wenn gezoomt wurde
-                        if (warningText) warningText.style.display = 'block';
+                        warningText.style.display = 'block';
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
-                        if (warningText) warningText.style.display = 'none';
+                        warningText.style.display = 'none';
                     }
                 }, 500); // Überprüfung alle 500 ms
-
             }
+            
             
 
         window.onload = () => {
