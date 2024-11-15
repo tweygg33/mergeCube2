@@ -126,7 +126,7 @@
          // Fügt die Rotations- und Zoom-Logik hinzu
         async function initializeARScene() {   
         //  if (window.navigator.userAgent.includes("SamsungBrowser")) {
-            checkSamsungBrowser();
+            monitorARScale()
             // Zeige den AR-Container und verstecke die Info
             document.getElementById('ar-container').style.display = 'block';
             document.getElementById('navbar').style.display = 'none';
