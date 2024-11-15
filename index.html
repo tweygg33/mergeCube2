@@ -390,13 +390,12 @@
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
             
-                // Ursprüngliche Maße der Szene speichern
-                const initialRect = scene.getBoundingClientRect();
             
                 // Intervall zur Überwachung der Skalierung
                 setInterval(() => {
+                // Ursprüngliche Maße der Szene speichern
+                    const initialRect = scene.getBoundingClientRect();
                     const currentRect = scene.getBoundingClientRect();
-            
                     // Vergleich der aktuellen Größe mit der ursprünglichen
                     const isZoomed =
                         Math.abs(currentRect.width - initialRect.width) > 5 ||

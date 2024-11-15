@@ -389,6 +389,7 @@ h1 {
     0%, 100% { transform: rotateX(-90deg) translateZ(150px); }
     50%, 65% { transform: rotateX(-90deg) translateZ(100px); }
 }
+/* Warntext-Stil */
 .warning-text {
     position: fixed;
     top: 10px;
@@ -402,10 +403,8 @@ h1 {
     font-family: Arial, sans-serif;
     font-size: 14px;
     text-align: center;
-    display: none; /* Standardmäßig ausgeblendet */
+    animation: fadeIn 0.5s ease-in-out;
 }
-
-
 
 /* Animation für das Einblenden */
 @keyframes fadeIn {
