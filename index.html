@@ -376,27 +376,34 @@
             }
             // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
             //SAMSUNG BROWSER
-            function checkSamsungBrowser() {
-                // Prüfen, ob der Browser der Samsung-Browser ist
-                if (window.navigator.userAgent.includes("SamsungBrowser")) {
-                    // Text anzeigen
-                    const warningText = document.createElement("div");
-                    warningText.id = "samsung-warning";
-                    warningText.className = "warning-text"; // Klasse für externe CSS
-                    warningText.innerText = "Sie verwenden Samsung Browser. Bitte deaktivieren Sie den Pinch-Zoom unter den Einstellungen.";
-                    document.body.appendChild(warningText);
+            function monitorARScale() {
+                const scene = document.querySelector('a-scene');
+                if (!scene) return; // Keine Szene vorhanden
+            
+                // Ursprüngliche Maße der Szene speichern
+                const initialRect = scene.getBoundingClientRect();
+            
+                // Intervall zur Überwachung der Skalierung
+                const interval = setInterval(() => {
+                    const currentRect = scene.getBoundingClientRect();
+            
+                    // Vergleich der aktuellen Größe mit der ursprünglichen
+                    const isZoomed =
+                        Math.abs(currentRect.width - initialRect.width) > 5 ||
+                        Math.abs(currentRect.height - initialRect.height) > 5;
+            
+                    const warningText = document.getElementById('samsung-warning');
+                    if (isZoomed) {
+                        // Zeige Warntext, wenn gezoomt wurde
+                        if (warningText) warningText.style.display = 'block';
+                    } else {
+                        // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
+                        if (warningText) warningText.style.display = 'none';
+                    }
+                }, 500); // Überprüfung alle 500 ms
 
-                    // Prüfen, ob der Pinch-Zoom deaktiviert ist
-                    let initialScale = window.visualViewport.scale;
-                    const interval = setInterval(() => {
-                        if (window.visualViewport.scale === initialScale) {
-                            // Text entfernen
-                            warningText.style.display = "none";
-                            clearInterval(interval);
-                        }
-                    }, 500);
-                }
             }
+            
 
         window.onload = () => {
             initCameraSelection();
