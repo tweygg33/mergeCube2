@@ -125,7 +125,6 @@
          // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
          // Fügt die Rotations- und Zoom-Logik hinzu
         async function initializeARScene() {   
-            monitorARScale()
         //  if (window.navigator.userAgent.includes("SamsungBrowser")) {
           
             // Zeige den AR-Container und verstecke die Info
@@ -230,6 +229,7 @@
                     <a-entity camera></a-entity>
                 </a-scene>
             `; 
+            monitorARScale();
             // Rotation Order Komponente hinzufügen
             AFRAME.registerComponent('rotation-order', {
                 schema: { type: 'string', default: 'XYZ' },
