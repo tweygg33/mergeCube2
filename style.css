@@ -365,7 +365,7 @@ h1 {
     .bottom { transform: rotateX(-90deg) translateZ(50px); }
     
     .cube-container {
-        width: 230px;
+        width: 150px;
         /* border: 2px solid black; */
     }
     
