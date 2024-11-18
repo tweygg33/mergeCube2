@@ -355,7 +355,6 @@ h1 {
     }
     .cube-container {
         width: 250px;
-        height: 300px;
         border: 2px solid black;
     }
     
@@ -393,7 +392,6 @@ h1 {
         }
         .cube-container {
             width: 200px;
-            height: 220px;
             border: 2px solid black;
         }
         /* Cube positioning with fixed 100px transform */
