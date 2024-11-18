@@ -353,16 +353,16 @@ h1 {
         padding: .7rem;
     }
     .face {
-        width: 140px;
-        height: 140px;
+        width: 100px;
+        height: 100px;
         }
         /* Cube positioning with fixed 100px transform */
-    .front  { transform: rotateY(0deg) translateZ(70px); }
-    .back   { transform: rotateY(180deg) translateZ(70px); }
-    .right  { transform: rotateY(90deg) translateZ(70px); }
-    .left   { transform: rotateY(-90deg) translateZ(70px); }
-    .top    { transform: rotateX(90deg) translateZ(70px); }
-    .bottom { transform: rotateX(-90deg) translateZ(70px); }
+    .front  { transform: rotateY(0deg) translateZ(50px); }
+    .back   { transform: rotateY(180deg) translateZ(50px); }
+    .right  { transform: rotateY(90deg) translateZ(50px); }
+    .left   { transform: rotateY(-90deg) translateZ(50px); }
+    .top    { transform: rotateX(90deg) translateZ(50px); }
+    .bottom { transform: rotateX(-90deg) translateZ(50px); }
     
     .cube-container {
         width: 230px;
