@@ -34,8 +34,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    justify-content: center;
-    align-items: center;
+
 }
  
 /* Enhanced Navbar */
@@ -314,20 +313,14 @@ h1 {
 @media (max-width: 785px) {
     .hero {
         flex-direction: column;
-        height: auto;
-        padding: 2rem 1.5rem;
-        width: 95%;
-        gap: 3rem;
-        overflow: visible;
-        
     }
-    .hero-content {
+    /* .hero-content {
         width: 100%;
         height: auto;
         padding: 2rem;
         order: 1;
         flex: 0;
-    }
+    } */
     .hero-content h1 {
         font-size: 2rem;
     }
