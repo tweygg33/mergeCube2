@@ -314,8 +314,11 @@ h1 {
     .hero {
         flex-direction: column;
         min-height: auto; /* Hinzugefügt */
-        gap: 1rem; /* Reduzierter Abstand */
+
+        align-items: center;
+        justify-content: center;
     }
+
     
     .hero-content {
         width: 100%;
