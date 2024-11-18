@@ -339,12 +339,15 @@ h1 {
     }
   
     .cube-container {
+        width: 300px;
+        height: 500px;
         order: 2;
         margin: 2rem auto;
         transform-origin: center center;
+        border: 2px solid black;
     }
 }
-@media (max-width: 675px) {
+@media (max-width: 680px) {
     .hero {
         width: 95%;
         padding: 1rem;
@@ -361,8 +364,58 @@ h1 {
 
 @media (max-width: 450px) {
     .hero-content h1 {
-        font-size: 1.6rem;
+        font-size: 1.9rem;
     }
+    .cube-container {
+        width: 250px;
+        height: 300px;
+        border: 2px solid black;
+    }
+    
+}
+@media (max-width: 430px) {
+    .hero-content h1 {
+        font-size: 1.7rem;
+    }
+    .face {
+        width: 160px;
+        height: 160px;
+        }
+        /* Cube positioning with fixed 100px transform */
+    .front  { transform: rotateY(0deg) translateZ(80px); }
+    .back   { transform: rotateY(180deg) translateZ(80px); }
+    .right  { transform: rotateY(90deg) translateZ(80px); }
+    .left   { transform: rotateY(-90deg) translateZ(80px); }
+    .top    { transform: rotateX(90deg) translateZ(80px); }
+    .bottom { transform: rotateX(-90deg) translateZ(80px); }
+    .hero-content .start-button {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+    }
+}
+@media (max-width: 400px) {
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+    
+}
+@media (max-width: 350px) {
+    .face {
+        width: 140px;
+        height: 140px;
+        }
+        .cube-container {
+            width: 200px;
+            height: 220px;
+            border: 2px solid black;
+        }
+        /* Cube positioning with fixed 100px transform */
+    .front  { transform: rotateY(0deg) translateZ(70px); }
+    .back   { transform: rotateY(180deg) translateZ(70px); }
+    .right  { transform: rotateY(90deg) translateZ(70px); }
+    .left   { transform: rotateY(-90deg) translateZ(70px); }
+    .top    { transform: rotateX(90deg) translateZ(70px); }
+    .bottom { transform: rotateX(-90deg) translateZ(70px); }
 }
  
 /* @media (max-width: 505px) {
