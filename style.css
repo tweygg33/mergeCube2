@@ -30,7 +30,7 @@ body {
     background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
     color: var(--text-color);
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -367,95 +367,8 @@ h1 {
     }
     
 }
-@media (max-width: 430px) {
-    .hero-content h1 {
-        font-size: 1.7rem;
-    }
-    .face {
-        width: 160px;
-        height: 160px;
-        }
-        /* Cube positioning with fixed 100px transform */
-    .front  { transform: rotateY(0deg) translateZ(80px); }
-    .back   { transform: rotateY(180deg) translateZ(80px); }
-    .right  { transform: rotateY(90deg) translateZ(80px); }
-    .left   { transform: rotateY(-90deg) translateZ(80px); }
-    .top    { transform: rotateX(90deg) translateZ(80px); }
-    .bottom { transform: rotateX(-90deg) translateZ(80px); }
-    .hero-content .start-button {
-        padding: 1rem 2.5rem;
-        font-size: 1rem;
-    }
-}
-@media (max-width: 400px) {
-    .hero-content h1 {
-        font-size: 1.5rem;
-    }
-    .description {
-        line-height: 1.6rem;
-    }
-    
-}
-@media (max-width: 350px) {
-    .face {
-        width: 140px;
-        height: 140px;
-        }
-        .cube-container {
-            width: 200px;
-            border: 2px solid black;
-        }
-        /* Cube positioning with fixed 100px transform */
-    .front  { transform: rotateY(0deg) translateZ(70px); }
-    .back   { transform: rotateY(180deg) translateZ(70px); }
-    .right  { transform: rotateY(90deg) translateZ(70px); }
-    .left   { transform: rotateY(-90deg) translateZ(70px); }
-    .top    { transform: rotateX(90deg) translateZ(70px); }
-    .bottom { transform: rotateX(-90deg) translateZ(70px); }
-}
- 
-/* @media (max-width: 505px) {
-    .hero {
-        min-height: 400px;
-    }
- 
-    .logo {
-        font-size: 1.5rem;
-    }
- 
-    h1 {
-        font-size: 1.75rem;
-    }
- 
-    .description {
-        font-size: 1rem;
-    }
- 
-    .start-button {
-        padding: 0.875rem 2rem;
-        font-size: 1rem;
-    }
-} */
- 
-/* @media (max-width: 480px) {
-    .hero {
-        padding: 1.5rem 1rem;
-        gap: 2rem;
-        margin-bottom: 220px;
-    }
- 
-    .hero-content {
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-    }
- 
-    .cube-container {
-        margin: 1rem auto;
-        position: relative;
-        z-index: 1;
-    }
-}
-  */
+
+
 /* Enhanced Button Styling */
 .start-button {
     display: inline-block;
