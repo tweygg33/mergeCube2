@@ -341,6 +341,14 @@ h1 {
 }
 
 @media (max-width: 450px) {
+    .hero-content h1 {
+        font-size: 1.2rem;
+        margin-bottom: .4rem;
+    }
+    .description{
+        font-size: 1rem;
+        margin-bottom: .7rem;
+    }
     #navbar{
         padding: .7rem;
     }
@@ -355,12 +363,7 @@ h1 {
     .left   { transform: rotateY(-90deg) translateZ(70px); }
     .top    { transform: rotateX(90deg) translateZ(70px); }
     .bottom { transform: rotateX(-90deg) translateZ(70px); }
-    .hero-content h1 {
-        font-size: 1.9rem;
-    }
-    .description{
-        font-size: 1.45rem;
-    }
+    
     .cube-container {
         width: 230px;
         /* border: 2px solid black; */
