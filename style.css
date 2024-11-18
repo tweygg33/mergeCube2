@@ -341,6 +341,9 @@ h1 {
 }
 
 @media (max-width: 450px) {
+    #navbar{
+        padding: .7rem;
+    }
     .face {
         width: 140px;
         height: 140px;
