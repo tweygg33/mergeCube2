@@ -340,42 +340,18 @@ h1 {
  
 }
 
-@media (max-width: 785px) {
-
-
-    
-    /* .hero-content {
-        width: 100%;
-        height: auto;
-        padding: 2rem;
-        order: 1;
-        flex: 0;
-    } */
-    
-    .cube-container {
-        /* width: 300px;
-        order: 2;
-        margin: 1rem auto; 
-        transform-origin: center center; */
-    }
-}
-
-@media (max-width: 680px) {
-    /* .hero {
-        width: 95%;
-        padding: 1rem;
-    } */
-   
-    .hero-content {
-        /* padding: 2rem; */
-    }
-   
-    .description {
-        /* font-size: 1.1rem; */
-    }
-}
-
 @media (max-width: 450px) {
+    .face {
+        width: 140px;
+        height: 140px;
+        }
+        /* Cube positioning with fixed 100px transform */
+    .front  { transform: rotateY(0deg) translateZ(70px); }
+    .back   { transform: rotateY(180deg) translateZ(70px); }
+    .right  { transform: rotateY(90deg) translateZ(70px); }
+    .left   { transform: rotateY(-90deg) translateZ(70px); }
+    .top    { transform: rotateX(90deg) translateZ(70px); }
+    .bottom { transform: rotateX(-90deg) translateZ(70px); }
     .hero-content h1 {
         font-size: 1.9rem;
     }
