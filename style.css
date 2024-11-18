@@ -34,6 +34,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    justify-content: center;
+    align-items: center;
 
 }
  
@@ -314,13 +316,13 @@ h1 {
     .hero {
         flex-direction: column;
     }
-    /* .hero-content {
+    .hero-content {
         width: 100%;
         height: auto;
         padding: 2rem;
         order: 1;
         flex: 0;
-    } */
+    }
     .hero-content h1 {
         font-size: 2rem;
     }
