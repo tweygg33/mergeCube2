@@ -83,11 +83,10 @@ body {
     width: 90%;
     max-width: 1400px;
     min-width: 280px;
-    min-height: 600px;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem;
     text-align: center;
     position: relative;
     overflow: visible;
@@ -189,7 +188,7 @@ h1 {
     height: 200px;
     position: relative;
     perspective: 1200px;
-    margin: 2rem;
+    margin: 2rem 2rem 0 2rem;
     transform-style: preserve-3d;
     transform: rotateX(15deg);
 }
@@ -341,6 +340,12 @@ h1 {
 }
 
 @media (max-width: 450px) {
+    .hero{
+        margin-top: -1rem;
+    }
+    .hero-content{
+        padding: 1rem 2rem;
+    }
     .hero-content h1 {
         font-size: 1.2rem;
         margin-bottom: .4rem;
@@ -366,6 +371,7 @@ h1 {
     
     .cube-container {
         width: 150px;
+        height: 150px;
         /* border: 2px solid black; */
     }
     
