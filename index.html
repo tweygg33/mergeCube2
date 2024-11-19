@@ -48,7 +48,16 @@
         <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
     <script>
-        
+        let zoomFoto = document.createElement("div");
+            zoomFoto.setAttribute("id","zoomFoto");
+            zoomFoto.textContent = "Hallo World"
+         if (localStorage.getItem("zoomActive") === "true") {
+            document.querySelector('.hero-content').style.display="none";
+            document.getElementById("hero").insertAdjacentElement("afterbegin",zoomFoto);
+         } else {
+            zoomFoto.style.display = 'none';
+            document.querySelector('.hero-content').style.display="block";
+         }
         const MIN_SCALE = 0.01;
         const MAX_SCALE = 3.0;
         // Globale Variablen für Maus- und Touch-Interaktion
@@ -398,7 +407,8 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     if (isZoomed) {
-                        document.querySelector('.hero-content').style.display="none"
+                        localStorage.setItem("zoomActive", "true");
+                        // document.querySelector('.hero-content').style.display="none"
                         // const zoomFoto = document.createElement("div");
                         // zoomFoto.setAttribute("id","zoomFoto");
                         // document.getElementById("hero").insertAdjacentElement("afterbegin",zoomFoto);
@@ -406,8 +416,8 @@
                        location.reload();
                         
                     } else {
+                        localStorage.setItem("zoomActive", "false");
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
-                        zoomFoto.style.display = 'none';
                     }
                 }, 500); // Überprüfung alle 500 ms
             }
