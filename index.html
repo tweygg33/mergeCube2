@@ -390,10 +390,6 @@
                 Bitte deaktivieren Sie den Pinch-Zoom 
                 unter den Einstellungen.`
                 document.body.appendChild(warningText);*/
-
-                const zoomFoto = document.createElement("div");
-                zoomFoto.setAttribute("id","zoomFoto");
-                document.body.appendChild(zoomFoto);
             
                 const scene = document.querySelector('a-scene');
                 if (!scene) return; // Keine Szene vorhanden
@@ -412,10 +408,12 @@
                         Math.abs(currentRect.height - initialRect.height) > 5;
             
                     if (isZoomed) {
+                        const zoomFoto = document.createElement("div");
+                        zoomFoto.setAttribute("id","zoomFoto");
+                        document.getElementById("hero").insertAdjacentElement("afterbegin",zoomFoto);
                         // Zeige Warntext, wenn gezoomt wurde
-                       zoomFoto.style.display = 'block';
                        location.reload();
-
+                        document.querySelector('.hero-content').style.display="none";
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         zoomFoto.style.display = 'none';
