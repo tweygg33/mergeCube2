@@ -340,9 +340,6 @@ h1 {
 }
 
 @media (max-width: 450px) {
-    .hero{
-        margin-top: -1rem;
-    }
     .hero-content{
         padding: 1rem 2rem;
     }
