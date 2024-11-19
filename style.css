@@ -201,7 +201,7 @@ h1 {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
-    animation: cube-rotate 20s infinite linear;
+    animation: cube-rotate 8s infinite linear;
 }
  
 @keyframes cube-rotate {
@@ -441,7 +441,7 @@ h1 {
     transform-origin: center;
 }
 
-/* Add smooth motion reduction for users who prefer reduced motion */
+/* Add smooth motion reduction for users who prefer reduced motion
 @media (prefers-reduced-motion: reduce) {
     .cube-container {
         animation: container-rotate 30s infinite linear;
@@ -450,5 +450,5 @@ h1 {
     .face, .face img {
         transition: none;
     }
-}
+} */
  
