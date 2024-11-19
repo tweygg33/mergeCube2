@@ -412,8 +412,8 @@
                         zoomFoto.setAttribute("id","zoomFoto");
                         document.getElementById("hero").insertAdjacentElement("afterbegin",zoomFoto);
                         // Zeige Warntext, wenn gezoomt wurde
-                       location.reload();
                         document.querySelector('.hero-content').style.display="none";
+                        location.reload();
                     } else {
                         // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
                         zoomFoto.style.display = 'none';
