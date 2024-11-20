@@ -82,6 +82,7 @@ body {
  
 /* Enhanced Hero Section */
 .hero {
+    overflow: hidden;
     width: 90%;
     max-width: 1400px;
     min-width: 280px;
@@ -110,6 +111,7 @@ body {
         inset 0 0 20px rgba(255, 255, 255, 0.5);
     position: relative;
     z-index: 1;
+    
 }
  
 .hero::before {
