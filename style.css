@@ -82,7 +82,6 @@ body {
  
 /* Enhanced Hero Section */
 .hero {
-    overflow: hidden;
     width: 90%;
     max-width: 1400px;
     min-width: 280px;

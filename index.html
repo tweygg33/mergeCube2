@@ -60,15 +60,7 @@
                 e.innerHTML="";
             }) 
             document.querySelector(".hero-content").style.background ="none";
-            const style = document.createElement("style");
-            style.textContent = `
-                .hero-content::before,
-                .hero-content::after {
-                    content: none !important; /* Entfernt den Inhalt */
-                    background: transparent !important; /* Hintergrund transparent */
-                }
-            `;
-            document.head.appendChild(style);
+            document.querySelector(".hero-content").style.boxshadow = "none";
             document.querySelector(".hero-content").insertAdjacentElement("afterbegin",zoomFoto);
             zoomFoto.insertAdjacentElement("afterend",button);          
          } else {
