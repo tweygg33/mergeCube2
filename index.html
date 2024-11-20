@@ -53,6 +53,7 @@
         let button = document.createElement("button");  
             button.setAttribute("class", "start-button");
             button.setAttribute("id","start-ar-button");
+            button.textContent = "Starten";
 
          if (localStorage.getItem("zoomActive") === "true") {
             document.querySelector('.hero-content').style.display="none";
