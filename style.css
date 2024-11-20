@@ -442,8 +442,8 @@ h1 {
 }
 #zoomFoto {
     background: url(img2/p-to-z-gif.gif) no-repeat center center;
-    width: 300px;
-    height: 300px;
+    max-width: 600px;
+    max-height: 600px;
     background-size: cover; /* oder contain, je nach Bedarf */
     padding: 3.5rem;
     border-radius: 24px;
