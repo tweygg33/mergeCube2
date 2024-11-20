@@ -440,6 +440,10 @@ h1 {
     transform: scale(1);
     transform-origin: center;
 }
+#zoomFoto {
+    background: url(img2/p-to-z-gif.gif);
+    
+}
 
 /* Add smooth motion reduction for users who prefer reduced motion
 @media (prefers-reduced-motion: reduce) {
