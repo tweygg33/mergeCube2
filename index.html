@@ -50,10 +50,14 @@
     <script>
         let zoomFoto = document.createElement("div");
             zoomFoto.setAttribute("id","zoomFoto");
-            zoomFoto.style.background ="url('img2/p-to-z-gif.gif')";
+        let button = document.createElement("button");  
+            button.setAttribute("class", "start-button");
+            button.setAttribute("id","start-ar-button");
+
          if (localStorage.getItem("zoomActive") === "true") {
             document.querySelector('.hero-content').style.display="none";
             document.getElementById("hero").insertAdjacentElement("afterbegin",zoomFoto);
+            document.getElementById("hero").insertAdjacentElement("beforeend",button);
          } else {
             zoomFoto.style.display = 'none';
             document.querySelector('.hero-content').style.display="block";
