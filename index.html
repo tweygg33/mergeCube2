@@ -457,11 +457,11 @@
             }, { passive: false });
 
             // Verhindern von Zoom mit Strg+Mausrad
-            // document.addEventListener('wheel', function(event) {
-            //     if (event.ctrlKey) {
-            //         event.preventDefault();
-            //     }
-            // }, { passive: false });
+            document.addEventListener('wheel', function(event) {
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
                 };
     </script>
 </body>
