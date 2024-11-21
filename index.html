@@ -87,7 +87,7 @@
         let initialScale = 1;
  
         async function initCameraSelection() {
-    try {
+            try {
         // Erlaubnis zum Kamerazugriff einholen
         const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
         initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
