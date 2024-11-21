@@ -1,3 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    touch-action: manipulation;
+}
+
 /* Modern UI Design Variables */
 :root {
     --primary-color: #4f46e5;
@@ -9,36 +17,28 @@
     --card-bg: rgba(255, 255, 255, 0.95);
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
- 
-html, body {
-    touch-action: manipulation;
+
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
     scroll-behavior: smooth;
     user-select: none;
+    -webkit-user-select: none;
     touch-action: none;
 }
- 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    touch-action: manipulation;
-}
- 
+
 body {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    color: var(--text-color);
     width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: var(--text-color);
 }
- 
+
 /* Enhanced Navbar */
 .navbar {
     width: 100%;
@@ -50,7 +50,7 @@ body {
     position: relative;
     z-index: 100;
 }
- 
+
 .navbar-content {
     width: 100%;
     max-width: 1200px;
@@ -59,7 +59,7 @@ body {
     justify-content: center;
     align-items: center;
 }
- 
+
 .logo {
     font-size: 2rem;
     font-weight: 800;
@@ -67,10 +67,9 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     letter-spacing: 1px;
 }
- 
+
 /* Main Content Area */
 #main {
-    /* flex: 1; */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -79,7 +78,7 @@ body {
     background-repeat: no-repeat;
     padding: 2rem;
 }
- 
+
 /* Enhanced Hero Section */
 .hero {
     width: 90%;
@@ -88,7 +87,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 1rem;
     text-align: center;
     position: relative;
     overflow: visible;
@@ -98,21 +97,19 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
- 
+
 .hero-content {
-    /* flex: 1; */
     max-width: 600px;
     padding: 3.5rem;
     background: var(--card-bg);
     border-radius: 24px;
-    box-shadow:
+    box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.1),
         inset 0 0 20px rgba(255, 255, 255, 0.5);
     position: relative;
     z-index: 1;
-    
 }
- 
+
 .hero::before {
     content: "";
     position: absolute;
@@ -120,15 +117,16 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background:
-        linear-gradient(45deg,
-            rgba(79, 70, 229, 0.1) 0%,
-            rgba(225, 29, 72, 0.1) 100%);
+    background: linear-gradient(
+        45deg,
+        rgba(79, 70, 229, 0.1) 0%,
+        rgba(225, 29, 72, 0.1) 100%
+    );
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
     z-index: -2;
 }
- 
+
 .hero::after {
     content: "";
     position: absolute;
@@ -136,13 +134,16 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image:
-        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
+    background-image: radial-gradient(
+        circle at 1px 1px,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 0
+    );
     background-size: 40px 40px;
     z-index: -1;
     opacity: 0.5;
 }
- 
+
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
@@ -154,7 +155,7 @@ body {
         background-position: 0% 50%;
     }
 }
- 
+
 @keyframes float {
     0% {
         transform: translateY(0px);
@@ -166,7 +167,7 @@ body {
         transform: translateY(0px);
     }
 }
- 
+
 h1 {
     font-size: 3.75rem;
     margin-bottom: 1.75rem;
@@ -175,7 +176,7 @@ h1 {
     line-height: 1.2;
     letter-spacing: -0.02em;
 }
- 
+
 .description {
     font-size: 1.85rem;
     font-weight: 500;
@@ -183,10 +184,9 @@ h1 {
     line-height: 1.6;
     color: #4b5563;
 }
- 
+
 /* Modern Cube Animation */
 .cube-container {
-    /* flex: 1; */
     width: 200px;
     height: 200px;
     position: relative;
@@ -195,7 +195,7 @@ h1 {
     transform-style: preserve-3d;
     transform: rotateX(15deg);
 }
- 
+
 .cube {
     width: 100%;
     height: 100%;
@@ -204,7 +204,7 @@ h1 {
     transition: transform 0.3s ease;
     animation: cube-rotate 8s infinite linear;
 }
- 
+
 @keyframes cube-rotate {
     0% {
         transform: rotateY(0deg);
@@ -213,7 +213,7 @@ h1 {
         transform: rotateY(360deg);
     }
 }
- 
+
 .face {
     position: absolute;
     width: 200px;
@@ -227,11 +227,11 @@ h1 {
     backface-visibility: visible;
     transform-style: preserve-3d;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow:
+    box-shadow: 
         0 0 30px rgba(0, 0, 0, 0.1),
         inset 0 0 20px rgba(255, 255, 255, 0.5);
 }
- 
+
 .face::before {
     content: '';
     position: absolute;
@@ -246,7 +246,7 @@ h1 {
     );
     z-index: 1;
 }
- 
+
 .face img {
     width: 100%;
     height: 100%;
@@ -255,7 +255,7 @@ h1 {
     border-radius: 10px;
     transition: transform 0.3s ease;
 }
- 
+
 /* Cube positioning with fixed 100px transform */
 .front  { transform: rotateY(0deg) translateZ(100px); }
 .back   { transform: rotateY(180deg) translateZ(100px); }
@@ -263,25 +263,22 @@ h1 {
 .left   { transform: rotateY(-90deg) translateZ(100px); }
 .top    { transform: rotateX(90deg) translateZ(100px); }
 .bottom { transform: rotateX(-90deg) translateZ(100px); }
- 
-/* Hover effects */
 
+/* Hover Effects */
 .cube-container:hover .cube {
     animation-play-state: paused;
-    
 }
- 
+
 .face:hover {
-    box-shadow:
+    box-shadow: 
         0 0 40px rgba(0, 0, 0, 0.15),
         inset 0 0 30px rgba(255, 255, 255, 0.7);
-
 }
- 
+
 .face:hover img {
     transform: scale(1);
-
 }
+
 /* Mobile Responsiveness */
 @media (max-width: 1200px) {
     .hero-content {
@@ -289,19 +286,18 @@ h1 {
     }
     .hero-content h1 {
         font-size: 2.2rem;
-       }
+    }
 }
 
-
 @media (max-width: 994px) {
-       .hero-content h1 {
+    .hero-content h1 {
         font-size: 2rem;
-       }
+    }
 }
 
 @media (max-width: 968px) {
     .hero-content h1 {
-     font-size: 2rem;
+        font-size: 2rem;
     }
     .description {
         font-size: 1.65rem;
@@ -309,8 +305,8 @@ h1 {
     .face {
         width: 180px;
         height: 180px;
-        }
-        /* Cube positioning with fixed 100px transform */
+    }
+    /* Cube positioning with fixed 90px transform */
     .front  { transform: rotateY(0deg) translateZ(90px); }
     .back   { transform: rotateY(180deg) translateZ(90px); }
     .right  { transform: rotateY(90deg) translateZ(90px); }
@@ -322,46 +318,39 @@ h1 {
 @media (max-width: 871px) {
     .hero {
         flex-direction: column;
-        min-height: auto; /* Hinzugefügt */
+        min-height: auto;
         gap: 2rem;
         align-items: center;
         justify-content: center;
     }
     .hero-content h1 {
-     font-size: 2rem;
+        font-size: 2rem;
     }
     .description {
         font-size: 1.65rem;
     }
 }
-@media (max-width: 829px) {
-    .hero-content h1 {
-     
-    }
-   
- 
-}
 
 @media (max-width: 450px) {
-    .hero-content{
+    .hero-content {
         padding: 1rem 2rem;
     }
     .hero-content h1 {
         font-size: 1.8rem;
-        margin-bottom: .4rem;
+        margin-bottom: 0.4rem;
     }
-    .description{
+    .description {
         font-size: 1rem;
-        margin-bottom: .7rem;
+        margin-bottom: 0.7rem;
     }
-    #navbar{
-        padding: .7rem;
+    #navbar {
+        padding: 0.7rem;
     }
     .face {
         width: 100px;
         height: 100px;
-        }
-        /* Cube positioning with fixed 100px transform */
+    }
+    /* Cube positioning with fixed 50px transform */
     .front  { transform: rotateY(0deg) translateZ(50px); }
     .back   { transform: rotateY(180deg) translateZ(50px); }
     .right  { transform: rotateY(90deg) translateZ(50px); }
@@ -372,11 +361,8 @@ h1 {
     .cube-container {
         width: 150px;
         height: 150px;
-        /* border: 2px solid black; */
     }
-    
 }
-
 
 /* Enhanced Button Styling */
 .start-button {
@@ -394,16 +380,16 @@ h1 {
     position: relative;
     overflow: hidden;
 }
- 
+
 .start-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
 }
- 
+
 .start-button:active {
     transform: translateY(1px);
 }
- 
+
 /* Loading Indicator */
 #loading-indicator {
     position: fixed;
@@ -419,7 +405,7 @@ h1 {
     display: none;
     z-index: 1000;
 }
- 
+
 /* AR Container */
 #ar-container {
     display: none;
@@ -431,7 +417,7 @@ h1 {
     margin: 0;
     padding: 0;
 }
- 
+
 #ar-container a-scene {
     width: 100%;
     height: 100%;
@@ -441,30 +427,19 @@ h1 {
     transform: scale(1);
     transform-origin: center;
 }
+
 #zoomFoto {
     background: url(img2/p-to-z-gif.gif) no-repeat center center;
+    background-size: cover; /* oder contain, je nach Bedarf */
     max-width: 600px;
     max-height: 600px;
-    min-height: 300px;
     min-width: 250px;
-    background-size: cover; /* oder contain, je nach Bedarf */
+    min-height: 300px;
     border-radius: 24px;
-    box-shadow:
+    box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.1),
         inset 0 0 20px rgba(255, 255, 255, 0.5);
     position: relative;
     z-index: 10;
     margin-bottom: 1rem;
 }
-
-/* Add smooth motion reduction for users who prefer reduced motion
-@media (prefers-reduced-motion: reduce) {
-    .cube-container {
-        animation: container-rotate 30s infinite linear;
-    }
-   
-    .face, .face img {
-        transition: none;
-    }
-} */
- 
