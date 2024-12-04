@@ -151,7 +151,7 @@ async function initializeARScene() {
             </a-marker>
 
             <!-- Marker 3 -->
-            <a-marker type="pattern" url="pattern2/pattern-luefter.patt" id="marker3">
+            <a-marker type="pattern" url="whiteImages/pattern-luefter1.patt" id="marker3">
                 <a-entity id="model-container-3"
                           gltf-model="#model3"
                           animation-mixer="clip: *; loop: repeat; timeScale: 1"
