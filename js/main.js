@@ -1,31 +1,31 @@
-// let zoomFoto = document.createElement("div");
-//     zoomFoto.setAttribute("id","zoomFoto");
-// let button = document.createElement("button");  
-//     button.setAttribute("class", "start-button");
-//     button.setAttribute("id","start-ar-button");
-//     button.textContent = "Starten";         
-//  if (localStorage.getItem("zoomActive") === "true") {
-//     document.querySelectorAll('.hero-content').forEach(e=>{
-//         e.innerHTML="";
-//     }) 
-//     document.querySelector(".hero-content").style.background ="none";
-//     document.querySelector(".hero-content").style.boxShadow = "none";
-//     document.querySelector(".cube-container").style.display= "none";
-//     document.querySelector(".hero-content").insertAdjacentElement("afterbegin",zoomFoto);
-//     zoomFoto.insertAdjacentElement("afterend",button);          
-//  } else {
-//     document.querySelectorAll('.hero-content').forEach(e=>{
-//         e.innerHTML="";
-//     }) 
-//     let h1 = document.createElement("h1");
-//     h1.textContent = "Erlebe Erweiterte Realität";
-//     let p = document.createElement("p");
-//     p.setAttribute("class","description");
-//     p.textContent = "Interagiere mit 3D-Objekten";
-//     document.querySelector(".hero-content").insertAdjacentElement("afterbegin",h1);
-//     h1.insertAdjacentElement("afterend",p);
-//     p.insertAdjacentElement("afterend",button)
-//  };
+let zoomFoto = document.createElement("div");
+    zoomFoto.setAttribute("id","zoomFoto");
+let button = document.createElement("button");  
+    button.setAttribute("class", "start-button");
+    button.setAttribute("id","start-ar-button");
+    button.textContent = "Starten";         
+ if (localStorage.getItem("zoomActive") === "true") {
+    document.querySelectorAll('.hero-content').forEach(e=>{
+        e.innerHTML="";
+    }) 
+    document.querySelector(".hero-content").style.background ="none";
+    document.querySelector(".hero-content").style.boxShadow = "none";
+    document.querySelector(".cube-container").style.display= "none";
+    document.querySelector(".hero-content").insertAdjacentElement("afterbegin",zoomFoto);
+    zoomFoto.insertAdjacentElement("afterend",button);          
+ } else {
+    document.querySelectorAll('.hero-content').forEach(e=>{
+        e.innerHTML="";
+    }) 
+    let h1 = document.createElement("h1");
+    h1.textContent = "Erlebe Erweiterte Realität";
+    let p = document.createElement("p");
+    p.setAttribute("class","description");
+    p.textContent = "Interagiere mit 3D-Objekten";
+    document.querySelector(".hero-content").insertAdjacentElement("afterbegin",h1);
+    h1.insertAdjacentElement("afterend",p);
+    p.insertAdjacentElement("afterend",button)
+ };
 const MIN_SCALE = 0.01;
 const MAX_SCALE = 3.0;
 // Globale Variablen für Maus- und Touch-Interaktion
