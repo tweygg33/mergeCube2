@@ -376,6 +376,7 @@ document.addEventListener('touchmove', function(event) {
     
             if (isZoomed) {
                 localStorage.setItem("zoomActive", "true");
+                location.reload();
             } else {
                 localStorage.setItem("zoomActive", "false");
                 // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
