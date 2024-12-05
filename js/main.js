@@ -1,5 +1,3 @@
-// main.js
-
 // Registrieren der rotation-order Komponente außerhalb von initializeARScene
 AFRAME.registerComponent('rotation-order', {
     schema: { type: 'string', default: 'XYZ' },
@@ -12,7 +10,7 @@ touchaktionen.alleFunktionen();
 // Globale Variablen initialisieren
 globale_variablen.samsung_check();
 window.onload = () => {
-    initCameraSelection();  
+   cameraController.initCameraSelection();  
     // Verhindern von ungewollten Zoom-Interaktionen
     document.addEventListener('touchmove', function(event) {
         if (event.scale !== 1) {
@@ -30,69 +28,6 @@ window.onload = () => {
         }
     }, { passive: false });
 };
-// Funktion zur Initialisierung der Kameraauswahl
-async function initCameraSelection() {
-    try {
-        // Erlaubnis zum Kamerazugriff einholen
-        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
-        // Geräte auflisten
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-        if (videoInputDevices.length === 0) {
-            throw new Error('Keine Videokameras gefunden.');
-        }
-        // Automatisch die erste Rückkamera auswählen, falls vorhanden
-        let selectedDevice = videoInputDevices.find(device =>
-            device.label.toLowerCase().includes('rear') ||
-            device.label.toLowerCase().includes('back') ||
-            device.label.toLowerCase().includes('rück')
-        ) || videoInputDevices[0];
-        // Event Listener für "AR starten" Button
-        document.getElementById('start-ar-button').addEventListener('click', async () => {
-            const scene = document.querySelector('a-scene');
-            if (selectedDevice) {
-                document.getElementById('loading-indicator').style.display = 'block';
-                document.getElementById('main').style.display = "none";
-                try {
-                    // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-                    overrideGetUserMedia(selectedDevice.deviceId);
-                    // Initialisiere die AR-Szene
-                    await initializeARScene();
-                    // Zeige den AR-Container und verstecke die Kameraauswahl und Info
-                    document.getElementById('ar-container').style.display = 'block';
-                } catch (error) {
-                    console.error('Fehler beim Initialisieren der AR-Szene:', error);
-                    alert('Fehler beim Starten der AR-Anwendung.');
-                } finally {
-                    document.getElementById('loading-indicator').style.display = 'none';
-                }
-            } else {
-                alert('Bitte wähle eine Kamera aus.');
-            }
-        });
-    } catch (error) {
-        console.error('Fehler beim Zugriff auf die Kamera:', error);
-    }
-}
-
-// Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
-// selectedDeviceId - Die deviceId der ausgewählten Kamera
-function overrideGetUserMedia(selectedDeviceId) {
-    const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-    navigator.mediaDevices.getUserMedia = function(constraints) {
-        if (constraints.video && selectedDeviceId) {
-            // Setze deviceId in den Video-Constraints
-            constraints.video = {
-                ...constraints.video,
-                deviceId: { exact: selectedDeviceId },
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-            };  
-        }
-        return originalGetUserMedia(constraints);
-    };
-}
 
 // Funktion zur Initialisierung der AR-Szene
 // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
