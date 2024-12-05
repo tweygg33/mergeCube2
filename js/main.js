@@ -1,31 +1,5 @@
-let zoomFoto = document.createElement("div");
-    zoomFoto.setAttribute("id","zoomFoto");
-let button = document.createElement("button");  
-    button.setAttribute("class", "start-button");
-    button.setAttribute("id","start-ar-button");
-    button.textContent = "Starten";         
- if (localStorage.getItem("zoomActive") === "true") {
-    document.querySelectorAll('.hero-content').forEach(e=>{
-        e.innerHTML="";
-    }) 
-    document.querySelector(".hero-content").style.background ="none";
-    document.querySelector(".hero-content").style.boxShadow = "none";
-    document.querySelector(".cube-container").style.display= "none";
-    document.querySelector(".hero-content").insertAdjacentElement("afterbegin",zoomFoto);
-    zoomFoto.insertAdjacentElement("afterend",button);          
- } else {
-    document.querySelectorAll('.hero-content').forEach(e=>{
-        e.innerHTML="";
-    }) 
-    let h1 = document.createElement("h1");
-    h1.textContent = "Erlebe Erweiterte Realität";
-    let p = document.createElement("p");
-    p.setAttribute("class","description");
-    p.textContent = "Interagiere mit 3D-Objekten";
-    document.querySelector(".hero-content").insertAdjacentElement("afterbegin",h1);
-    h1.insertAdjacentElement("afterend",p);
-    p.insertAdjacentElement("afterend",button)
- };
+globale_variablen.samsung_check();
+
 const MIN_SCALE = 0.01;
 const MAX_SCALE = 3.0;
 // Globale Variablen für Maus- und Touch-Interaktion
@@ -206,7 +180,8 @@ async function initializeARScene() {
             <a-entity camera></a-entity>
         </a-scene>
     `; 
-    monitorARScale();
+    // globaleVariablen.js (Samsung Check)
+    globale_variablen.monitorARScale();
     // Rotation Order Komponente hinzufügen
     AFRAME.registerComponent('rotation-order', {
         schema: { type: 'string', default: 'XYZ' },
@@ -352,37 +327,7 @@ document.addEventListener('touchmove', function(event) {
         const dy = touches[0].clientY - touches[1].clientY;
         return Math.sqrt(dx * dx + dy * dy);
     }
-    // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
-    //SAMSUNG BROWSER
-    function monitorARScale() {
-        // Prüfen, ob der Samsung-Browser genutzt wird
-        if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
-    
-        const scene = document.querySelector('a-scene');
-        if (!scene) return; // Keine Szene vorhanden
-    
-        // Ursprüngliche Maße der Szene speichern (außerhalb des Intervalls)
-        const initialRect = scene.getBoundingClientRect();
-    
-        // Intervall zur Überwachung der Skalierung
-        setInterval(() => {
-            // Aktuelle Maße der Szene abrufen
-            const currentRect = scene.getBoundingClientRect();
-    
-            // Vergleich der aktuellen Größe mit der ursprünglichen
-            const isZoomed =
-                Math.abs(currentRect.width - initialRect.width) > 5 ||
-                Math.abs(currentRect.height - initialRect.height) > 5;
-    
-            if (isZoomed) {
-                localStorage.setItem("zoomActive", "true");
-                location.reload();
-            } else {
-                localStorage.setItem("zoomActive", "false");
-                // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
-            }
-        }, 500); // Überprüfung alle 500 ms
-    }
+   
     
 
 window.onload = () => {
