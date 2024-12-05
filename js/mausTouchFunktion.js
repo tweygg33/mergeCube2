@@ -14,71 +14,71 @@ const touchaktionen = {
     initialScale: 1,
 
     // Event Listener für Maus- und Touch-Interaktion hinzufügen
-    event_touch_interaktion() {
-        // Maus-Events
-        document.addEventListener('mousedown', (event) => {
+event_touch_interaktion() {
+    // Maus-Events
+    document.addEventListener('mousedown', (event) => {
+        this.isMouseDown = true;
+        this.lastMouseX = event.clientX;
+        this.lastMouseY = event.clientY;
+    });
+
+    document.addEventListener('mouseup', () => {
+        this.isMouseDown = false;
+    });
+
+    document.addEventListener('mousemove', (event) => {
+        if (!this.isMouseDown || !this.currentModel) return; // Sicherstellen, dass das Modell geladen ist
+        const deltaX = event.clientX - this.lastMouseX;
+        const deltaY = event.clientY - this.lastMouseY;
+        // Zugriff auf das Three.js Objekt
+        let object3D = this.currentModel.object3D;
+        // Rotation anpassen
+        object3D.rotation.y += deltaX * 0.01;
+        object3D.rotation.x += deltaY * 0.01;
+        this.lastMouseX = event.clientX;
+        this.lastMouseY = event.clientY;
+    });
+
+    // Touch-Events
+    document.addEventListener('touchstart', (event) => {
+        if (event.touches.length === 1) {
             this.isMouseDown = true;
-            this.lastMouseX = event.clientX;
-            this.lastMouseY = event.clientY;
+            this.lastMouseX = event.touches[0].clientX;
+            this.lastMouseY = event.touches[0].clientY;
+        } else if (event.touches.length === 2) {
+            // Pinch-Zoom beginnen
+            this.initialPinchDistance = this.getPinchDistance(event.touches);
+            this.initialScale = this.currentModel ? this.currentModel.object3D.scale.x : 1;
+        }
         });
 
-        document.addEventListener('mouseup', () => {
-            this.isMouseDown = false;
-        });
+    document.addEventListener('touchend', (event) => {
+        this.isMouseDown = false;
+        // Optional: Reset Pinch-Zoom-Variablen, wenn alle Finger losgelassen werden
+        if (event.touches.length < 2) {
+            this.initialPinchDistance = null;
+            this.initialScale = this.currentModel ? this.currentModel.object3D.scale.x : 1;
+        }
+    });
 
-        document.addEventListener('mousemove', (event) => {
-            if (!this.isMouseDown || !this.currentModel) return; // Sicherstellen, dass das Modell geladen ist
-            const deltaX = event.clientX - this.lastMouseX;
-            const deltaY = event.clientY - this.lastMouseY;
-            // Zugriff auf das Three.js Objekt
+    document.addEventListener('touchmove', (event) => {
+        if (event.touches.length === 1 && this.isMouseDown && this.currentModel) {
+            // Einfache Drag-Bewegung
+            const deltaX = event.touches[0].clientX - this.lastMouseX;
+            const deltaY = event.touches[0].clientY - this.lastMouseY;
             let object3D = this.currentModel.object3D;
-            // Rotation anpassen
             object3D.rotation.y += deltaX * 0.01;
             object3D.rotation.x += deltaY * 0.01;
-            this.lastMouseX = event.clientX;
-            this.lastMouseY = event.clientY;
-        });
-
-        // Touch-Events
-        document.addEventListener('touchstart', (event) => {
-            if (event.touches.length === 1) {
-                this.isMouseDown = true;
-                this.lastMouseX = event.touches[0].clientX;
-                this.lastMouseY = event.touches[0].clientY;
-            } else if (event.touches.length === 2) {
-                // Pinch-Zoom beginnen
-                this.initialPinchDistance = this.getPinchDistance(event.touches);
-                this.initialScale = this.currentModel ? this.currentModel.object3D.scale.x : 1;
-            }
-        });
-
-        document.addEventListener('touchend', (event) => {
-            this.isMouseDown = false;
-            // Optional: Reset Pinch-Zoom-Variablen, wenn alle Finger losgelassen werden
-            if (event.touches.length < 2) {
-                this.initialPinchDistance = null;
-                this.initialScale = this.currentModel ? this.currentModel.object3D.scale.x : 1;
-            }
-        });
-
-        document.addEventListener('touchmove', (event) => {
-            if (event.touches.length === 1 && this.isMouseDown && this.currentModel) {
-                // Einfache Drag-Bewegung
-                const deltaX = event.touches[0].clientX - this.lastMouseX;
-                const deltaY = event.touches[0].clientY - this.lastMouseY;
-                let object3D = this.currentModel.object3D;
-                object3D.rotation.y += deltaX * 0.01;
-                object3D.rotation.x += deltaY * 0.01;
-                this.lastMouseX = event.touches[0].clientX;
-                this.lastMouseY = event.touches[0].clientY;
-            } else if (event.touches.length === 2 && this.currentModel) {
-                // Pinch-Zoom
-                const pinchDistance = this.getPinchDistance(event.touches);
-                let scaleChange = pinchDistance / this.initialPinchDistance;
-                let newScale = this.clampScale(this.initialScale * scaleChange);
-                this.currentModel.object3D.scale.set(newScale, newScale, newScale);
-            }
-        });
+            this.lastMouseX = event.touches[0].clientX;
+            this.lastMouseY = event.touches[0].clientY;
+        } else if (event.touches.length === 2 && this.currentModel) {
+            // Pinch-Zoom
+            const pinchDistance = this.getPinchDistance(event.touches);
+            let scaleChange = pinchDistance / this.initialPinchDistance;
+            let newScale = this.clampScale(this.initialScale * scaleChange);
+            this.currentModel.object3D.scale.set(newScale, newScale, newScale);
+        }
+    });
     },
 
     // Funktion, um die Skalierung zu begrenzen (Min und Max)
