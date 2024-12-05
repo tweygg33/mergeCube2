@@ -106,24 +106,24 @@ const sceneController = {
                 </a-scene>
             `; 
         
-            // Zugriff auf die neu erstellte Szene (falls benötigt)
-            const scene = arContainer.querySelector('a-scene');
-            if (scene) {
-                scene.addEventListener('loaded', () => {
-                    console.log('Die A-Frame Szene wurde erfolgreich geladen.');
-                });
-            } else {
-                console.error('Keine <a-scene> im AR-Container gefunden.');
-            }
-        
-            // Samsung Check überwachen
-            globale_variablen.monitorARScale();
-            // Initialisiere die Marker-Events
-            this.initializeMarkerEvents();
-        } catch (error) {
-            console.error('Fehler bei der Initialisierung der AR-Szene:', error);
-            alert('Fehler bei der Initialisierung der AR-Szene.');
+        // Zugriff auf die neu erstellte Szene (falls benötigt)
+        const scene = arContainer.querySelector('a-scene');
+        if (scene) {
+            scene.addEventListener('loaded', () => {
+                console.log('Die A-Frame Szene wurde erfolgreich geladen.');
+            });
+        } else {
+            console.error('Keine <a-scene> im AR-Container gefunden.');
         }
+    
+        // Samsung Check überwachen
+        globale_variablen.monitorARScale();
+        // Initialisiere die Marker-Events
+        this.initializeMarkerEvents();
+    } catch (error) {
+        console.error('Fehler bei der Initialisierung der AR-Szene:', error);
+        alert('Fehler bei der Initialisierung der AR-Szene.');
+    }
     },
 
     // Methode zur Initialisierung der Marker-Events
