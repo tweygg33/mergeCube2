@@ -1,39 +1,42 @@
+// globaleVariablen.js
 
 const globale_variablen = {
-    //Globale Variablen für Samsung Check
+    // Globale Variablen für Samsung Check
     samsung_check() {
         let zoomFoto = document.createElement("div");
-        zoomFoto.setAttribute("id","zoomFoto");
+        zoomFoto.setAttribute("id", "zoomFoto");
         let button = document.createElement("button");  
         button.setAttribute("class", "start-button");
-        button.setAttribute("id","start-ar-button");
+        button.setAttribute("id", "start-ar-button");
         button.textContent = "Starten";         
- if (localStorage.getItem("zoomActive") === "true") {
-        document.querySelectorAll('.hero-content').forEach(e=>{
-            e.innerHTML="";
-        }) 
-        document.querySelector(".hero-content").style.background ="none";
-        document.querySelector(".hero-content").style.boxShadow = "none";
-        document.querySelector(".cube-container").style.display= "none";
-        document.querySelector(".hero-content").insertAdjacentElement("afterbegin",zoomFoto);
-        zoomFoto.insertAdjacentElement("afterend",button);          
- } else {
-        document.querySelectorAll('.hero-content').forEach(e=>{
-            e.innerHTML="";
-        }) 
-        let h1 = document.createElement("h1");
-        h1.textContent = "Erlebe Erweiterte Realität";
-        let p = document.createElement("p");
-        p.setAttribute("class","description");
-        p.textContent = "Interagiere mit 3D-Objekten";
-        document.querySelector(".hero-content").insertAdjacentElement("afterbegin",h1);
-        h1.insertAdjacentElement("afterend",p);
-        p.insertAdjacentElement("afterend",button)
- };
+        
+        if (localStorage.getItem("zoomActive") === "true") {
+            document.querySelectorAll('.hero-content').forEach(e => {
+                e.innerHTML = "";
+            }); 
+            const heroContent = document.querySelector(".hero-content");
+            heroContent.style.background = "none";
+            heroContent.style.boxShadow = "none";
+            document.querySelector(".cube-container").style.display = "none";
+            heroContent.insertAdjacentElement("afterbegin", zoomFoto);
+            zoomFoto.insertAdjacentElement("afterend", button);          
+        } else {
+            document.querySelectorAll('.hero-content').forEach(e => {
+                e.innerHTML = "";
+            }); 
+            let h1 = document.createElement("h1");
+            h1.textContent = "Erlebe Erweiterte Realität";
+            let p = document.createElement("p");
+            p.setAttribute("class", "description");
+            p.textContent = "Interagiere mit 3D-Objekten";
+            const heroContent = document.querySelector(".hero-content");
+            heroContent.insertAdjacentElement("afterbegin", h1);
+            h1.insertAdjacentElement("afterend", p);
+            p.insertAdjacentElement("afterend", button);
+        }
     },
 
-     // Funktion, um den User-Agent zu prüfen und den Text anzuzeigen
-    //SAMSUNG BROWSER
+    // Funktion zur Überwachung der Skalierung im Samsung-Browser
     monitorARScale() {
         // Prüfen, ob der Samsung-Browser genutzt wird
         if (!window.navigator.userAgent.includes("SamsungBrowser")) return;

@@ -1,4 +1,5 @@
-// Globale Variablen innerhalb des touchaktionen-Objekts definiert
+// mausTouchFunktion.js
+
 const touchaktionen = {
     // Skalierungsgrenzen
     MIN_SCALE: 0.5,
@@ -51,7 +52,7 @@ const touchaktionen = {
             }
         });
 
-        document.addEventListener('touchend', () => {
+        document.addEventListener('touchend', (event) => {
             this.isMouseDown = false;
             // Optional: Reset Pinch-Zoom-Variablen, wenn alle Finger losgelassen werden
             if (event.touches.length < 2) {

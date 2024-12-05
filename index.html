@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-        <!-- Navbar Section -->
-        <nav class="navbar" id="navbar">
-            <div class="navbar-content">
-                <div class="logo">DRV-CUBE</div>        
-            </div>
-        </nav>  
-        <main id="main">
-                    <!-- Hero Section with Start Button -->
+    <!-- Navbar Section -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <div class="logo">DRV-CUBE</div>        
+        </div>
+    </nav>  
+    <main id="main">
+        <!-- Hero Section with Start Button -->
         <section class="hero" id="hero">
             <div class="hero-content">
                 <h1>Erlebe Erweiterte Realität</h1>
@@ -38,16 +38,17 @@
                 </div>
             </div>  
         </section>
-        </main>
+    </main>
     <!-- Ladeindikator für die AR-Szene -->
     <div id="loading-indicator">AR-Erfahrung wird geladen...</div>
     <!-- Container für die AR-Szene, wird dynamisch mit A-Frame-Inhalten gefüllt -->
-    <div id="ar-container">
+    <div id="ar-container" style="display: none;">
         <!-- AR.js scene wird hier dynamisch geladen -->
     </div>
+    
+    <!-- Einbinden der JavaScript-Dateien -->
     <script src="js/globaleVariablen.js" defer></script>
     <script src="js/mausTouchFunktion.js" defer></script>
     <script src="js/main.js" defer></script>
 </body>
 </html>
- 

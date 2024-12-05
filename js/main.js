@@ -1,50 +1,90 @@
-globale_variablen.samsung_check();
-async function initCameraSelection() {
-    try {
-// Erlaubnis zum Kamerazugriff einholen
-const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
-initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
-// Geräte auflisten
-const devices = await navigator.mediaDevices.enumerateDevices();
-let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
-if (videoInputDevices.length === 0) {
-    throw new Error('Keine Videokameras gefunden.');
-}
-// Automatisch die erste Rückkamera auswählen, falls vorhanden
-let selectedDevice = videoInputDevices.find(device =>
-    device.label.toLowerCase().includes('rear') ||
-    device.label.toLowerCase().includes('back') ||
-    device.label.toLowerCase().includes('rück')
-) || videoInputDevices[0];
-// Event Listener für "AR starten" Button
-document.getElementById('start-ar-button').addEventListener('click', async () => {
-    const scene = document.querySelector('a-scene');
-    if (selectedDevice) {
-        document.getElementById('loading-indicator').style.display = 'block';
-        document.getElementById('main').style.display="none";
-        try {
-            // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
-            overrideGetUserMedia(selectedDevice.deviceId);
-            // Initialisiere die AR-Szene
-            await initializeARScene();
-            // Zeige den AR-Container und verstecke die Kameraauswahl und Info
-            document.getElementById('ar-container').style.display = 'block';
-        } catch (error) {
-            console.error('Fehler beim Initialisieren der AR-Szene:', error);
-            alert('Fehler beim Starten der AR-Anwendung.');
-        } finally {
-            document.getElementById('loading-indicator').style.display = 'none';
-        }
-    } else {
-        alert('Bitte wähle eine Kamera aus.');
+// main.js
+
+// Registrieren der rotation-order Komponente außerhalb von initializeARScene
+AFRAME.registerComponent('rotation-order', {
+    schema: { type: 'string', default: 'XYZ' },
+    init: function () {
+        this.el.object3D.rotation.order = this.data;
     }
 });
-} catch (error) {
-console.error('Fehler beim Zugriff auf die Kamera:', error);
+
+// Initialisieren aller Touch-Funktionen
+touchaktionen.alleFunktionen();
+
+// Globale Variablen initialisieren
+globale_variablen.samsung_check();
+
+window.onload = () => {
+    initCameraSelection();
+    
+    // Verhindern von ungewollten Zoom-Interaktionen
+    document.addEventListener('touchmove', function(event) {
+        if (event.scale !== 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    // Verhindern von Doppeltipp-Zoom
+    document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+    }, { passive: false });
+
+    // Verhindern von Zoom mit Strg+Mausrad
+    document.addEventListener('wheel', function(event) {
+        if (event.ctrlKey) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+};
+
+// Funktion zur Initialisierung der Kameraauswahl
+async function initCameraSelection() {
+    try {
+        // Erlaubnis zum Kamerazugriff einholen
+        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        initialStream.getTracks().forEach(track => track.stop());  // Stream sofort stoppen, da nur die Erlaubnis benötigt wird
+        // Geräte auflisten
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        let videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+        if (videoInputDevices.length === 0) {
+            throw new Error('Keine Videokameras gefunden.');
+        }
+        // Automatisch die erste Rückkamera auswählen, falls vorhanden
+        let selectedDevice = videoInputDevices.find(device =>
+            device.label.toLowerCase().includes('rear') ||
+            device.label.toLowerCase().includes('back') ||
+            device.label.toLowerCase().includes('rück')
+        ) || videoInputDevices[0];
+        // Event Listener für "AR starten" Button
+        document.getElementById('start-ar-button').addEventListener('click', async () => {
+            const scene = document.querySelector('a-scene');
+            if (selectedDevice) {
+                document.getElementById('loading-indicator').style.display = 'block';
+                document.getElementById('main').style.display = "none";
+                try {
+                    // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
+                    overrideGetUserMedia(selectedDevice.deviceId);
+                    // Initialisiere die AR-Szene
+                    await initializeARScene();
+                    // Zeige den AR-Container und verstecke die Kameraauswahl und Info
+                    document.getElementById('ar-container').style.display = 'block';
+                } catch (error) {
+                    console.error('Fehler beim Initialisieren der AR-Szene:', error);
+                    alert('Fehler beim Starten der AR-Anwendung.');
+                } finally {
+                    document.getElementById('loading-indicator').style.display = 'none';
+                }
+            } else {
+                alert('Bitte wähle eine Kamera aus.');
+            }
+        });
+    } catch (error) {
+        console.error('Fehler beim Zugriff auf die Kamera:', error);
+    }
 }
-}
- // Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
-//  selectedDeviceId - Die deviceId der ausgewählten Kamera
+
+// Funktion zur Überschreibung von getUserMedia, um eine spezifische Kamera zu verwenden
+// selectedDeviceId - Die deviceId der ausgewählten Kamera
 function overrideGetUserMedia(selectedDeviceId) {
     const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
     navigator.mediaDevices.getUserMedia = function(constraints) {
@@ -54,18 +94,17 @@ function overrideGetUserMedia(selectedDeviceId) {
                 ...constraints.video,
                 deviceId: { exact: selectedDeviceId },
                 width: { ideal: 1280 },
-               height: { ideal: 720 }
+                height: { ideal: 720 }
             };  
         }
         return originalGetUserMedia(constraints);
     };
 }
- // Funktion zur Initialisierung der AR-Szene
- // Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
- // Fügt die Rotations- und Zoom-Logik hinzu
+
+// Funktion zur Initialisierung der AR-Szene
+// Erstellt die A-Frame AR-Szene mit definierten Markern und 3D-Modellen
+// Fügt die Rotations- und Zoom-Logik hinzu
 async function initializeARScene() {   
-//  if (window.navigator.userAgent.includes("SamsungBrowser")) {
-  
     // Zeige den AR-Container und verstecke die Info
     document.getElementById('ar-container').style.display = 'block';
     document.getElementById('navbar').style.display = 'none';
@@ -73,7 +112,7 @@ async function initializeARScene() {
     // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
     const arContainer = document.getElementById('ar-container');
     arContainer.innerHTML = `
-        <a-scene  embedded arjs='patternRatio: 0.9; sourceType: webcam; detectionMode: mono;'>
+        <a-scene embedded arjs='patternRatio: 0.9; sourceType: webcam; detectionMode: mono;'>
             <!-- Assets vorab laden -->
             <a-assets>
                 <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
@@ -168,19 +207,13 @@ async function initializeARScene() {
             <a-entity camera></a-entity>
         </a-scene>
     `; 
-    // globaleVariablen.js (Samsung Check)
+    // Samsung Check überwachen
     globale_variablen.monitorARScale();
-    // Rotation Order Komponente hinzufügen
-    AFRAME.registerComponent('rotation-order', {
-        schema: { type: 'string', default: 'XYZ' },
-        init: function () {
-            this.el.object3D.rotation.order = this.data;
-        }
-    });
+    // Initialisiere die Marker-Events
     initializeMarkerEvents();
 };
- 
- // Funktion zur Initialisierung der Marker-Events
+
+// Funktion zur Initialisierung der Marker-Events
 // Verfolgt das aktuell sichtbare Marker und Modell
 function initializeMarkerEvents() {      
     const markers = document.querySelectorAll('a-marker');
@@ -198,7 +231,7 @@ function initializeMarkerEvents() {
             const model = marker.querySelector('a-entity');
             if (model) {
                 model.setAttribute('visible', 'true');
-                currentModel = model; // Aktuelles Modell setzen
+                touchaktionen.currentModel = model; // Aktuelles Modell setzen
             }
 
             currentVisibleMarker = marker;
@@ -221,35 +254,13 @@ function initializeMarkerEvents() {
                 const anotherModel = anotherVisibleMarker.querySelector('a-entity');
                 if (anotherModel) {
                     anotherModel.setAttribute('visible', 'true');
-                    currentModel = anotherModel; // Aktuelles Modell aktualisieren
+                    touchaktionen.currentModel = anotherModel; // Aktuelles Modell aktualisieren
                 }
                 currentVisibleMarker = anotherVisibleMarker;
             } else {
                 currentVisibleMarker = null;
-                currentModel = null; // Kein Modell sichtbar
+                touchaktionen.currentModel = null; // Kein Modell sichtbar
             }
         });
     });
-} 
-touchaktionen.alleFunktionen();
-window.onload = () => {
-    initCameraSelection();
-    
-    document.addEventListener('touchmove', function(event) {
-        if (event.scale !== 1) {
-            event.preventDefault();
-        }
-    }, { passive: false });
-
-// Verhindern von Doppeltipp-Zoom
-    document.addEventListener('dblclick', function(event) {
-        event.preventDefault();
-    }, { passive: false });
-
-    // Verhindern von Zoom mit Strg+Mausrad
-    document.addEventListener('wheel', function(event) {
-        if (event.ctrlKey) {
-            event.preventDefault();
-        }
-    }, { passive: false });
-        };
+}
