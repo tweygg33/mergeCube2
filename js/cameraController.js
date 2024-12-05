@@ -2,6 +2,7 @@
 
 const cameraController = {
     selectedDeviceId: null,
+
     // Methode zur Initialisierung der Kameraauswahl
     async initCameraSelection() {
         try {
@@ -35,7 +36,7 @@ const cameraController = {
                             // Überschreibe getUserMedia, um die ausgewählte Kamera zu verwenden
                             this.overrideGetUserMedia(this.selectedDeviceId);
                             // Initialisiere die AR-Szene
-                            await initializeARScene();
+                            await sceneController.initializeARScene();
                             // Zeige den AR-Container und verstecke die Kameraauswahl und Info
                             document.getElementById('ar-container').style.display = 'block';
                         } catch (error) {
