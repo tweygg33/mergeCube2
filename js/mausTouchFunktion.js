@@ -12,15 +12,6 @@ const touchaktionen = {
     currentModel: null, // Muss initialisiert werden, wenn ein 3D-Modell geladen wird
     initialPinchDistance: null,
     initialScale: 1,
-    // Registrieren der rotation-order Komponente außerhalb von initializeARScene
-rotationRegister() {
-        AFRAME.registerComponent('rotation-order', {
-            schema: { type: 'string', default: 'XYZ' },
-            init: function () {
-                this.el.object3D.rotation.order = this.data;
-            }
-        });
-    },
     // Event Listener für Maus- und Touch-Interaktion hinzufügen
 event_touch_interaktion() {
     // Maus-Events
