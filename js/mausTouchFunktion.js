@@ -2,7 +2,7 @@
 
 const touchaktionen = {
     // Skalierungsgrenzen
-    MIN_SCALE: 0.5,
+    MIN_SCALE: 0.05,
     MAX_SCALE: 5,
 
     // Zustandsvariablen
