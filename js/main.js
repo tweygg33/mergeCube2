@@ -1,16 +1,4 @@
 globale_variablen.samsung_check();
-
-const MIN_SCALE = 0.01;
-const MAX_SCALE = 3.0;
-// Globale Variablen für Maus- und Touch-Interaktion
-let isMouseDown = false;
-let lastMouseX = 0;
-let lastMouseY = 0;
-let currentModel = null; // Global definiert
- // Global variables für Touch
-let initialPinchDistance = null;
-let initialScale = 1;
-
 async function initCameraSelection() {
     try {
 // Erlaubnis zum Kamerazugriff einholen
@@ -243,93 +231,7 @@ function initializeMarkerEvents() {
         });
     });
 } 
-// Event Listener für Maus- und Touch-Interaktion hinzufügen
-document.addEventListener('mousedown', function(event) {
-    isMouseDown = true;
-    lastMouseX = event.clientX;
-    lastMouseY = event.clientY;
-});
-document.addEventListener('mouseup', function() {
-    isMouseDown = false;
-});
-document.addEventListener('mousemove', function(event) {
-    if (!isMouseDown || !currentModel) return;  // Sicherstellen, dass das Modell geladen ist
-    const deltaX = event.clientX - lastMouseX;
-    const deltaY = event.clientY - lastMouseY;
-    // Zugriff auf das Three.js Objekt
-    let object3D = currentModel.object3D;
-    // Rotation anpassen
-    object3D.rotation.y += deltaX * 0.01;
-    object3D.rotation.x += deltaY * 0.01;
-    lastMouseX = event.clientX;
-    lastMouseY = event.clientY;
-});
-// Touch-Unterstützung für mobile Geräte
-document.addEventListener('touchstart', function(event) {
-    isMouseDown = true;
-    lastMouseX = event.touches[0].clientX;
-    lastMouseY = event.touches[0].clientY;
-});
-document.addEventListener('touchend', function() {
-    isMouseDown = false;
-});
-document.addEventListener('touchmove', function(event) {
-    if (!isMouseDown || !currentModel) return;
-
-    const deltaX = event.touches[0].clientX - lastMouseX;
-    const deltaY = event.touches[0].clientY - lastMouseY;
-
-    let object3D = currentModel.object3D;
-
-    object3D.rotation.y += deltaX * 0.01;
-    object3D.rotation.x += deltaY * 0.01;
-
-    lastMouseX = event.touches[0].clientX;
-    lastMouseY = event.touches[0].clientY;
-});
- // Function to clamp the scale within the set limits
- function clampScale(scale) {
-        return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
-    }
-    // Mouse wheel event for desktop zoom
-    document.addEventListener('wheel', function(event) {
-        if (currentModel) {
-            // Adjust scale based on wheel direction
-            let newScale = currentModel.object3D.scale.x + (event.deltaY * -0.001);
-            newScale = clampScale(newScale);
-
-            // Apply new scale to the current model
-            currentModel.object3D.scale.set(newScale, newScale, newScale);
-        }
-    });
-    // Touch events for mobile pinch-to-zoom
-    document.addEventListener('touchstart', function(event) {
-        if (event.touches.length === 2) {
-            // Store the initial distance and scale when pinch starts
-            initialPinchDistance = getPinchDistance(event.touches);
-            initialScale = currentModel ? currentModel.object3D.scale.x : 1;
-        }
-    });
-    document.addEventListener('touchmove', function(event) {
-        if (event.touches.length === 2 && currentModel) {
-            // Calculate the new pinch distance and scale
-            const pinchDistance = getPinchDistance(event.touches);
-            let scaleChange = pinchDistance / initialPinchDistance;
-            let newScale = clampScale(initialScale * scaleChange);
-
-            // Apply the scaled value to the current model
-            currentModel.object3D.scale.set(newScale, newScale, newScale);
-        }
-    });
-    // Helper function to calculate distance between two touch points
-    function getPinchDistance(touches) {
-        const dx = touches[0].clientX - touches[1].clientX;
-        const dy = touches[0].clientY - touches[1].clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-   
-    
-
+touchaktionen.alleFunktionen();
 window.onload = () => {
     initCameraSelection();
     

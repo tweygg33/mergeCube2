@@ -62,6 +62,5 @@ const globale_variablen = {
                 // Blende Warntext aus, wenn Zoom zurückgesetzt wurde
             }
         }, 500); // Überprüfung alle 500 ms
-    }
-
+    },
 };
