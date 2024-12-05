@@ -1,11 +1,5 @@
-// Registrieren der rotation-order Komponente außerhalb von initializeARScene
-AFRAME.registerComponent('rotation-order', {
-    schema: { type: 'string', default: 'XYZ' },
-    init: function () {
-        this.el.object3D.rotation.order = this.data;
-    }
-});
 // Initialisieren aller Touch-Funktionen
+touchaktionen.rotationRegister();
 touchaktionen.alleFunktionen();
 // Globale Variablen initialisieren
 globale_variablen.samsung_check();
