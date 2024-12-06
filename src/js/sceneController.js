@@ -15,7 +15,7 @@ const sceneController = {
                     <a-assets>
                         <a-asset-item id="model1" src="src/img/glb/luefter.glb"></a-asset-item>
                         <a-asset-item id="model2" src="src/img/glb/laptop.glb"></a-asset-item>
-                        <a-asset-item id="model3" src="src/img/marker/CPU MIT ANIMATION 2.glb"></a-asset-item>
+                        <a-asset-item id="model3" src="src/img/marker/cpu.png"></a-asset-item>
                         <a-asset-item id="model4" src="src/img/glb/ssd.glb"></a-asset-item>
                         <a-asset-item id="model5" src="src/img/glb/motherboard.glb"></a-asset-item>
                         <a-asset-item id="model6" src="src/img/glb/luefter.glb"></a-asset-item>
@@ -41,7 +41,7 @@ const sceneController = {
                         <a-entity id="model-container-2"
                                   gltf-model="#model2"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
-                                  scale="0.01 0.01 0.01"  
+                                  scale="0.008 0.008 0.008"  
                                   position="0 0 0"
                                   rotation="0 0 0"
                                   rotation-order="XYZ"
