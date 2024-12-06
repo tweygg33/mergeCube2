@@ -6,7 +6,7 @@ Dieses Projekt wurde im Rahmen der **Projektphase im 2. Lehrjahr** von der **Deu
 ## Beteiligte Lehrfirmen
 - **EcoBins**
 - **Craft A Match**
-- **VirtueWork**
+- **VirtuWork**
 
 ## Funktionalität
 1. **3D-Würfel**: 
