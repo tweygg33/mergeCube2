@@ -26,7 +26,7 @@ Dieses Projekt wurde im Rahmen der **Projektphase im 2. Lehrjahr** von der **Deu
   - Sean Koppelmeyer  
   - Madox Neumann  
 
-- **Code schreiben, Website-Design, Anwendung,Päsentation-Design**:  
+- **Code schreiben, Website-Design, Päsentation-Design**:  
   - Saba Khutsisvili  
   - Aytac Yildirim  
 
