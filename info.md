@@ -26,7 +26,7 @@ Dieses Projekt wurde im Rahmen der **Projektphase im 2. Lehrjahr** von der **Deu
   - Sean Koppelmeyer  
   - Madox Neumann  
 
-- **Code schreiben, Website-Design, Anwendung**:  
+- **Code schreiben, Website-Design, Anwendung,Päsentation-Design**:  
   - Saba Khutsisvili  
   - Aytac Yildirim  
 
@@ -34,7 +34,7 @@ Dieses Projekt wurde im Rahmen der **Projektphase im 2. Lehrjahr** von der **Deu
   - Nils Wendt  
   - Leonhard Witt  
 
-- **Projektpräsentation, Dokumentation und Projektunterlagen**:  
+- **Dokumentation und Projektunterlagen**:  
   - Illya Brunnenkannt  
 
 ---
