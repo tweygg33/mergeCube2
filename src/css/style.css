@@ -429,7 +429,7 @@ h1 {
 }
 
 #zoomFoto {
-    background: url("src/img/logo-gif/drv.png") no-repeat center center;
+    background: url(../img/logo-gif/p-to-z-gif.gif) no-repeat center center;
     background-size: cover; /* oder contain, je nach Bedarf */
     max-width: 600px;
     max-height: 600px;
@@ -440,6 +440,6 @@ h1 {
         0 10px 30px rgba(0, 0, 0, 0.1),
         inset 0 0 20px rgba(255, 255, 255, 0.5);
     position: relative;
-    z-index: 1000;
+    z-index: 10;
     margin-bottom: 1rem;
 }
