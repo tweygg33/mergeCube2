@@ -40,6 +40,7 @@ const globale_variablen = {
     monitorARScale() {
         // Prüfen, ob der Samsung-Browser genutzt wird
         if (!window.navigator.userAgent.includes("SamsungBrowser")) return;
+        localStorage.setItem("zoomActive", "false");
     
         const scene = document.querySelector('a-scene');
         if (!scene) return; // Keine Szene vorhanden
