@@ -14,7 +14,7 @@ const sceneController = {
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="src/img/glb/luefter.glb"></a-asset-item>
-                        <a-asset-item id="model2" src="src/img/glb/laptop andere bild.glb"></a-asset-item>
+                        <a-asset-item id="model2" src="src/img/glb/laptop ohne bild.glb"></a-asset-item>
                         <a-asset-item id="model3" src="src/img/glb/cpu.glb"></a-asset-item>
                         <a-asset-item id="model4" src="src/img/glb/SSD smol.glb"></a-asset-item>
                         <a-asset-item id="model5" src="src/img/glb/Motherboard mit GPU2.glb"></a-asset-item>
