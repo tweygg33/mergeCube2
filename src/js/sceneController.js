@@ -18,7 +18,7 @@ const sceneController = {
                         <a-asset-item id="model3" src="src/img/glb/cpu.glb"></a-asset-item>
                         <a-asset-item id="model4" src="src/img/glb/SSD smol.glb"></a-asset-item>
                         <a-asset-item id="model5" src="src/img/glb/Motherboard mit GPU2.glb"></a-asset-item>
-                        <a-asset-item id="model6" src="src/img/glb/luefter.glb"></a-asset-item>
+                        <a-asset-item id="model6" src="src/img/glb/GPU.glb"></a-asset-item>
                     </a-assets>
         
                     <!-- Marker für die 6 Seiten eines Würfels -->
